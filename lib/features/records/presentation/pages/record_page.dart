@@ -17,7 +17,7 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
   late final TabController _tabController;
   final DateTime _today = DateTime.now();
   late DateTime _selectedDate;
-
+  
   @override
   void initState() {
     super.initState();
@@ -251,7 +251,7 @@ class _DashboardHeader extends StatelessWidget {
   }
 }
 
-/// 주간 캘린더 – 요일 고정, 날짜만 변경되는 구조
+/// 주간 캘린더 – 요일 고정, 무한 스와이프 지원
 class _WeeklyCalendar extends StatelessWidget {
   final DateTime baseDate; // 오늘 포함 날짜 (주 시작 계산)
   final DateTime selectedDate;
@@ -267,16 +267,18 @@ class _WeeklyCalendar extends StatelessWidget {
     required this.onNextWeek,
   });
 
+
+
   // 주의 시작일 계산 (일요일 기준)
   DateTime _getStartOfWeek(DateTime date) {
     final weekday = date.weekday;
-    // weekday: 1(월) ~ 7(일), 일요일을 0으로 만들기 위해 조정
     final daysFromSunday = weekday == 7 ? 0 : weekday;
     return date.subtract(Duration(days: daysFromSunday));
   }
 
   @override
   Widget build(BuildContext context) {
+    // 현재 주간 데이터 계산 (실시간)
     final startOfWeek = _getStartOfWeek(selectedDate);
     final days = List.generate(7, (i) => startOfWeek.add(Duration(days: i)));
     const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
@@ -707,7 +709,7 @@ class _PremiumCard extends StatelessWidget {
   }
 }
 
-/// 스와이프 가능한 주간 뷰 위젯 (애니메이션 포함)
+/// 무한 스와이프 가능한 주간 뷰 위젯 (PageView 기반)
 class _SwipeableWeekView extends StatefulWidget {
   final List<DateTime> days;
   final Widget Function(DateTime) buildDayButton;
@@ -725,103 +727,62 @@ class _SwipeableWeekView extends StatefulWidget {
   State<_SwipeableWeekView> createState() => _SwipeableWeekViewState();
 }
 
-class _SwipeableWeekViewState extends State<_SwipeableWeekView>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<Offset> _slideAnimation;
-  bool _isAnimating = false;
+class _SwipeableWeekViewState extends State<_SwipeableWeekView> {
+  late PageController _pageController;
+  static const int _initialPage = 1000; // 중간 지점에서 시작
+  int _currentPage = _initialPage;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _slideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(1.0, 0.0),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _pageController = PageController(initialPage: _initialPage);
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
-  void _handleSwipe(bool isNext) async {
-    if (_isAnimating) return;
+  // 페이지 인덱스를 기반으로 주간 데이터 생성
+  List<DateTime> _getWeekDaysForPage(int pageIndex) {
+    final weekOffset = pageIndex - _initialPage;
+    final baseWeekStart = widget.days.first; // 현재 주의 시작일
+    final targetWeekStart = baseWeekStart.add(Duration(days: weekOffset * 7));
+    return List.generate(7, (i) => targetWeekStart.add(Duration(days: i)));
+  }
+
+  void _onPageChanged(int page) {
+    final weekOffset = page - _currentPage;
+    _currentPage = page;
     
-    setState(() => _isAnimating = true);
-    
-    // 슬라이드 아웃 애니메이션
-    _slideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset(isNext ? -1.0 : 1.0, 0.0),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    
-    await _animationController.forward();
-    
-    // 주간 변경
-    if (isNext) {
-      widget.onNextWeek();
-    } else {
-      widget.onPrevWeek();
+    if (weekOffset > 0) {
+      // 다음 주로 이동
+      for (int i = 0; i < weekOffset; i++) {
+        widget.onNextWeek();
+      }
+    } else if (weekOffset < 0) {
+      // 이전 주로 이동
+      for (int i = 0; i < -weekOffset; i++) {
+        widget.onPrevWeek();
+      }
     }
-    
-    // 슬라이드 인 애니메이션 준비
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(isNext ? 1.0 : -1.0, 0.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _animationController.reset();
-    await _animationController.forward();
-    
-    setState(() => _isAnimating = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanEnd: (details) {
-        if (_isAnimating) return;
-        // 스와이프 감지
-        if (details.velocity.pixelsPerSecond.dx > 500) {
-          // 오른쪽으로 스와이프 -> 이전 주
-          _handleSwipe(false);
-        } else if (details.velocity.pixelsPerSecond.dx < -500) {
-          // 왼쪽으로 스와이프 -> 다음 주
-          _handleSwipe(true);
-        }
+    return PageView.builder(
+      controller: _pageController,
+      onPageChanged: _onPageChanged,
+      itemBuilder: (context, index) {
+        final weekDays = _getWeekDaysForPage(index);
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: weekDays.map((day) => Expanded(
+            child: Center(child: widget.buildDayButton(day)),
+          )).toList(),
+        );
       },
-      child: AnimatedBuilder(
-        animation: _slideAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(
-              _slideAnimation.value.dx * MediaQuery.of(context).size.width,
-              0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: widget.days.map((day) => Expanded(
-                child: Center(child: widget.buildDayButton(day)),
-              )).toList(),
-            ),
-          );
-        },
-      ),
     );
   }
 }
