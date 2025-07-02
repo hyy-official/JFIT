@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 class StatsCard extends StatelessWidget {
   final String title;
@@ -21,7 +22,7 @@ class StatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: AppTheme.cardBackgroundColor,
+      color: context.colors.surface,
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -32,11 +33,11 @@ class StatsCard extends StatelessWidget {
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                  Text(title, style: TextStyle(color: Colors.grey[400], fontSize: 15, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis),
+                  Text(title, style: context.texts.bodyMedium?.copyWith(color: AppTheme.textSub, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis),
                 SizedBox(height: 6),
-                  Text(value, style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
+                  Text(value, style: context.texts.headlineLarge?.copyWith(fontSize: 32), overflow: TextOverflow.ellipsis),
                 SizedBox(height: 2),
-                  Text(subtitle, style: TextStyle(color: Colors.grey[500], fontSize: 15), overflow: TextOverflow.ellipsis),
+                  Text(subtitle, style: context.texts.bodyMedium?.copyWith(color: AppTheme.textMuted), overflow: TextOverflow.ellipsis),
               ],
               ),
             ),

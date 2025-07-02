@@ -14,12 +14,13 @@ import 'features/workout_session/presentation/pages/workout_session_page.dart';
 import 'l10n/app_localizations.dart'; // 추가
 import 'core/navigation/main_navigation_page.dart';
 import 'core/widgets/auth_gate.dart';
+import 'core/navigation/stack_logging_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // SQLite 데이터베이스 초기화
-  print('[MAIN] SQLite 데이터베이스 초기화 시작');
+  
   final exerciseDbService = ExerciseDatabaseService();
   await exerciseDbService.database; // 데이터베이스 초기화
   await exerciseDbService.printDatabaseInfo(); // 데이터베이스 정보 출력
@@ -60,7 +61,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'JFiT',
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
       locale: _localeManager.currentLocale,
@@ -74,6 +75,7 @@ class _MyAppState extends State<MyApp> {
         Locale('en'), // English
         Locale('ko'), // Korean
       ],
+      navigatorObservers: [StackLoggingObserver()],
       home: const AuthGate(child: MainNavigationPage()),
     );
   }

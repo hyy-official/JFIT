@@ -3,6 +3,7 @@ import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/database/database_helper.dart';
 import 'package:jfit/features/programs/presentation/widgets/program_card.dart';
 import 'package:jfit/l10n/app_localizations.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -140,7 +141,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
     
     if (_isLoading) {
       return Container(
-        color: Colors.black,
+        color: context.colors.background,
         child: const Center(
           child: CircularProgressIndicator(),
         ),
@@ -187,7 +188,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
     final isWide = MediaQuery.of(context).size.width > 700;
 
     return Container(
-      color: Colors.black,
+      color: context.colors.background,
       child: SingleChildScrollView(
         padding: EdgeInsets.all(isWide ? 32 : 20),
         child: Column(
@@ -196,19 +197,12 @@ class _ProgramsPageState extends State<ProgramsPage> {
             // 헤더
             Text(
               l10n?.workoutPrograms ?? 'Workout Programs',
-              style: TextStyle(
-                fontSize: isWide ? 32 : 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              style: context.texts.headlineLarge?.copyWith(fontSize: isWide ? 32 : 28, color: Colors.white),
             ),
             SizedBox(height: 8),
             Text(
               l10n?.workoutProgramsDesc ?? 'Discover and follow professional workout programs designed by experts.',
-              style: TextStyle(
-                fontSize: isWide ? 16 : 15,
-                color: Colors.grey[400],
-              ),
+              style: context.texts.bodyMedium?.copyWith(fontSize: isWide ? 16 : 15, color: AppTheme.textSub),
             ),
             SizedBox(height: 32),
             // 통계 카드
@@ -246,17 +240,17 @@ class _ProgramsPageState extends State<ProgramsPage> {
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: l10n?.searchProgramsHint ?? 'Search programs, creators, or keywords...',
-                      hintStyle: TextStyle(color: Colors.grey[500]),
+                      hintStyle: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted),
                       filled: true,
-                      fillColor: AppTheme.cardBackgroundColor,
+                      fillColor: context.colors.surface,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
+                      prefixIcon: Icon(Icons.search, color: AppTheme.textMuted),
                       contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                     ),
-                    style: TextStyle(color: Colors.white),
+                    style: context.texts.bodyMedium?.copyWith(color: Colors.white),
                     onChanged: (v) {
                       setState(() => searchText = v);
                       _applyFilters();
@@ -332,7 +326,7 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isWide = MediaQuery.of(context).size.width > 700;
     return Card(
-      color: AppTheme.cardBackgroundColor,
+      color: context.colors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
       child: Padding(
@@ -366,10 +360,7 @@ class _StatCard extends StatelessWidget {
                   SizedBox(height: 4),
                   Text(
                     label, 
-                    style: TextStyle(
-                      fontSize: isWide ? 12 : 15, 
-                      color: Colors.grey[400],
-                    ),
+                    style: context.texts.bodySmall?.copyWith(fontSize: isWide ? 12 : 15, color: AppTheme.textSub),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -392,18 +383,18 @@ class _FilterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
       initialValue: label,
-      color: AppTheme.cardBackgroundColor,
+      color: context.colors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       onSelected: onSelected,
       itemBuilder: (context) => options.map((opt) => PopupMenuItem<String>(
         value: opt,
-        child: Text(opt, style: TextStyle(color: Colors.white)),
+        child: Text(opt, style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
       )).toList(),
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          backgroundColor: AppTheme.cardBackgroundColor,
+          backgroundColor: context.colors.surface,
           foregroundColor: Colors.white,
-          side: BorderSide(color: Colors.grey[700]!),
+          side: BorderSide(color: AppTheme.surface2),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           padding: EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         ),

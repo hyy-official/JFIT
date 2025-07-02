@@ -1,51 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'second_theme.dart';
 
 class AppTheme {
   // 폰트 변경 시 아래 한 줄만 수정하면 전체 앱에 적용됩니다.
   static const String fontFamily = '';
   // 예시: static const String fontFamily = 'NotoSansKR';
 
-  // 색상 팔레트 정의
-  static const Color cardBackgroundColor = Color(0xFF161616); // 거의 검정에 가까운 다크 그레이
-  static const Color workoutIconColor = Color(0xFFA78BFA); // 연보라색
-  static const Color nutritionIconColor = Color(0xFF34D399); // 민트/에메랄드 계열
-  static const Color proteinGraphColor = Color(0xFFF472B6); // 밝은 핑크
-  static const Color carbsGraphColor = Color(0xFFFBBF24); // 선명한 노랑
-  static const Color fatGraphColor = Color(0xFFF59E42); // 오렌지/주황
+  // ------------------------------
+  // Dark Modern Fitness 팔레트
+  // ------------------------------
+  // Base colors
+  static const Color primaryBackground = SecondTheme.bgPrimary;
+  static const Color secondaryBackground1 = SecondTheme.bgSecondary;
+  static const Color secondaryBackground2 = Color(0xFF161616); // 탭 비활성 등
+
+  // Surfaces
+  static const Color surface1 = SecondTheme.bgTertiary;
+  static const Color surface2 = SecondTheme.border;
+
+  // Accents
+  static const Color accent1 = SecondTheme.accentPrimary;
+  static const Color accent2 = SecondTheme.accentSecondary;
+
+  // Text
+  static const Color textSub = SecondTheme.textSecondary;
+  static const Color textMuted = SecondTheme.textMuted;
+
+  // Chart palette (고정 순서)
+  static const List<Color> chartColors = SecondThemeChartColors.palette;
+
+  // 기존 위젯 호환용 색상 (대시보드 아이콘 등)
+  static const Color workoutIconColor = accent2;
+  static const Color nutritionIconColor = Color(0xFF34D399);
+  static const Color proteinGraphColor = Color(0xFFF472B6);
+  static const Color carbsGraphColor = Color(0xFFFBBF24);
+  static const Color fatGraphColor = Color(0xFFF59E42);
+
+  // 공통 그라디언트
+  static const LinearGradient accentGradient = SecondTheme.accentGradient;
+
+  // 이전 코드 호환용 alias
+  static const Color cardBackgroundColor = surface1;
 
   static ThemeData get lightTheme => ThemeData(
-        brightness: Brightness.light,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        brightness: Brightness.dark, // 다크 베이스 유지
+        colorScheme: const ColorScheme.dark(
+          primary: accent1,
+          secondary: accent2,
+          surface: surface1,
+          background: primaryBackground,
+          onPrimary: Colors.white,
+          onSurface: textSub,
+        ),
+        textTheme: const TextTheme(
+          headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+          titleMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
+          bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: textSub),
+          bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: textSub),
+          labelSmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: textMuted),
+        ),
         fontFamily: fontFamily.isEmpty ? null : fontFamily,
         useMaterial3: true,
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
-            // 데스크톱 플랫폼은 페이드 업 애니메이션으로 전환해 스와이프 제스처를 제거
             TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
             TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
             TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
-            // 모바일(iOS)은 기본 Cupertino(스와이프 지원)
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-            // Android 는 기본(Material) 유지 – 지정하지 않으면 기본값 사용
           },
         ),
         cardTheme: CardThemeData(
-          color: cardBackgroundColor,
+          color: secondaryBackground1,
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
+        scaffoldBackgroundColor: primaryBackground,
       );
 
   static ThemeData get darkTheme => ThemeData(
         brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple, 
-          brightness: Brightness.dark,
-          secondary: workoutIconColor,
-          tertiary: nutritionIconColor,
+        colorScheme: const ColorScheme.dark(
+          primary: accent1,
+          secondary: accent2,
+          surface: surface1,
+          background: primaryBackground,
+          onPrimary: Colors.white,
+          onSurface: textSub,
+        ),
+        textTheme: const TextTheme(
+          headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+          titleMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
+          bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: textSub),
+          bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: textSub),
+          labelSmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: textMuted),
         ),
         fontFamily: fontFamily.isEmpty ? null : fontFamily,
         useMaterial3: true,
@@ -58,12 +108,12 @@ class AppTheme {
           },
         ),
         cardTheme: CardThemeData(
-          color: cardBackgroundColor,
+          color: secondaryBackground1,
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        scaffoldBackgroundColor: const Color(0xFF0F0F0F), // 더 어두운 배경
+        scaffoldBackgroundColor: primaryBackground, // 더 어두운 배경
       );
 } 

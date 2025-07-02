@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 class RecentWorkouts extends StatelessWidget {
   final List<Map<String, dynamic>> workouts;
@@ -12,7 +13,7 @@ class RecentWorkouts extends StatelessWidget {
     
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: AppTheme.cardBackgroundColor,
+      color: context.colors.surface,
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -23,14 +24,14 @@ class RecentWorkouts extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [AppTheme.workoutIconColor, AppTheme.workoutIconColor.withOpacity(0.7)]),
+                    gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withOpacity(0.8), AppTheme.workoutIconColor]),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(8),
                   child: Icon(Icons.access_time, color: Colors.white, size: 20),
                 ),
                 SizedBox(width: 10),
-                Text(l10n?.recentWorkouts ?? 'Recent Workouts', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                Text(l10n?.recentWorkouts ?? 'Recent Workouts', style: context.texts.titleMedium?.copyWith(color: Colors.white)),
               ],
             ),
             SizedBox(height: 16),
@@ -53,7 +54,7 @@ class _WorkoutTile extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey[800],
+              color: AppTheme.surface2,
               borderRadius: BorderRadius.circular(14),
             ),
             padding: const EdgeInsets.all(12),
@@ -64,8 +65,8 @@ class _WorkoutTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(w['name'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                Text('${w['duration']}min • ${w['calories']} cal', style: TextStyle(color: Colors.grey[400], fontSize: 13)),
+                Text(w['name'], style: context.texts.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                Text('${w['duration']}min • ${w['calories']} cal', style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub)),
               ],
             ),
           ),
@@ -75,13 +76,13 @@ class _WorkoutTile extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppTheme.workoutIconColor.withOpacity(0.2),
+                  color: AppTheme.workoutIconColor.withOpacity(0.25),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(w['type'], style: TextStyle(color: AppTheme.workoutIconColor, fontWeight: FontWeight.w600, fontSize: 12)),
+                child: Text(w['type'], style: context.texts.bodySmall?.copyWith(color: AppTheme.workoutIconColor, fontWeight: FontWeight.w600)),
               ),
               SizedBox(height: 4),
-              Text(w['date'], style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+              Text(w['date'], style: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted)),
             ],
           ),
         ],

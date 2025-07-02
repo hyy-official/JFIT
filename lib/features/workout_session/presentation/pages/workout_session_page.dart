@@ -8,6 +8,8 @@ import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import 'package:jfit/core/navigation/main_navigation_page.dart';
 import 'package:jfit/core/widgets/responsive_scaffold.dart';
+import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 class WorkoutSessionPage extends StatefulWidget {
   final String? sessionId; // null이면 새 세션(프리스타일)
@@ -78,10 +80,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         }
 
         if (effectiveProgramId != null) {
-          print('프로그램 ID로 검색: ${widget.programId}');
           program = await db.getWorkoutProgramById(effectiveProgramId);
-          print('찾은 프로그램: ${program?.keys.toList()}');
-          print('프로그램 이름: ${program?['name']}');
           
           if (program != null && program!.isNotEmpty) {
             // 사용자 프로그램 인스턴스를 조회하거나 생성
@@ -102,15 +101,12 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
               sessionName += ' - ${widget.programDay}';
             }
             
-            print('세션 이름 설정: $sessionName');
-            
             // 프로그램의 운동들을 로드
             int w = activeUserProgram!['current_week'];
             int d = activeUserProgram!['current_day'];
             programExercises = _loadProgramExercises(week: w, dayIndex: d-1);
-            print('프로그램 운동 개수: ${programExercises.length}');
           } else {
-            print('프로그램을 찾을 수 없음');
+            // 프로그램을 찾을 수 없음
           }
         }
 
@@ -132,14 +128,13 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         session!['id'] = id;
         exercises = programExercises;
         
-        print('새 세션 생성 후: ${session?.keys.toList()}');
-        print('새 세션 session_name: ${session?['session_name']}');
+        // 새 세션 생성 완료
       }
 
       // 이전 기록을 기반으로 타겟 정보 적용
       await _applyPreviousTargets();
     } catch (e) {
-      print('세션 로드 중 오류: $e');
+      // 세션 로드 중 오류: $e
       // 오류 발생 시 기본 프리스타일 세션 생성
       final newSession = {
         'session_name': '프리스타일 워크아웃',
@@ -196,7 +191,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
               };
             }).toList();
     } catch (e) {
-      print('프로그램 운동 로드 중 오류: $e');
+      // 프로그램 운동 로드 중 오류: $e
     }
 
     return [];
@@ -295,7 +290,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
   }
 
   void _addSet(int exerciseIndex) {
-    debugPrint('[DBG] Adding set to exercise $exerciseIndex');
+    // Add set
     setState(() {
       final sets = List<Map<String, dynamic>>.from(exercises[exerciseIndex]['sets']);
       final last = sets.isNotEmpty ? sets.last : {'weight': 0, 'reps': 0, 'completed': false};
@@ -312,7 +307,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
   }
 
   void _removeSet(int exerciseIndex, int setIndex) {
-    debugPrint('[DBG] Removing set $setIndex from exercise $exerciseIndex');
+    // Remove set
     setState(() {
       final sets = List<Map<String, dynamic>>.from(exercises[exerciseIndex]['sets']);
       if (setIndex >= 0 && setIndex < sets.length) {
@@ -324,7 +319,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
   }
 
   void _updateSet(int exerciseIndex, int setIndex, Map<String, dynamic> updates) {
-    debugPrint('[DBG] Update set $setIndex of exercise $exerciseIndex with $updates');
+    // Update set
     setState(() {
       final sets = List<Map<String, dynamic>>.from(exercises[exerciseIndex]['sets']);
       final prevCompleted = sets[setIndex]['completed'] == true;
@@ -381,7 +376,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         weight: weight,
       );
     } catch (e) {
-      print('운동 로그 저장 실패: $e');
+      // 운동 로그 저장 실패: $e
     }
   }
 
@@ -457,7 +452,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         barrierDismissible: false,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: const Color(0xFF161616),
+            backgroundColor: AppTheme.secondaryBackground2,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             title: const Text(
               '축하드립니다!',
@@ -473,7 +468,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
                   Navigator.of(context).pop(); // 다이얼로그 닫기
                   navigateHome();
                 },
-                child: const Text('확인', style: TextStyle(color: Color(0xFF6366f1))),
+                child: Text('확인', style: TextStyle(color: context.colors.primary)),
               ),
             ],
           );
@@ -526,9 +521,9 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
     if (loading) {
     
       Widget page = Scaffold(
-        backgroundColor: const Color(0xFF0a0a0a),
-        body: const Center(
-          child: CircularProgressIndicator(color: Color(0xFF6366f1)),
+        backgroundColor: context.colors.background,
+        body: Center(
+          child: CircularProgressIndicator(color: context.colors.primary),
         ),
       );
 
@@ -552,7 +547,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
 
     
     Widget content = Scaffold(
-      backgroundColor: const Color(0xFF0a0a0a),
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -569,9 +564,9 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       margin: const EdgeInsets.only(bottom: 24),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0a0a0a).withOpacity(0.8),
+                        color: context.colors.background.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFF232323)),
+                        border: Border.all(color: AppTheme.surface2),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -585,7 +580,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
                                 // 루틴 이름 / 세션 이름
                                 Text(
                                   _getMobileHeaderTitle(),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -600,8 +595,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
                                     if (_getMobileSubtitle().isNotEmpty) ...[
                                       Text(
                                         _getMobileSubtitle(),
-                                        style: const TextStyle(
-                                          color: Color(0xFF6366f1),
+                                        style: TextStyle(
+                                          color: context.colors.primary,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -614,7 +609,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
                                     const SizedBox(width: 4),
                               Text(
                                 _formatTime(workoutTime),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                         fontSize: 14,
                                   fontFamily: 'monospace',
@@ -629,7 +624,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
                           ElevatedButton(
                             onPressed: _finishWorkout,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF6366f1),
+                              backgroundColor: context.colors.primary,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                               shape: RoundedRectangleBorder(
@@ -714,7 +709,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
                 },
               );
             },
-            backgroundColor: const Color(0xFF6366f1),
+            backgroundColor: context.colors.primary,
             child: const Icon(Icons.add, color: Colors.white),
           );
         },
@@ -774,9 +769,9 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF111111),
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF232323)),
+        border: Border.all(color: AppTheme.surface2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -796,8 +791,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
             if (activeUserProgram != null) ...[
               Text(
                 'Week ${activeUserProgram?['current_week']}  •  Day ${activeUserProgram?['current_day']}',
-                style: const TextStyle(
-                  color: Color(0xFF6366f1),
+                style: TextStyle(
+                  color: context.colors.primary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -806,8 +801,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
               const SizedBox(height: 4),
               Text(
                 widget.programDay!,
-                style: const TextStyle(
-                  color: Color(0xFF6366f1),
+                style: TextStyle(
+                  color: context.colors.primary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -826,8 +821,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
           const SizedBox(height: 8),
           Text(
             '시작 시간: ${_formatStartTime()}',
-            style: const TextStyle(
-              color: Color(0xFFa3a3a3),
+            style: TextStyle(
+              color: context.colors.onSurface,
               fontSize: 14,
             ),
           ),
@@ -867,12 +862,12 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF161616),
-          foregroundColor: const Color(0xFF6366f1),
+          backgroundColor: AppTheme.secondaryBackground2,
+          foregroundColor: context.colors.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: const Color(0xFF6366f1).withOpacity(0.3),
+              color: context.colors.primary.withOpacity(0.3),
               width: 2,
             ),
           ),
@@ -896,9 +891,9 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF111111),
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF232323)),
+        border: Border.all(color: AppTheme.surface2),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -910,12 +905,12 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF161616),
+              color: AppTheme.secondaryBackground2,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               children: [
-                const Icon(Icons.timer, color: Color(0xFF8b5cf6), size: 24),
+                Icon(Icons.timer, color: AppTheme.accent2, size: 24),
                 const SizedBox(height: 8),
                 Text(
                   _formatTime(workoutTime),
@@ -926,10 +921,10 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
+                Text(
                   '경과 시간',
                   style: TextStyle(
-                    color: Color(0xFFa3a3a3),
+                    color: context.colors.onSurface,
                     fontSize: 12,
                   ),
                 ),
@@ -950,15 +945,15 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
           const SizedBox(height: 12),
           LinearProgressIndicator(
             value: _progressPercentage / 100,
-            backgroundColor: const Color(0xFF232323),
-            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF6366f1)),
+            backgroundColor: AppTheme.surface2,
+            valueColor: AlwaysStoppedAnimation<Color>(context.colors.primary),
             minHeight: 8,
           ),
           const SizedBox(height: 8),
           Text(
             '$_completedSets / $_totalSets 세트 완료 (${_progressPercentage.toStringAsFixed(0)}%)',
-            style: const TextStyle(
-              color: Color(0xFFa3a3a3),
+            style: TextStyle(
+              color: context.colors.onSurface,
               fontSize: 12,
             ),
           ),
@@ -979,7 +974,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
             child: ElevatedButton(
               onPressed: _finishWorkout,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6366f1),
+                backgroundColor: context.colors.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -1003,7 +998,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF161616),
+        color: AppTheme.secondaryBackground2,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -1011,8 +1006,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: Color(0xFFa3a3a3),
+            style: TextStyle(
+              color: context.colors.onSurface,
               fontSize: 14,
             ),
           ),

@@ -5,6 +5,7 @@ import 'package:jfit/core/widgets/responsive_scaffold.dart';
 import 'package:jfit/core/database/database_helper.dart';
 import 'package:uuid/uuid.dart';
 import 'package:jfit/features/workout_session/presentation/pages/workout_session_page.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 class ProgramDetailPage extends StatefulWidget {
   final Map<String, dynamic> program;
@@ -113,7 +114,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
         // TODO: AI 기능 구현
       },
       body: Container(
-        color: Colors.black,
+        color: context.colors.background,
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -130,7 +131,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                           icon: const Icon(Icons.arrow_back, color: Colors.white),
                           onPressed: () => Navigator.of(context).pop(),
                           style: IconButton.styleFrom(
-                            backgroundColor: AppTheme.cardBackgroundColor,
+                            backgroundColor: context.colors.surface,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             padding: const EdgeInsets.all(12),
                           ),
@@ -181,7 +182,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
 
   Widget _buildProgramHeader(AppLocalizations? l10n, bool isWide) {
     return Card(
-      color: AppTheme.cardBackgroundColor,
+      color: context.colors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
       child: Padding(
@@ -207,10 +208,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                       const SizedBox(height: 8),
                       Text(
                         '${l10n?.by ?? 'Created by'} ${widget.program['creator']}',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: isWide ? 16 : 14,
-                        ),
+                        style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub),
                       ),
                     ],
                   ),
@@ -253,11 +251,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
             const SizedBox(height: 16),
             Text(
               widget.program['description'],
-              style: TextStyle(
-                color: Colors.grey[300],
-                fontSize: isWide ? 16 : 14,
-                height: 1.5,
-              ),
+              style: context.texts.bodyMedium?.copyWith(color: AppTheme.textSub, fontSize: isWide ? 16 : 14, height: 1.5),
             ),
             const SizedBox(height: 16),
             Wrap(
@@ -376,7 +370,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
     required bool isWide,
   }) {
     return Card(
-      color: AppTheme.cardBackgroundColor,
+      color: context.colors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
       child: Padding(
@@ -388,11 +382,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
             SizedBox(height: isWide ? 6 : 8),
             Text(
               title,
-              style: TextStyle(
-                color: Colors.grey[400],
-                fontSize: isWide ? 12 : 12,
-                fontWeight: FontWeight.w500,
-              ),
+              style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -503,7 +493,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
 
   Widget _buildEquipmentSection(AppLocalizations? l10n, bool isWide) {
     return Card(
-      color: AppTheme.cardBackgroundColor,
+      color: context.colors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
       child: Padding(
@@ -527,9 +517,9 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.grey[800],
+                    color: AppTheme.surface2,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey[700]!),
+                    border: Border.all(color: AppTheme.surface2),
                   ),
                   child: Text(
                     equipment,
@@ -550,7 +540,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
 
   Widget _buildWeeklyScheduleSection(AppLocalizations? l10n, bool isWide, int totalWeeks) {
     return Card(
-      color: AppTheme.cardBackgroundColor,
+      color: context.colors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
       child: Padding(
@@ -589,8 +579,8 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
               onPressed: weekPageStart > 0 ? _scrollLeft : null,
               icon: const Icon(Icons.chevron_left),
               style: IconButton.styleFrom(
-                backgroundColor: weekPageStart > 0 ? Colors.grey[800] : Colors.transparent,
-                foregroundColor: weekPageStart > 0 ? Colors.white : Colors.grey[600],
+                backgroundColor: weekPageStart > 0 ? AppTheme.surface2 : Colors.transparent,
+                foregroundColor: weekPageStart > 0 ? Colors.white : AppTheme.textSub,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
@@ -608,15 +598,15 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: isSelected 
                               ? AppTheme.workoutIconColor
-                              : Colors.grey[800],
+                              : AppTheme.surface2,
                           foregroundColor: isSelected 
                               ? Colors.white 
-                              : Colors.grey[300],
+                              : AppTheme.textSub,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                             side: isSelected 
                                 ? BorderSide.none 
-                                : BorderSide(color: Colors.grey[700]!),
+                                : BorderSide(color: AppTheme.surface2),
                           ),
                           elevation: 0,
                           padding: EdgeInsets.zero,
@@ -643,8 +633,8 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
               onPressed: (weekPageStart + weeksPerPage) < totalWeeks ? _scrollRight : null,
               icon: const Icon(Icons.chevron_right),
               style: IconButton.styleFrom(
-                backgroundColor: (weekPageStart + weeksPerPage) < totalWeeks ? Colors.grey[800] : Colors.transparent,
-                foregroundColor: (weekPageStart + weeksPerPage) < totalWeeks ? Colors.white : Colors.grey[600],
+                backgroundColor: (weekPageStart + weeksPerPage) < totalWeeks ? AppTheme.surface2 : Colors.transparent,
+                foregroundColor: (weekPageStart + weeksPerPage) < totalWeeks ? Colors.white : AppTheme.textSub,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
@@ -663,7 +653,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                   shape: BoxShape.circle,
                   color: currentPageIndex == index 
                       ? AppTheme.workoutIconColor 
-                      : Colors.grey[600],
+                      : AppTheme.surface2,
                 ),
               );
             }),
@@ -685,7 +675,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
           child: Card(
-            color: Colors.grey[900],
+            color: AppTheme.surface2,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             elevation: 0,
             child: Padding(
@@ -708,9 +698,9 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: EdgeInsets.all(isWide ? 16 : 12),
                         decoration: BoxDecoration(
-                          color: AppTheme.cardBackgroundColor,
+                          color: AppTheme.surface2,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey[800]!),
+                          border: Border.all(color: AppTheme.surface2),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -729,7 +719,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[800],
+                                    color: AppTheme.surface2,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(
@@ -744,7 +734,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[800],
+                                    color: AppTheme.surface2,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(

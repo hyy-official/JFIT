@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/widgets/responsive_scaffold.dart';
-import 'package:jfit/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:jfit/features/exercise/presentation/pages/exercise_page.dart';
 import 'package:jfit/features/programs/presentation/pages/programs_page.dart';
 import 'package:jfit/features/workout_session/presentation/pages/workout_session_page.dart';
+import 'package:jfit/features/records/presentation/pages/record_page.dart';
 
 /// 앱 하단 내비게이션(ResponsiveScaffold)을 담당하는 메인 페이지.
 ///
@@ -26,8 +26,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pages = [
-      // 0: 대시보드
-      const DashboardPage(),
+      // 0: 기록(Record)
+      const RecordPage(),
       // 1: 운동 기록(ExercisePage)
       const ExercisePage(),
       // 2: 내 운동(현재 진행 중인 워크아웃 또는 프리스타일 세션)

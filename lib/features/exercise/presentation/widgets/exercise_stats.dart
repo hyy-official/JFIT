@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 class ExerciseStats extends StatelessWidget {
   final List<Map<String, dynamic>> exercises;
@@ -38,11 +39,7 @@ class ExerciseStats extends StatelessWidget {
       children: [
         Text(
           l10n?.thisWeekStatistics ?? 'This Week Statistics',
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: context.texts.titleMedium?.copyWith(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         LayoutBuilder(
@@ -54,6 +51,7 @@ class ExerciseStats extends StatelessWidget {
               return Row(
                 children: [
                   Expanded(child: _buildStatCard(
+                    context,
                     l10n?.sessions ?? 'Sessions',
                     sessions.toString(),
                     Icons.fitness_center,
@@ -61,6 +59,7 @@ class ExerciseStats extends StatelessWidget {
                   )),
                   const SizedBox(width: 16),
                   Expanded(child: _buildStatCard(
+                    context,
                     l10n?.totalTime ?? 'Total Time',
                     '${totalMinutes}m',
                     Icons.schedule,
@@ -68,6 +67,7 @@ class ExerciseStats extends StatelessWidget {
                   )),
                   const SizedBox(width: 16),
                   Expanded(child: _buildStatCard(
+                    context,
                     l10n?.caloriesBurned ?? 'Calories Burned',
                     totalCalories.toString(),
                     Icons.local_fire_department,
@@ -75,6 +75,7 @@ class ExerciseStats extends StatelessWidget {
                   )),
                   const SizedBox(width: 16),
                   Expanded(child: _buildStatCard(
+                    context,
                     l10n?.avgDuration ?? 'Avg Duration',
                     '${avgDuration.round()}m',
                     Icons.trending_up,
@@ -89,6 +90,7 @@ class ExerciseStats extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(child: _buildStatCard(
+                        context,
                         l10n?.sessions ?? 'Sessions',
                         sessions.toString(),
                         Icons.fitness_center,
@@ -96,6 +98,7 @@ class ExerciseStats extends StatelessWidget {
                       )),
                       const SizedBox(width: 16),
                       Expanded(child: _buildStatCard(
+                        context,
                         l10n?.totalTime ?? 'Total Time',
                         '${totalMinutes}m',
                         Icons.schedule,
@@ -107,6 +110,7 @@ class ExerciseStats extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(child: _buildStatCard(
+                        context,
                         l10n?.caloriesBurned ?? 'Calories Burned',
                         totalCalories.toString(),
                         Icons.local_fire_department,
@@ -114,6 +118,7 @@ class ExerciseStats extends StatelessWidget {
                       )),
                       const SizedBox(width: 16),
                       Expanded(child: _buildStatCard(
+                        context,
                         l10n?.avgDuration ?? 'Avg Duration',
                         '${avgDuration.round()}m',
                         Icons.trending_up,
@@ -130,19 +135,19 @@ class ExerciseStats extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(BuildContext context, String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.cardBackgroundColor,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.grey[700]!.withOpacity(0.3),
+          color: AppTheme.surface2.withOpacity(0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -169,10 +174,7 @@ class ExerciseStats extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[400],
-                  ),
+                  style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -181,11 +183,7 @@ class ExerciseStats extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: context.texts.headlineLarge?.copyWith(fontSize: 28, color: Colors.white),
           ),
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/features/programs/presentation/pages/program_detail_page.dart';
 
@@ -22,7 +23,7 @@ class ProgramCard extends StatelessWidget {
               maxWidth: isMobile ? 380 : double.infinity,
             ),
             child: Card(
-              color: AppTheme.cardBackgroundColor,
+              color: context.colors.surface,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               margin: EdgeInsets.all(isWide ? 16 : 8),
               elevation: 0,
@@ -47,7 +48,7 @@ class ProgramCard extends StatelessWidget {
                                   Flexible(
                                     child: Text(
                                       program['name'],
-                                      style: TextStyle(fontSize: isWide ? 20 : 16, fontWeight: FontWeight.bold, color: Colors.white),
+                                      style: context.texts.titleMedium?.copyWith(fontSize: isWide ? 20 : 16, color: Colors.white, fontWeight: FontWeight.bold),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                     ),
@@ -60,7 +61,7 @@ class ProgramCard extends StatelessWidget {
                                 ],
                               ),
                               SizedBox(height: 4),
-                              Text('${l10n?.by ?? 'by'} ${program['creator']}', style: TextStyle(color: Colors.grey[400], fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
+                              Text('${l10n?.by ?? 'by'} ${program['creator']}', style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
                             ],
                           ),
                         ),
@@ -69,7 +70,7 @@ class ProgramCard extends StatelessWidget {
                           children: [
                             Icon(Icons.star, color: AppTheme.fatGraphColor, size: 18),
                             SizedBox(width: 2),
-                            Text(program['rating'].toString(), style: TextStyle(color: Colors.amber[200], fontWeight: FontWeight.bold, fontSize: 15)),
+                            Text(program['rating'].toString(), style: context.texts.bodyMedium?.copyWith(color: Colors.amber[200], fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
@@ -77,7 +78,7 @@ class ProgramCard extends StatelessWidget {
                     SizedBox(height: isWide ? 10 : 6),
                     Text(
                       program['description'],
-                      style: TextStyle(color: Colors.grey[300], fontSize: isWide ? 15 : 12),
+                      style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub, fontSize: isWide ? 15 : 12),
                       maxLines: isWide ? 2 : 3,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -108,7 +109,7 @@ class ProgramCard extends StatelessWidget {
                     SizedBox(height: isWide ? 10 : 6),
                     Row(
                       children: [
-                        Text(l10n?.equipmentNeeded ?? 'Equipment needed:', style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+                        Text(l10n?.equipmentNeeded ?? 'Equipment needed:', style: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted, fontSize: 13)),
                         SizedBox(width: 6),
                         ...List<String>.from(program['equipment_needed']).map((e) => _EquipChip(label: e)),
                       ],
@@ -118,7 +119,7 @@ class ProgramCard extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.workoutIconColor,
+                          backgroundColor: AppTheme.accent2,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           padding: EdgeInsets.symmetric(vertical: isWide ? 16 : 12),
@@ -180,10 +181,10 @@ class _EquipChip extends StatelessWidget {
       margin: EdgeInsets.only(right: 4),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.grey[800],
+        color: AppTheme.surface2,
         borderRadius: BorderRadius.circular(7),
       ),
-      child: Text(label, style: TextStyle(color: Colors.grey[300], fontSize: 11)),
+      child: Text(label, style: TextStyle(color: AppTheme.textSub, fontSize: 11)),
     );
   }
 }
@@ -196,9 +197,9 @@ class _InfoIconText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: Colors.grey[400], size: 17),
+        Icon(icon, color: AppTheme.textSub, size: 17),
         SizedBox(width: 4),
-        Text(text, style: TextStyle(color: Colors.grey[200], fontSize: 13)),
+        Text(text, style: TextStyle(color: AppTheme.textSub, fontSize: 13)),
       ],
     );
   }

@@ -3,6 +3,8 @@ import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/features/exercise/presentation/widgets/exercise_stats.dart';
 import 'package:jfit/features/exercise/presentation/widgets/exercise_progress_chart.dart';
 import 'package:jfit/features/exercise/presentation/widgets/workout_history.dart';
+import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 
 class ExercisePage extends StatefulWidget {
@@ -127,7 +129,7 @@ class _ExercisePageState extends State<ExercisePage> {
     final l10n = AppLocalizations.of(context);
     
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: context.colors.background,
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -137,17 +139,13 @@ class _ExercisePageState extends State<ExercisePage> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: AppTheme.accent1,
                   child: const Icon(Icons.fitness_center, color: Colors.white),
                 ),
                 const SizedBox(width: 12),
                 Text(
                   l10n?.appTitle ?? 'JFIT', 
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+                  style: context.texts.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                 ),
               ],
             ),
@@ -158,19 +156,12 @@ class _ExercisePageState extends State<ExercisePage> {
               children: [
                 Text(
                   l10n?.workoutManager ?? 'Workout Manager',
-                  style: const TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: context.texts.headlineLarge?.copyWith(fontSize: 36, color: Colors.white),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   l10n?.trackFitnessJourney ?? 'Track your fitness journey and build consistency',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey[400],
-                  ),
+                  style: context.texts.bodyMedium?.copyWith(fontSize: 18, color: AppTheme.textSub),
                 ),
               ],
             ),

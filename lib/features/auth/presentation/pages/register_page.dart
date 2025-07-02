@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/services/auth_service.dart';
 import 'package:jfit/features/auth/presentation/pages/login_page.dart';
+import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -30,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1a1a1a),
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -51,23 +53,23 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Center(
-            child: Text('Create Account', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+          Center(
+            child: Text('Create Account', style: context.texts.headlineLarge?.copyWith(fontSize: 28)),
           ),
           const SizedBox(height: 32),
-          const Text('Full Name', style: TextStyle(color: Colors.white)),
+          Text('Full Name', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
           const SizedBox(height: 8),
           _buildTextField(_nameController, hint: 'John Doe'),
           const SizedBox(height: 20),
-          const Text('Email', style: TextStyle(color: Colors.white)),
+          Text('Email', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
           const SizedBox(height: 8),
           _buildTextField(_emailController, keyboard: TextInputType.emailAddress, hint: 'example@mail.com'),
           const SizedBox(height: 20),
-          const Text('Password', style: TextStyle(color: Colors.white)),
+          Text('Password', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
           const SizedBox(height: 8),
           _buildPasswordField(_passwordController),
           const SizedBox(height: 20),
-          const Text('Confirm Password', style: TextStyle(color: Colors.white)),
+          Text('Confirm Password', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
           const SizedBox(height: 8),
           _buildPasswordField(_confirmController),
           const SizedBox(height: 32),
@@ -75,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _isLoading ? null : _onRegister,
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF6366f1), padding: const EdgeInsets.symmetric(vertical: 16)),
+              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accent1, padding: const EdgeInsets.symmetric(vertical: 16)),
               child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('Sign Up'),
             ),
           ),
@@ -89,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   (route) => false,
                 );
               },
-              child: const Text('Already have an account? Sign In', style: TextStyle(color: Color(0xFF9ca3af))),
+              child: Text('Already have an account? Sign In', style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub)),
             ),
           ),
         ],
@@ -101,12 +103,12 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       controller: c,
       keyboardType: keyboard,
-      style: const TextStyle(color: Colors.white),
+      style: context.texts.bodyMedium?.copyWith(color: Colors.white),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Color(0xFF6b7280)),
+        hintStyle: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted),
         filled: true,
-        fillColor: const Color(0xFF374151),
+        fillColor: AppTheme.surface2,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
       ),
       validator: (v) {
@@ -120,15 +122,15 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       controller: c,
       obscureText: _obscure,
-      style: const TextStyle(color: Colors.white),
+      style: context.texts.bodyMedium?.copyWith(color: Colors.white),
       decoration: InputDecoration(
         filled: true,
-        fillColor: const Color(0xFF374151),
+        fillColor: AppTheme.surface2,
         hintText: '********',
-        hintStyle: const TextStyle(color: Color(0xFF6b7280)),
+        hintStyle: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
         suffixIcon: IconButton(
-          icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility, color: const Color(0xFF6b7280)),
+          icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility, color: AppTheme.textMuted),
           onPressed: () => setState(() => _obscure = !_obscure),
         ),
       ),

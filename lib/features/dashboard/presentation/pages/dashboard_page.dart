@@ -27,6 +27,7 @@ import 'package:jfit/features/dashboard/presentation/widgets/recent_workouts.dar
 import 'package:jfit/core/utils/locale_manager.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/extensions/context_extensions.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -102,7 +103,7 @@ class DashboardPage extends StatelessWidget {
 
     final isWide = MediaQuery.of(context).size.width > 700;
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: context.colors.background,
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -127,9 +128,9 @@ class DashboardPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            Text(l10n?.workoutDashboard ?? 'Workout Dashboard', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text(l10n?.workoutDashboard ?? 'Workout Dashboard', style: context.texts.headlineLarge?.copyWith(fontSize: 36, color: Colors.white)),
             SizedBox(height: 6),
-            Text(l10n?.currentDate ?? 'Tuesday, June 24th, 2025', style: TextStyle(fontSize: 18, color: Colors.grey[400])),
+            Text(l10n?.currentDate ?? 'Tuesday, June 24th, 2025', style: context.texts.bodyMedium?.copyWith(fontSize: 18, color: AppTheme.textSub)),
             SizedBox(height: 24),
             isWide
                 ? Row(
