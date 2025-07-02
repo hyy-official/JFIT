@@ -54,7 +54,8 @@ class AppTheme {
           onSurface: textSub,
         ),
         textTheme: const TextTheme(
-          headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+          headlineLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          //headlineLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           titleMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
           bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: textSub),
           bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: textSub),

@@ -218,7 +218,8 @@ class _DashboardHeader extends StatelessWidget {
         // 현재 월 텍스트
         Text(
           monthText,
-          style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.normal, fontSize: 20, color: Colors.white),
+          
         ),
 
         // 다음 달 버튼
