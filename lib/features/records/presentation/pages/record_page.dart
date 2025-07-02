@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -49,10 +50,10 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
                     selectedDate: _selectedDate,
                     onDateSelected: (d) => setState(() => _selectedDate = d),
                     tabController: _tabController,
-                    onPrevMonth: () => setState(() => _selectedDate = _selectedDate.subtract(Duration(days: 30))),
-                    onNextMonth: () => setState(() => _selectedDate = _selectedDate.add(Duration(days: 30))),
-                    onPrevWeek: () => setState(() => _selectedDate = _selectedDate.subtract(Duration(days: 7))),
-                    onNextWeek: () => setState(() => _selectedDate = _selectedDate.add(Duration(days: 7))),
+                    onPrevMonth: () => setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30))),
+                    onNextMonth: () => setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30))),
+                    onPrevWeek: () => setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7))),
+                    onNextWeek: () => setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7))),
                   ),
                 ),
                 // 데스크톱 전용 사이드 패널
@@ -201,12 +202,6 @@ class _DashboardHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // 햄버거 메뉴 (옵션)
-        IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          splashRadius: 20,
-          onPressed: onMenuTap ?? () {},
-        ),
-        const SizedBox(width: 8),
 
         // 이전 달 버튼
         IconButton(
@@ -234,8 +229,18 @@ class _DashboardHeader extends StatelessWidget {
         // 액션 아이콘들
         IconButton(
           icon: const Icon(Icons.bar_chart, color: Colors.white),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AnalyticsPage()),
+            );
+          },
           splashRadius: 20,
+        ),
+        IconButton(
+          icon: const Icon(Icons.notifications_none, color: Colors.white),
+          splashRadius: 20,
+          onPressed: () {},
         ),
         IconButton(
           icon: const Icon(Icons.list, color: Colors.white),
