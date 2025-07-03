@@ -1,3 +1,4 @@
+/*
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:jfit/core/database/database_helper.dart';
@@ -195,7 +196,7 @@ class SyncService {
 
   /// 백그라운드 동기화 (주기적 실행)
   Future<void> backgroundSync({String? userId}) async {
-    if (_isSyncing) return;
+    if (_isSyncing) return false;
     
     // 마지막 동기화로부터 일정 시간이 지났을 때만 실행
     if (_lastSyncTime != null) {
@@ -269,3 +270,4 @@ enum ConflictResolution {
   useServer,  // 서버 데이터 사용
   merge,      // 데이터 병합
 } 
+*/

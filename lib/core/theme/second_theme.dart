@@ -23,7 +23,7 @@ class SecondTheme {
   static const Color borderHover = Color(0xFF404040);
 
   // Glass Morphism 카드 배경 (opacity 는 사용할 때 지정)
-  static Color glassCardBG = bgTertiary.withOpacity(0.70);
+  static Color glassCardBG = bgTertiary.withAlpha((255 * 0.70).round());
 
   // Accent Gradient (좌→우)
   static const LinearGradient accentGradient = LinearGradient(

@@ -3,9 +3,15 @@
 /// 모바일/데스크톱 레이아웃을 모두 지원하는 반응형 페이지의 스켈레톤 구현입니다.
 /// 추후 데이터 바인딩 및 상세 위젯 기능을 채워주세요.
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
 import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
+import 'package:jfit/features/records/bloc/record_bloc.dart';
+import 'package:jfit/features/records/bloc/record_event.dart';
+import 'package:jfit/features/records/bloc/record_state.dart';
+import 'package:jfit/features/records/data/models/meal_record_model.dart';
+import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -24,6 +30,9 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
     super.initState();
     _selectedDate = _today;
     _tabController = TabController(length: 3, vsync: this);
+    // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
+    context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate)); // 임시 사용자 ID 1
+    context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate)); // 임시 사용자 ID 1
   }
 
   @override
@@ -37,53 +46,82 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isDesktop = constraints.maxWidth >= 700;
-        return Scaffold(
-          backgroundColor: context.colors.background,
-          body: SafeArea(
-            child: Row(
-              children: [
-                // 메인 콘텐츠 영역
-                Expanded(
-                  flex: 3,
-                  child: _MainContent(
-                    today: _today,
-                    selectedDate: _selectedDate,
-                    onDateSelected: (d) => setState(() => _selectedDate = d),
-                    tabController: _tabController,
-                    onPrevMonth: () => setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30))),
-                    onNextMonth: () => setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30))),
-                    onPrevWeek: () => setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7))),
-                    onNextWeek: () => setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7))),
-                  ),
+        return BlocBuilder<RecordBloc, RecordState>(
+          builder: (context, state) {
+            List<MealRecord> mealRecords = [];
+            UserDailySummary? dailySummary;
+
+            if (state is RecordLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is MealRecordsLoaded) {
+              mealRecords = state.mealRecords;
+            } else if (state is DailySummaryLoaded) {
+              dailySummary = state.dailySummary;
+            } else if (state is RecordError) {
+              return Center(child: Text('Error: ${state.message}', style: const TextStyle(color: Colors.white)));
+            }
+
+            return Scaffold(
+              backgroundColor: context.colors.background,
+              body: SafeArea(
+                child: Row(
+                  children: [
+                    // 메인 콘텐츠 영역
+                    Expanded(
+                      flex: 3,
+                      child: _MainContent(
+                        today: _today,
+                        selectedDate: _selectedDate,
+                        onDateSelected: (d) {
+                          setState(() => _selectedDate = d);
+                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
+                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
+                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
+                        },
+                        tabController: _tabController,
+                        onPrevMonth: () {
+                          setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30)));
+                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
+                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
+                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
+                        },
+                        onNextMonth: () {
+                          setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30)));
+                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
+                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
+                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
+                        },
+                        onPrevWeek: () {
+                          setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7)));
+                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
+                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
+                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
+                        },
+                        onNextWeek: () {
+                          setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7)));
+                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
+                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
+                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
+                        },
+                        mealRecords: mealRecords,
+                      ),
+                    ),
+                    // 데스크톱 전용 사이드 패널
+                    if (isDesktop) ...[
+                      const VerticalDivider(width: 1, color: Color(0xFF1A1A1A)),
+                      Expanded(
+                        flex: 2,
+                        child: _SidePanel(selectedDate: _selectedDate, dailySummary: dailySummary),
+                      ),
+                    ],
+                  ],
                 ),
-                // 데스크톱 전용 사이드 패널
-                if (isDesktop) ...[
-                  const VerticalDivider(width: 1, color: Color(0xFF1A1A1A)),
-                  Expanded(
-                    flex: 2,
-                    child: _SidePanel(selectedDate: _selectedDate),
-                  ),
-                ],
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
-  }
-
-  double _horizontalPadding(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    if (w >= 1024) return 24;
-    if (w >= 768) return 20;
-    return 16;
-  }
-
-  double _verticalSpacing(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    if (w >= 1024) return 24;
-    if (w >= 768) return 20;
-    return 16;
   }
 }
 
@@ -97,6 +135,7 @@ class _MainContent extends StatelessWidget {
   final VoidCallback onNextMonth;
   final VoidCallback onPrevWeek;
   final VoidCallback onNextWeek;
+  final List<MealRecord> mealRecords;
 
   const _MainContent({
     required this.today,
@@ -107,6 +146,7 @@ class _MainContent extends StatelessWidget {
     required this.onNextMonth,
     required this.onPrevWeek,
     required this.onNextWeek,
+    required this.mealRecords,
   });
 
   @override
@@ -185,13 +225,10 @@ class _DashboardHeader extends StatelessWidget {
   final DateTime date;
   final VoidCallback onPrevMonth;
   final VoidCallback onNextMonth;
-  final VoidCallback? onMenuTap;
-
   const _DashboardHeader({
     required this.date,
     required this.onPrevMonth,
     required this.onNextMonth,
-    this.onMenuTap,
   });
 
   @override
@@ -317,7 +354,7 @@ class _WeeklyCalendar extends StatelessWidget {
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: AppTheme.accent1.withOpacity(0.4),
+                              color: AppTheme.accent1.withAlpha((255 * 0.4).round()),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -631,7 +668,8 @@ class _QuickCardState extends State<_QuickCard> {
 /// 우측 사이드 패널 (데스크톱 전용)
 class _SidePanel extends StatelessWidget {
   final DateTime selectedDate;
-  const _SidePanel({required this.selectedDate});
+  final UserDailySummary? dailySummary;
+  const _SidePanel({required this.selectedDate, this.dailySummary});
 
   @override
   Widget build(BuildContext context) {
@@ -647,8 +685,8 @@ class _SidePanel extends StatelessWidget {
               style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _SummaryTile(label: '운동', value: '0분'),
-            _SummaryTile(label: '칼로리', value: '0kcal'),
+            _SummaryTile(label: '운동', value: '${dailySummary?.totalWorkoutDurationMinutes ?? 0}분'),
+            _SummaryTile(label: '칼로리', value: '${dailySummary?.totalCaloriesConsumed ?? 0}kcal'),
             const SizedBox(height: 24),
             const _PremiumCard(),
           ],
@@ -808,9 +846,9 @@ class _CustomTabBar extends StatelessWidget {
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: AppTheme.surface1.withOpacity(0.3),
+        color: AppTheme.surface1.withAlpha((255 * 0.3).round()),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppTheme.surface2.withOpacity(0.5), width: 1),
+        border: Border.all(color: AppTheme.surface2.withAlpha((255 * 0.5).round()), width: 1),
       ),
       child: TabBar(
         controller: controller,
@@ -819,7 +857,7 @@ class _CustomTabBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.accent1.withOpacity(0.3),
+              color: AppTheme.accent1.withAlpha((255 * 0.3).round()),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

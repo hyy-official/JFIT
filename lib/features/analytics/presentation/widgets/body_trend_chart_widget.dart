@@ -133,7 +133,7 @@ class BodyTrendChartWidget extends StatelessWidget {
               show: true,
               gradient: LinearGradient(
                 colors: AnalyticsChartTheme.scoreBarGradient.colors
-                    .map((color) => color.withOpacity(0.3))
+                    .map((color) => color.withAlpha((255 * 0.3).round()))
                     .toList(),
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,

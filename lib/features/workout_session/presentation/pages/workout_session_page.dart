@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/database/database_helper.dart';
 import 'package:jfit/features/workout_session/presentation/widgets/exercise_card.dart';
-import 'package:jfit/features/workout_session/presentation/widgets/workout_summary.dart';
-import 'package:jfit/features/workout_session/presentation/widgets/add_exercise_modal.dart';
+// import 'package:jfit/features/workout_session/presentation/widgets/add_exercise_modal.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import 'package:jfit/core/navigation/main_navigation_page.dart';
 import 'package:jfit/core/widgets/responsive_scaffold.dart';
@@ -245,41 +243,6 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
     } catch (e) {
       
     }
-  }
-
-  void _addExercise(String exerciseName) async {
-    
-    // 이전 기록을 찾아 타겟 설정
-    final exerciseId = await db.getExerciseIdByName(exerciseName);
-    Map<String, dynamic>? lastLog;
-    if (exerciseId != null) {
-      lastLog = await db.getLastWorkoutLogByExerciseId(exerciseId);
-    }
-    double? targetWeight;
-    int? targetReps;
-    if (lastLog != null) {
-      targetWeight = (lastLog['weight'] is num) ? (lastLog['weight'] as num).toDouble() : null;
-      targetReps = lastLog['reps'] is int ? lastLog['reps'] as int : null;
-    }
-    
-    setState(() {
-      exercises.add({
-        'exercise_name': exerciseName,
-        'sets': [
-          {
-            'weight': 0,
-            'reps': 0,
-            'completed': false,
-            'target_weight': targetWeight ?? 0,
-            'target_reps': targetReps?.toString() ?? '(기록 없음)',
-          }
-        ],
-      });
-      
-    });
-    
-    
-    _saveExercisesToSession();
   }
 
   void _removeExercise(int exerciseIndex) {
@@ -645,9 +608,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final isDesktop = constraints.maxWidth >= 1024;
                     
-                    if (isDesktop) {
+                    if (constraints.maxWidth >= 1024) {
                       // 데스크톱 레이아웃: 헤더 카드 + 사이드바를 한 컬럼으로 묶기
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -686,28 +648,25 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       // FloatingActionButton (모바일에서만 표시)
       floatingActionButton: LayoutBuilder(
         builder: (context, constraints) {
-          final isDesktop = constraints.maxWidth >= 1024;
-          if (isDesktop) return const SizedBox.shrink();
+          if (constraints.maxWidth >= 1024) return const SizedBox.shrink();
           
           return FloatingActionButton(
             onPressed: () async {
-              
-              final result = await showDialog(
-                context: context,
-                barrierColor: Colors.black.withOpacity(0.5),
-                builder: (context) {
-              
-                  return AddExerciseModal(
-                    onAdd: (exerciseName) {
-                      _addExercise(exerciseName);
-                      Navigator.of(context).pop();
-                    },
-                    onCancel: () {
-                      Navigator.of(context).pop();
-                    },
-                  );
-                },
-              );
+              // final result = await showDialog(
+              //   context: context,
+              //   barrierColor: Colors.black.withOpacity(0.5),
+              //   builder: (context) {
+              //     return AddExerciseModal(
+              //       onAdd: (exerciseName) {
+              //         _addExercise(exerciseName);
+              //         Navigator.of(context).pop();
+              //       },
+              //       onCancel: () {
+              //         Navigator.of(context).pop();
+              //       },
+              //     );
+              //   },
+              // );
             },
             backgroundColor: context.colors.primary,
             child: const Icon(Icons.add, color: Colors.white),
@@ -843,23 +802,21 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       height: 120,
       child: ElevatedButton(
         onPressed: () async {
-          
-          final result = await showDialog(
-            context: context,
-            barrierColor: Colors.black.withOpacity(0.5),
-                             builder: (context) {
-                   
-                   return AddExerciseModal(
-                     onAdd: (exerciseName) {
-                       _addExercise(exerciseName);
-                       Navigator.of(context).pop();
-                     },
-                     onCancel: () {
-                       Navigator.of(context).pop();
-                     },
-                   );
-                 },
-          );
+          // final result = await showDialog(
+          //   context: context,
+          //   barrierColor: Colors.black.withOpacity(0.5),
+          //   builder: (context) {
+          //     return AddExerciseModal(
+          //       onAdd: (exerciseName) {
+          //         _addExercise(exerciseName);
+          //         Navigator.of(context).pop();
+          //       },
+          //       onCancel: () {
+          //         Navigator.of(context).pop();
+          //       },
+          //     );
+          //   },
+          // );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTheme.secondaryBackground2,

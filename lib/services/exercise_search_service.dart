@@ -1,3 +1,4 @@
+/*
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
@@ -348,7 +349,11 @@ class ExerciseSearchService {
     for (int i = 0; i < _difficultyKo.length; i++) {
       final ko = _difficultyKo[i];
       final en = _difficultyEn[i];
-      options.add(FilterOption(ko: ko, en: en, count: counts[ko] ?? 0));
+      options.add(FilterOption(
+        ko: ko,
+        en: en,
+        count: counts[ko] ?? 0,
+      ));
     }
     return options;
   }
@@ -361,7 +366,7 @@ class ExerciseSearchService {
       final ko = _exerciseTypeKo[i];
       final en = _exerciseTypeEn[i];
       options.add(FilterOption(ko: ko, en: en, count: counts[ko] ?? 0));
-    }
+    })
     return options;
   }
 
@@ -399,7 +404,8 @@ class ExerciseSearchService {
       final ko = _muscleGroupKo[i];
       final en = _muscleGroupEn[i];
       options.add(FilterOption(ko: ko, en: en, count: counts[ko] ?? 0));
-    }
+    })
     return options;
   }
 } 
+*/

@@ -89,7 +89,7 @@ class DietScoreChartWidget extends StatelessWidget {
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               final dateLabel = data[group.x.toInt()].dateLabel;
               return BarTooltipItem(
-                '$dateLabel\n${rod.toY?.toStringAsFixed(1)}점',
+                '$dateLabel\n' + '${rod.toY.toStringAsFixed(1)}점',
                 AnalyticsChartTheme.tooltipTextStyle,
               );
             },

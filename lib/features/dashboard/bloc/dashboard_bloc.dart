@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/dashboard/bloc/dashboard_event.dart';
 import 'package:jfit/features/dashboard/bloc/dashboard_state.dart';
 import 'package:jfit/features/dashboard/data/repositories/dashboard_repository.dart';
-import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
+
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final DashboardRepository _dashboardRepository;

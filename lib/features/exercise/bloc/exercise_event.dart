@@ -4,7 +4,7 @@ abstract class ExerciseEvent extends Equatable {
   const ExerciseEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadExerciseRecords extends ExerciseEvent {

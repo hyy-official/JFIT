@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/services/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jfit/features/auth/bloc/auth_bloc.dart';
+
 import 'package:jfit/features/auth/presentation/pages/login_page.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
@@ -18,7 +20,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
   bool _obscure = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -31,15 +32,34 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.background,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(32),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: _buildForm(context),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthAuthenticated) {
+          // 회원가입 성공 시 로그인 페이지로 이동
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginPage()),
+              (route) => false,
+            );
+          }
+        } else if (state is AuthError) {
+          // 에러 발생 시 스낵바 표시
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: context.colors.background,
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(32),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 480),
+                child: _buildForm(context),
+              ),
             ),
           ),
         ),
@@ -75,16 +95,32 @@ class _RegisterPageState extends State<RegisterPage> {
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _isLoading ? null : _onRegister,
-              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accent1, padding: const EdgeInsets.symmetric(vertical: 16)),
-              child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('Sign Up'),
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                final isLoading = state is AuthLoading;
+                return ElevatedButton(
+                  onPressed: isLoading ? null : () {
+                    if (!_formKey.currentState!.validate()) return;
+                    if (_passwordController.text != _confirmController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
+                      return;
+                    }
+                    context.read<AuthBloc>().add(AuthRegisterRequested(
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text.trim(),
+                          username: _nameController.text.trim(), // Full Name을 username으로 사용
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accent1, padding: const EdgeInsets.symmetric(vertical: 16)),
+                  child: isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('Sign Up'),
+                );
+              },
             ),
           ),
           const SizedBox(height: 16),
           Center(
             child: TextButton(
-              onPressed: _isLoading ? null : () {
+              onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (_) => const LoginPage()),
@@ -140,31 +176,5 @@ class _RegisterPageState extends State<RegisterPage> {
         return null;
       },
     );
-  }
-
-  Future<void> _onRegister() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_passwordController.text != _confirmController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
-      return;
-    }
-    setState(() => _isLoading = true);
-    try {
-      await AuthService().register(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-        name: _nameController.text.trim(),
-      );
-      if (!mounted) return;
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-        (route) => false,
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
   }
 } 

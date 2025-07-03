@@ -1,96 +1,101 @@
 import 'package:jfit/features/records/data/models/meal_record_model.dart';
 import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RecordRepository {
-  // 더미 데이터 (실제로는 Supabase와 통신)
-  final List<MealRecord> _mockMealRecords = [
-    MealRecord(
-      id: 'meal1',
-      userId: 1,
-      mealDate: DateTime(2024, 7, 3),
-      mealType: 'breakfast',
-      totalCalories: 500.0,
-      totalProtein: 30.0,
-      totalCarbs: 50.0,
-      totalFat: 20.0,
-      notes: '오트밀과 과일',
-    ),
-    MealRecord(
-      id: 'meal2',
-      userId: 1,
-      mealDate: DateTime(2024, 7, 3),
-      mealType: 'lunch',
-      totalCalories: 700.0,
-      totalProtein: 40.0,
-      totalCarbs: 70.0,
-      totalFat: 30.0,
-      notes: '닭가슴살 샐러드',
-    ),
-  ];
+  final SupabaseClient _supabaseClient;
 
-  final List<UserDailySummary> _mockDailySummaries = [
-    UserDailySummary(
-      id: 'summary1',
-      userId: 1,
-      summaryDate: DateTime(2024, 7, 3),
-      totalWorkoutDurationMinutes: 60,
-      totalCaloriesBurned: 400,
-      totalCaloriesConsumed: 1200.0,
-      totalProteinConsumed: 70.0,
-      totalCarbsConsumed: 120.0,
-      totalFatConsumed: 50.0,
-    ),
-  ];
+  RecordRepository() : _supabaseClient = Supabase.instance.client;
+
 
   Future<List<MealRecord>> getMealRecords(int userId, {DateTime? date}) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return _mockMealRecords.where((record) {
-      bool matchesUser = record.userId == userId;
-      bool matchesDate = date == null ||
-          (record.mealDate.year == date.year &&
-              record.mealDate.month == date.month &&
-              record.mealDate.day == date.day);
-      return matchesUser && matchesDate;
-    }).toList();
+    try {
+      var query = _supabaseClient
+          .from('meal_records')
+          .select('*, meal_items!inner(*, foods!inner(*))')
+          .eq('user_id', userId);
+
+      if (date != null) {
+        query = query.eq('meal_date', date.toIso8601String().split('T')[0]);
+      }
+
+      final response = await query.order('meal_date', ascending: false);
+
+      return (response as List).map((json) => MealRecord.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load meal records: ${e.toString()}');
+    }
   }
 
   Future<MealRecord> addMealRecord(MealRecord record) async {
-    await Future.delayed(const Duration(seconds: 1));
-    // TODO: Supabase에 식사 기록 추가 로직 구현
-    // _mockMealRecords.add(record); // 실제 DB에서는 ID가 자동 생성됨
-    return record;
+    try {
+      final response = await _supabaseClient.from('meal_records').insert({
+        'user_id': record.userId,
+        'meal_date': record.mealDate.toIso8601String().split('T')[0],
+        'meal_type': record.mealType,
+        'total_calories': record.totalCalories,
+        'total_protein': record.totalProtein,
+        'total_carbs': record.totalCarbs,
+        'total_fat': record.totalFat,
+        'notes': record.notes,
+        'photo_url': record.photoUrl,
+      }).select().single();
+
+      // TODO: meal_items 및 foods 테이블에 대한 추가 로직 구현 필요
+      // (예: 기존 음식 조회, 새 음식 추가, 식사 항목 추가)
+
+      return MealRecord.fromJson(response);
+    } catch (e) {
+      throw Exception('Failed to add meal record: ${e.toString()}');
+    }
   }
 
   Future<MealRecord> updateMealRecord(MealRecord record) async {
-    await Future.delayed(const Duration(seconds: 1));
-    // TODO: Supabase에서 식사 기록 업데이트 로직 구현
-    final index = _mockMealRecords.indexWhere((r) => r.id == record.id);
-    if (index != -1) {
-      _mockMealRecords[index] = record;
+    try {
+      final response = await _supabaseClient.from('meal_records').update({
+        'meal_date': record.mealDate.toIso8601String().split('T')[0],
+        'meal_type': record.mealType,
+        'total_calories': record.totalCalories,
+        'total_protein': record.totalProtein,
+        'total_carbs': record.totalCarbs,
+        'total_fat': record.totalFat,
+        'notes': record.notes,
+        'photo_url': record.photoUrl,
+      }).eq('id', record.id).select().single();
+
+      // TODO: meal_items 업데이트 로직 구현 필요
+
+      return MealRecord.fromJson(response);
+    } catch (e) {
+      throw Exception('Failed to update meal record: ${e.toString()}');
     }
-    return record;
   }
 
   Future<void> deleteMealRecord(String recordId) async {
-    await Future.delayed(const Duration(seconds: 1));
-    // TODO: Supabase에서 식사 기록 삭제 로직 구현
-    _mockMealRecords.removeWhere((record) => record.id == recordId);
+    try {
+      await _supabaseClient.from('meal_records').delete().eq('id', recordId);
+      // TODO: meal_items도 함께 삭제되는지 확인 (CASCADE 설정에 따라 다름)
+    } catch (e) {
+      throw Exception('Failed to delete meal record: ${e.toString()}');
+    }
   }
 
   Future<UserDailySummary?> getDailySummary(int userId, DateTime date) async {
-    await Future.delayed(const Duration(seconds: 1));
-    // TODO: Supabase에서 userId와 date에 해당하는 일일 요약 조회 로직 구현
-    return _mockDailySummaries.firstWhere(
-      (summary) =>
-          summary.userId == userId &&
-          summary.summaryDate.year == date.year &&
-          summary.summaryDate.month == date.month &&
-          summary.summaryDate.day == date.day,
-      orElse: () => UserDailySummary(
-        id: 'new_summary',
-        userId: userId,
-        summaryDate: date,
-      ),
-    );
+    try {
+      final response = await _supabaseClient
+          .from('user_daily_summaries')
+          .select()
+          .eq('user_id', userId)
+          .eq('summary_date', date.toIso8601String().split('T')[0])
+          .single();
+
+      return UserDailySummary.fromJson(response);
+    } catch (e) {
+      // 데이터가 없으면 예외가 발생할 수 있으므로 null 반환
+      if (e is PostgrestException && e.message.contains('0 rows')) {
+        return null;
+      }
+      throw Exception('Failed to load daily summary: ${e.toString()}');
+    }
   }
 }

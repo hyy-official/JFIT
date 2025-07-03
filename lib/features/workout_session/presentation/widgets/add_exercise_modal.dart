@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/models/exercise.dart';
@@ -480,7 +481,7 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   ),
                 ),
-              ),
+              },
             );
           }).toList(),
         ),
@@ -775,3 +776,4 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
     }
   }
 } 
+*/

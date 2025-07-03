@@ -126,9 +126,9 @@ class _CustomTabBar extends StatelessWidget {
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: AppTheme.surface1.withOpacity(0.3),
+        color: AppTheme.surface1.withAlpha((255 * 0.3).round()),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppTheme.surface2.withOpacity(0.5), width: 1),
+        border: Border.all(color: AppTheme.surface2.withAlpha((255 * 0.5).round()), width: 1),
       ),
       child: TabBar(
         controller: controller,
@@ -137,7 +137,7 @@ class _CustomTabBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.accent1.withOpacity(0.3),
+              color: AppTheme.accent1.withAlpha((255 * 0.3).round()),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -156,7 +156,7 @@ class _CustomTabBar extends StatelessWidget {
           fontSize: 14,
         ),
         dividerColor: Colors.transparent,
-        overlayColor: MaterialStateProperty.all(Colors.transparent),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
         splashFactory: NoSplash.splashFactory,
         tabAlignment: TabAlignment.fill,
         tabs: tabs.map((text) => Tab(text: text)).toList(),

@@ -1,3 +1,4 @@
+/*
 import 'package:jfit/core/database/database_helper.dart';
 import 'package:jfit/core/services/api_service.dart';
 import 'package:jfit/core/services/auth_service.dart';
@@ -425,3 +426,4 @@ class EnhancedSyncService {
     _notifyStatus('동기화가 취소되었습니다.');
   }
 } 
+*/

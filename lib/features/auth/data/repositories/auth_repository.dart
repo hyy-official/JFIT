@@ -1,66 +1,75 @@
-import 'package:jfit/features/auth/data/models/auth_user.dart';
+import 'package:jfit/features/auth/data/models/auth_user.dart' as jfit_auth_user;
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase_lib;
 
 class AuthRepository {
-  // 더미 사용자 데이터 (실제로는 DB에서 가져옴)
-  final List<AuthUser> _users = [];
+  final supabase_lib.SupabaseClient _supabaseClient;
 
-  AuthRepository();
+  AuthRepository() : _supabaseClient = supabase_lib.Supabase.instance.client;
 
-  Future<AuthUser> login(String email, String password) async {
-    await Future.delayed(const Duration(seconds: 1)); // 네트워크 지연 시뮬레이션
-
-    // TODO: 실제 백엔드 API 호출 및 비밀번호 해시 검증 로직 구현
-    // 현재는 더미 데이터로 간단히 확인
+  Future<jfit_auth_user.AuthUser> login(String email, String password) async {
+    // TODO: 실제 프로덕션 환경에서는 비밀번호 검증을 안전한 백엔드 API를 통해 수행해야 합니다.
+    // 클라이언트에서 직접 비밀번호를 해싱하거나 검증하는 것은 보안상 매우 위험합니다.
     try {
-      final user = _users.firstWhere(
-        (u) => u.email == email && _verifyPassword(password, u.id), // 비밀번호 검증 로직 필요
+      final response = await _supabaseClient
+          .from('users')
+          .select('id, email, username, full_name, hashed_password')
+          .eq('email', email)
+          .single();
+
+      final storedHashedPassword = response['hashed_password'] as String;
+      // TODO: 여기서는 더미로 비밀번호가 일치하는지 확인합니다.
+      // 실제로는 백엔드에서 plain password와 storedHashedPassword를 비교해야 합니다.
+      if (password != storedHashedPassword) { // 이 부분은 백엔드에서 처리되어야 함
+        throw Exception('Invalid email or password');
+      }
+
+      return jfit_auth_user.AuthUser(
+        id: response['id'] as int,
+        email: response['email'] as String,
+        username: response['username'] as String,
+        fullName: response['full_name'] as String?,
       );
-      // 로그인 성공 시 세션 토큰 저장 등 추가 로직
-      return user;
     } catch (e) {
-      throw Exception('Invalid email or password');
+      throw Exception('Login failed: ${e.toString()}');
     }
   }
 
-  Future<AuthUser> register(String email, String password, String username) async {
-    await Future.delayed(const Duration(seconds: 1)); // 네트워크 지연 시뮬레이션
+  Future<jfit_auth_user.AuthUser> register(String email, String password, String username) async {
+    // TODO: 실제 프로덕션 환경에서는 비밀번호 해싱을 안전한 백엔드 API를 통해 수행해야 합니다.
+    // 클라이언트에서 직접 비밀번호를 해싱하는 것은 보안상 매우 위험합니다.
+    try {
+      // 비밀번호를 해싱하여 저장 (여기서는 더미로 평문 저장)
+      final hashedPassword = password; // 실제로는 bcrypt 등으로 해싱된 값
 
-    // TODO: 실제 백엔드 API 호출 및 비밀번호 해싱 후 DB 저장 로직 구현
-    // 현재는 더미 데이터로 간단히 확인
-    if (_users.any((u) => u.email == email || u.username == username)) {
-      throw Exception('Email or username already in use');
+      final response = await _supabaseClient.from('users').insert({
+        'email': email,
+        'username': username,
+        'hashed_password': hashedPassword,
+        'is_active': true,
+        'is_verified': false, // 이메일 인증 필요 시 false
+      }).select().single();
+
+      return jfit_auth_user.AuthUser(
+        id: response['id'] as int,
+        email: response['email'] as String,
+        username: response['username'] as String,
+        fullName: response['full_name'] as String?,
+      );
+    } catch (e) {
+      throw Exception('Registration failed: ${e.toString()}');
     }
-
-    final newUserId = _users.length + 1;
-    final newUser = AuthUser(
-      id: newUserId,
-      email: email,
-      username: username,
-      // 실제로는 여기서 비밀번호를 해싱하여 저장해야 함
-    );
-    _users.add(newUser);
-    // 회원가입 성공 시 자동 로그인 또는 추가 로직
-    return newUser;
   }
 
   Future<void> logout() async {
-    await Future.delayed(const Duration(seconds: 1)); // 네트워크 지연 시뮬레이션
-    // TODO: 세션 토큰 삭제 등 로그아웃 로직 구현
+    // TODO: 세션 관리 로직 구현 (예: 로컬 저장소에서 토큰 삭제)
+    // 자체 인증 시스템이므로 Supabase Auth의 signOut은 사용하지 않습니다.
+    print('User logged out (dummy)');
   }
 
-  Future<AuthUser?> getCurrentUser() async {
-    await Future.delayed(const Duration(milliseconds: 500)); // 네트워크 지연 시뮬레이션
+  Future<jfit_auth_user.AuthUser?> getCurrentUser() async {
     // TODO: 저장된 세션 토큰을 기반으로 현재 사용자 정보 가져오는 로직 구현
+    // 예를 들어, 로컬 저장소에 저장된 사용자 ID나 토큰을 확인하여 DB에서 사용자 정보를 조회합니다.
     // 현재는 항상 null 반환 (로그인되지 않은 상태)
     return null;
-  }
-
-  // 더미 비밀번호 검증 (실제로는 해싱된 비밀번호와 비교)
-  bool _verifyPassword(String plainPassword, int userId) {
-    // 이 부분은 실제 백엔드에서 해싱된 비밀번호와 비교하는 로직이 되어야 합니다.
-    // 여기서는 단순히 더미 사용자 ID에 따라 비밀번호를 'password'로 가정합니다.
-    if (userId == 1 && plainPassword == 'password') return true;
-    if (userId == 2 && plainPassword == 'password') return true;
-    return false;
   }
 }

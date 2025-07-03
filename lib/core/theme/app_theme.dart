@@ -1,5 +1,7 @@
+
+
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'second_theme.dart';
 
 class AppTheme {
@@ -49,7 +51,7 @@ class AppTheme {
           primary: accent1,
           secondary: accent2,
           surface: surface1,
-          background: primaryBackground,
+          surfaceContainer: primaryBackground, // background 대신 surfaceContainer 사용
           onPrimary: Colors.white,
           onSurface: textSub,
         ),
@@ -87,7 +89,7 @@ class AppTheme {
           primary: accent1,
           secondary: accent2,
           surface: surface1,
-          background: primaryBackground,
+          surfaceContainer: primaryBackground, // background 대신 surfaceContainer 사용
           onPrimary: Colors.white,
           onSurface: textSub,
         ),

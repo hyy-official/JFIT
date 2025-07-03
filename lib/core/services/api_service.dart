@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:jfit/core/services/auth_service.dart';
 
 class ApiService {
   // 개발·테스트용 로컬 서버 URL
@@ -8,14 +7,14 @@ class ApiService {
   // 실제 프로덕션 배포 시에는 아래와 같이 도메인을 교체하세요.
   // static const String baseUrl = 'https://your-api-domain.com/api';
   
-  final AuthService _authService = AuthService();
+  // final AuthService _authService = AuthService(); // AuthService 제거
 
-  // 인증 헤더 생성
+  // 인증 헤더 생성 (임시로 토큰 로직 제거)
   Future<Map<String, String>> get _headers async {
-    final token = await _authService.getToken();
+    // final token = await _authService.getToken(); // AuthService 제거
     return {
       'Content-Type': 'application/json',
-      if (token != null) 'Authorization': 'Bearer $token',
+      // if (token != null) 'Authorization': 'Bearer $token',
     };
   }
 

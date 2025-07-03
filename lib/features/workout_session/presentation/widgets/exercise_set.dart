@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jfit/core/utils/decimal_text_input_formatter.dart';
 
 class ExerciseSet extends StatefulWidget {
   final Map<String, dynamic> setData;

@@ -46,7 +46,7 @@ class StatsCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: gradientColors),
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [BoxShadow(color: gradientColors.last.withOpacity(0.2), blurRadius: 8, offset: Offset(0, 4))],
+                boxShadow: [BoxShadow(color: gradientColors.last.withAlpha((255 * 0.2).round()), blurRadius: 8, offset: Offset(0, 4))],
               ),
               padding: const EdgeInsets.all(14),
               child: Icon(icon, color: Colors.white, size: 28),

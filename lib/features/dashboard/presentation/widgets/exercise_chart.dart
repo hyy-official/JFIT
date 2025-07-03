@@ -25,7 +25,7 @@ class ExerciseChart extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withOpacity(0.8), AppTheme.workoutIconColor]),
+                    gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withAlpha((255 * 0.8).round()), AppTheme.workoutIconColor]),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(8),
@@ -66,7 +66,7 @@ class ExerciseChart extends StatelessWidget {
                     rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                     topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   ),
-                  barGroups: data.asMap().entries.map((e) => BarChartGroupData(x: e.key, barRods: [BarChartRodData(toY: e.value['duration'].toDouble(), gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withOpacity(0.8), AppTheme.workoutIconColor]), width: 18, borderRadius: BorderRadius.circular(6))])).toList(),
+                  barGroups: data.asMap().entries.map((e) => BarChartGroupData(x: e.key, barRods: [BarChartRodData(toY: e.value['duration'].toDouble(), gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withAlpha((255 * 0.8).round()), AppTheme.workoutIconColor]), width: 18, borderRadius: BorderRadius.circular(6))])).toList(),
                 ),
               ),
             ),

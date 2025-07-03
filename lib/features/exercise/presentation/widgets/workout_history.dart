@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/features/exercise/data/models/exercise_record.dart';
 
 class WorkoutHistory extends StatelessWidget {
-  final List<Map<String, dynamic>> exercises;
+  final List<ExerciseRecord> exercises;
 
   const WorkoutHistory({
     super.key,
@@ -14,12 +15,10 @@ class WorkoutHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    // 더미 - 날짜순으로 정렬
-    final sortedExercises = List<Map<String, dynamic>>.from(exercises);
+    // 날짜순으로 정렬
+    final sortedExercises = List<ExerciseRecord>.from(exercises);
     sortedExercises.sort((a, b) {
-      final dateA = DateTime.parse(a['exerciseDate'] as String);
-      final dateB = DateTime.parse(b['exerciseDate'] as String);
-      return dateB.compareTo(dateA);
+      return b.exerciseDate.compareTo(a.exerciseDate);
     });
 
     return Container(
@@ -28,7 +27,7 @@ class WorkoutHistory extends StatelessWidget {
         color: AppTheme.cardBackgroundColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.grey[700]!.withOpacity(0.3),
+          color: Colors.grey[700]!.withAlpha((255 * 0.3).round()),
           width: 1,
         ),
       ),
@@ -40,7 +39,7 @@ class WorkoutHistory extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppTheme.workoutIconColor.withOpacity(0.15),
+                  color: AppTheme.workoutIconColor.withAlpha((255 * 0.15).round()),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -79,12 +78,12 @@ class WorkoutHistory extends StatelessWidget {
     );
   }
 
-  Widget _buildWorkoutCard(AppLocalizations? l10n, Map<String, dynamic> exercise) {
-    final exerciseName = _getExerciseName(l10n, exercise['exerciseName'] as String);
-    final exerciseType = _getExerciseType(l10n, exercise['exerciseType'] as String);
-    final date = DateTime.parse(exercise['exerciseDate'] as String);
-    final duration = exercise['duration'] as int;
-    final calories = exercise['caloriesBurned'] as int;
+  Widget _buildWorkoutCard(AppLocalizations? l10n, ExerciseRecord exercise) {
+    final exerciseName = _getExerciseName(l10n, exercise.exerciseName);
+    final exerciseType = _getExerciseType(l10n, exercise.exerciseType);
+    final date = exercise.exerciseDate;
+    final duration = exercise.durationMinutes;
+    final calories = exercise.caloriesBurned;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -92,7 +91,7 @@ class WorkoutHistory extends StatelessWidget {
         color: AppTheme.cardBackgroundColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.grey[600]!.withOpacity(0.5),
+          color: Colors.grey[600]!.withAlpha((255 * 0.5).round()),
           width: 1,
         ),
       ),
@@ -116,7 +115,7 @@ class WorkoutHistory extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: _getTypeColor(exercise['exerciseType'] as String),
+                  color: _getTypeColor(exercise.exerciseType),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -151,20 +150,20 @@ class WorkoutHistory extends StatelessWidget {
                   '${calories} cal',
                 ),
               ),
-              if (exercise['weight'] != null && exercise['sets'] != null && exercise['reps'] != null) ...[
+              if (exercise.weightKg != null && exercise.sets != null && exercise.reps != null) ...[
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildMetric(
-                    '${exercise['weight']}kg',
-                    '${exercise['sets']} sets × ${exercise['reps']} reps',
+                    '${exercise.weightKg}kg',
+                    '${exercise.sets} sets × ${exercise.reps} reps',
                   ),
                 ),
               ],
-              if (exercise['distance'] != null) ...[
+              if (exercise.distanceKm != null) ...[
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildMetric(
-                    '${exercise['distance']}km',
+                    '${exercise.distanceKm}km',
                     '',
                   ),
                 ),

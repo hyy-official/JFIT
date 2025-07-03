@@ -93,7 +93,6 @@ class NutritionStatsChartWidget extends StatelessWidget {
         maxVal = data.map((d) => d.fat).reduce(max);
         break;
       case NutritionFilter.all:
-      default:
         maxVal = data.map((d) => d.carbs + d.protein + d.fat).reduce(max);
         break;
     }
@@ -120,7 +119,6 @@ class NutritionStatsChartWidget extends StatelessWidget {
       double rodY = 0;
       List<BarChartRodStackItem> displayStack = [];
       if (filter != NutritionFilter.all) {
-          double currentY = 0;
           if (filter == NutritionFilter.carbs) {
               rodY = item.carbs;
               displayStack.add(BarChartRodStackItem(0, rodY, AnalyticsChartTheme.nutritionDataColors[0]));
@@ -175,7 +173,6 @@ class NutritionStatsChartWidget extends StatelessWidget {
               tooltipText = '지방: ${item.fat.round()}g';
               break;
             case NutritionFilter.all:
-            default:
               tooltipText = '총: ${total.round()}g\n'
                             '탄: ${item.carbs.round()}g\n'
                             '단: ${item.protein.round()}g\n'

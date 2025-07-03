@@ -173,9 +173,7 @@ class ExerciseCard extends StatelessWidget {
           Column(
             children: sets.asMap().entries.map((entry) {
               final setIndex = entry.key;
-              final setData = entry.value;
               final isActive = setIndex == _getActiveSetIndex(sets);
-              
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: ExerciseSet(

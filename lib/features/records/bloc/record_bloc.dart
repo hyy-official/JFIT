@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/records/bloc/record_event.dart';
 import 'package:jfit/features/records/bloc/record_state.dart';
 import 'package:jfit/features/records/data/repositories/record_repository.dart';
-import 'package:jfit/features/records/data/models/meal_record_model.dart';
 import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
 
 class RecordBloc extends Bloc<RecordEvent, RecordState> {

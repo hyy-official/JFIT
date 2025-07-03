@@ -11,10 +11,10 @@ class ResponsiveScaffold extends StatelessWidget {
   const ResponsiveScaffold({
     super.key,
     this.appBar,
-    required this.body,
     this.currentIndex = 0,
     this.onNavTap,
     this.onAiTap,
+    required this.body,
   });
 
   @override

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/features/exercise/data/models/exercise_record.dart';
 
 class ExerciseStats extends StatelessWidget {
-  final List<Map<String, dynamic>> exercises;
+  final List<ExerciseRecord> exercises;
 
   const ExerciseStats({
     super.key,
@@ -15,9 +16,9 @@ class ExerciseStats extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     
-    // 더미 - 이번 주 통계 계산
+    // 이번 주 통계 계산
     final thisWeekExercises = exercises.where((exercise) {
-      final exerciseDate = DateTime.parse(exercise['exerciseDate'] as String);
+      final exerciseDate = exercise.exerciseDate;
       final now = DateTime.now();
       final weekStart = now.subtract(Duration(days: now.weekday - 1));
       return exerciseDate.isAfter(weekStart.subtract(const Duration(days: 1)));
@@ -26,11 +27,11 @@ class ExerciseStats extends StatelessWidget {
     final sessions = thisWeekExercises.length;
     final totalMinutes = thisWeekExercises.fold<int>(
       0, 
-      (sum, exercise) => sum + (exercise['duration'] as int? ?? 0),
+      (sum, exercise) => sum + (exercise.durationMinutes),
     );
     final totalCalories = thisWeekExercises.fold<int>(
       0,
-      (sum, exercise) => sum + (exercise['caloriesBurned'] as int? ?? 0),
+      (sum, exercise) => sum + (exercise.caloriesBurned),
     );
     final avgDuration = sessions > 0 ? totalMinutes / sessions : 0;
 
@@ -142,12 +143,12 @@ class ExerciseStats extends StatelessWidget {
         color: context.colors.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppTheme.surface2.withOpacity(0.3),
+          color: AppTheme.surface2.withAlpha((255 * 0.3).round()),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha((255 * 0.05).round()),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -161,7 +162,7 @@ class ExerciseStats extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withAlpha((255 * 0.15).round()),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(

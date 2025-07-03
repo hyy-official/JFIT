@@ -1,10 +1,10 @@
-import 'package:equatable/equatable.dart';
+part of 'auth_bloc.dart';
 
-abstract class AuthEvent extends Equatable {
+abstract class AuthEvent with EquatableMixin {
   const AuthEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AuthLoginRequested extends AuthEvent {

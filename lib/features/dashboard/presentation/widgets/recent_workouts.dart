@@ -24,7 +24,7 @@ class RecentWorkouts extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withOpacity(0.8), AppTheme.workoutIconColor]),
+                    gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withAlpha((255 * 0.8).round()), AppTheme.workoutIconColor]),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(8),
@@ -76,7 +76,7 @@ class _WorkoutTile extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppTheme.workoutIconColor.withOpacity(0.25),
+                  color: AppTheme.workoutIconColor.withAlpha((255 * 0.25).round()),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(w['type'], style: context.texts.bodySmall?.copyWith(color: AppTheme.workoutIconColor, fontWeight: FontWeight.w600)),

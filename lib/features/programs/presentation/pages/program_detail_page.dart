@@ -231,7 +231,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [AppTheme.fatGraphColor, AppTheme.fatGraphColor.withOpacity(0.8)],
+                            colors: [AppTheme.fatGraphColor, AppTheme.fatGraphColor.withAlpha((255 * 0.8).round())],
                           ),
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -287,9 +287,9 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withAlpha((255 * 0.15).round()),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Text(
         _getLocalizedTag(tag, l10n),

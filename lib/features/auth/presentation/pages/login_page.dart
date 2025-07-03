@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/l10n/app_localizations.dart';
-import 'package:jfit/core/services/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jfit/features/auth/bloc/auth_bloc.dart';
+
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   final bool showSidebar;
@@ -16,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
+  final _fullNameController = TextEditingController(); // Full Name 컨트롤러 추가
   bool _rememberMe = false;
   bool _obscurePassword = true;
   bool _isSignUp = false; // 로그인/회원가입 모드 전환
@@ -25,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _fullNameController.dispose();
     super.dispose();
   }
 
@@ -33,30 +37,45 @@ class _LoginPageState extends State<LoginPage> {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 1024 && widget.showSidebar;
     
-    return Scaffold(
-      backgroundColor: context.colors.background,
-      body: SafeArea(
-        child: Row(
-          children: [
-            // 사이드바 (데스크톱에서만 표시)
-            if (isDesktop) _buildSidebar(),
-            
-            // 메인 콘텐츠
-            Expanded(
-              child: Container(
-                color: AppTheme.secondaryBackground2,
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Container(
-                      constraints: const BoxConstraints(maxWidth: 480),
-                      padding: const EdgeInsets.all(32),
-                      child: _buildAuthForm(),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthAuthenticated) {
+          // 로그인/회원가입 성공 시 메인 페이지로 이동
+          if (mounted && Navigator.canPop(context)) {
+            Navigator.of(context).pop();
+          }
+        } else if (state is AuthError) {
+          // 에러 발생 시 스낵바 표시
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: context.colors.background,
+        body: SafeArea(
+          child: Row(
+            children: [
+              // 사이드바 (데스크톱에서만 표시)
+              if (isDesktop) _buildSidebar(),
+              
+              // 메인 콘텐츠
+              Expanded(
+                child: Container(
+                  color: AppTheme.secondaryBackground2,
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 480),
+                        padding: const EdgeInsets.all(32),
+                        child: _buildAuthForm(),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -305,6 +324,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
+                  controller: _fullNameController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: 'Enter your full name',
@@ -510,25 +530,30 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 width: double.infinity,
                 height: 56,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _handleAuth,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.accent1,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          _isSignUp ? 'Create Account' : 'Sign In',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                child: BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    final isLoading = state is AuthLoading;
+                    return ElevatedButton(
+                      onPressed: isLoading ? null : _handleAuth,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.accent1,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                        elevation: 0,
+                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                              _isSignUp ? 'Create Account' : 'Sign In',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                    );
+                  },
                 ),
               ),
               
@@ -611,44 +636,20 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _handleAuth() async {
+  void _handleAuth() {
     if (_formKey.currentState!.validate()) {
-      _setLoading(true);
-      try {
-        final authService = AuthService.instance;
-        if (_isSignUp) {
-          await authService.register(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim(),
-            username: _emailController.text.trim(),
-          );
-          if (mounted && Navigator.canPop(context)) {
-            Navigator.of(context).pop();
-          }
-        } else {
-          await authService.login(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim(),
-          );
-          if (mounted && Navigator.canPop(context)) {
-            Navigator.of(context).pop();
-          }
-        }
-      } on AuthException catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.message)),
-          );
-        }
-      } finally {
-        if (mounted) {
-          _setLoading(false);
-        }
+      if (_isSignUp) {
+        context.read<AuthBloc>().add(AuthRegisterRequested(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+              username: _fullNameController.text.trim(), // 임시로 Full Name을 username으로 사용
+            ));
+      } else {
+        context.read<AuthBloc>().add(AuthLoginRequested(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            ));
       }
     }
-  }
-
-  void _setLoading(bool isLoading) {
-    setState(() => _isLoading = isLoading);
   }
 }

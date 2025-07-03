@@ -3,9 +3,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/features/exercise/data/models/exercise_record.dart';
 
 class ExerciseProgressChart extends StatefulWidget {
-  final List<Map<String, dynamic>> exercises;
+  final List<ExerciseRecord> exercises;
 
   const ExerciseProgressChart({
     super.key,
@@ -38,7 +39,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
         color: context.colors.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppTheme.surface2.withOpacity(0.3),
+          color: AppTheme.surface2.withAlpha((255 * 0.3).round()),
           width: 1,
         ),
       ),
@@ -50,7 +51,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppTheme.workoutIconColor.withOpacity(0.15),
+                  color: AppTheme.workoutIconColor.withAlpha((255 * 0.15).round()),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -76,7 +77,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
               color: context.colors.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppTheme.surface2.withOpacity(0.5),
+                color: AppTheme.surface2.withAlpha((255 * 0.5).round()),
                 width: 1,
               ),
             ),
@@ -128,9 +129,9 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
   }
 
   Widget _buildChart() {
-    // 더미 - 선택된 운동의 데이터 필터링 및 볼륨 계산
+    // 선택된 운동의 데이터 필터링 및 볼륨 계산
     final selectedExerciseData = widget.exercises
-        .where((exercise) => exercise['exerciseName'] == selectedExercise)
+        .where((exercise) => exercise.exerciseName == selectedExercise)
         .toList();
 
     if (selectedExerciseData.isEmpty) {
@@ -147,9 +148,9 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
     final List<FlSpot> spots = [];
     for (int i = 0; i < selectedExerciseData.length; i++) {
       final exercise = selectedExerciseData[i];
-      final weight = exercise['weight'] as int? ?? 0;
-      final sets = exercise['sets'] as int? ?? 0;
-      final reps = exercise['reps'] as int? ?? 0;
+      final weight = exercise.weightKg ?? 0;
+      final sets = exercise.sets ?? 0;
+      final reps = exercise.reps ?? 0;
       final volume = weight * sets * reps;
       spots.add(FlSpot(i.toDouble(), volume.toDouble()));
     }
@@ -191,7 +192,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
                 if (value.toInt() >= selectedExerciseData.length) {
                   return const Text('');
                 }
-                final date = DateTime.parse(selectedExerciseData[value.toInt()]['exerciseDate'] as String);
+                final date = selectedExerciseData[value.toInt()].exerciseDate;
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
@@ -231,7 +232,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
             ),
             belowBarData: BarAreaData(
               show: true,
-              color: AppTheme.workoutIconColor.withOpacity(0.1),
+              color: AppTheme.workoutIconColor.withAlpha((255 * 0.1).round()),
             ),
           ),
         ],

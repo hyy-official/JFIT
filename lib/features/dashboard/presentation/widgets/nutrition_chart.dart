@@ -25,7 +25,7 @@ class NutritionChart extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [AppTheme.nutritionIconColor.withOpacity(0.8), AppTheme.nutritionIconColor]),
+                    gradient: LinearGradient(colors: [AppTheme.nutritionIconColor.withAlpha((255 * 0.8).round()), AppTheme.nutritionIconColor]),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(8),

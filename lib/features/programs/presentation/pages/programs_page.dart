@@ -338,7 +338,7 @@ class _StatCard extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withAlpha((255 * 0.15).round()),
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: EdgeInsets.all(isWide ? 8 : 12),

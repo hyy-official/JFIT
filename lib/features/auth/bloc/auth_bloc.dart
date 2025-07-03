@@ -1,12 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/features/auth/bloc/auth_event.dart';
-import 'package:jfit/features/auth/bloc/auth_state.dart';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/features/auth/bloc/auth_event.dart';
-import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/auth/data/repositories/auth_repository.dart';
-import 'package:jfit/features/auth/data/models/auth_user.dart';
+
+part 'auth_event.dart';
+part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;

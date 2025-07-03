@@ -53,7 +53,7 @@ class BodyTab extends StatelessWidget {
         ),
         if (isLoading)
           Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withAlpha((255 * 0.5).round()),
             child: const Center(child: CircularProgressIndicator()),
           ),
       ],
@@ -80,9 +80,9 @@ class _PeriodSelector extends StatelessWidget {
         return Container(
           height: 48,
           decoration: BoxDecoration(
-            color: AnalyticsChartTheme.cardBackground.withOpacity(0.3),
+            color: AnalyticsChartTheme.cardBackground.withAlpha((255 * 0.3).round()),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AnalyticsChartTheme.cardBorder.withOpacity(0.5), width: 1),
+            border: Border.all(color: AnalyticsChartTheme.cardBorder.withAlpha((255 * 0.5).round()), width: 1),
           ),
           child: Stack(
             children: [
@@ -99,7 +99,7 @@ class _PeriodSelector extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: AnalyticsChartTheme.primaryAccent.withOpacity(0.3),
+                        color: AnalyticsChartTheme.primaryAccent.withAlpha((255 * 0.3).round()),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -183,9 +183,9 @@ class _BodyTrendCardState extends State<_BodyTrendCard> {
               return Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: AnalyticsChartTheme.cardBackground.withOpacity(0.3),
+                  color: AnalyticsChartTheme.cardBackground.withAlpha((255 * 0.3).round()),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AnalyticsChartTheme.cardBorder.withOpacity(0.5), width: 1),
+                  border: Border.all(color: AnalyticsChartTheme.cardBorder.withAlpha((255 * 0.5).round()), width: 1),
                 ),
                 child: Stack(
                   children: [
@@ -202,7 +202,7 @@ class _BodyTrendCardState extends State<_BodyTrendCard> {
                           borderRadius: BorderRadius.circular(18),
                           boxShadow: [
                             BoxShadow(
-                              color: AnalyticsChartTheme.primaryAccent.withOpacity(0.3),
+                              color: AnalyticsChartTheme.primaryAccent.withAlpha((255 * 0.3).round()),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),

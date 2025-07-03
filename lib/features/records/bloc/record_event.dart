@@ -5,7 +5,7 @@ abstract class RecordEvent extends Equatable {
   const RecordEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadMealRecords extends RecordEvent {

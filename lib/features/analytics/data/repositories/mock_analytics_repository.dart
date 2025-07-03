@@ -52,6 +52,7 @@ class MockAnalyticsRepository implements AnalyticsRepository {
     }
   }
 
+  @override
   Future<List<DietScoreData>> getDietScoreData(String period) async {
     final dates = _getDates(period);
     
@@ -63,6 +64,7 @@ class MockAnalyticsRepository implements AnalyticsRepository {
     });
   }
 
+  @override
   Future<List<NutritionData>> getNutritionData(String period) async {
     final dates = _getDates(period);
 
@@ -76,6 +78,7 @@ class MockAnalyticsRepository implements AnalyticsRepository {
     });
   }
 
+  @override
   Future<List<WorkoutTimeData>> getWorkoutTimeData(String period) async {
     final dates = _getDates(period);
     return List.generate(dates.length, (index) {
@@ -86,6 +89,7 @@ class MockAnalyticsRepository implements AnalyticsRepository {
     });
   }
 
+  @override
   Future<List<WorkoutCompositionData>> getWorkoutCompositionData(String period) async {
     // 반환용 예시 데이터 5카테고리
     final labels = ['웨이트', '유산소', '스트레칭', '스포츠', '워킹'];
