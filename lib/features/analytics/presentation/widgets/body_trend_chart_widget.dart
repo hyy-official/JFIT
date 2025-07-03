@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jfit/core/theme/analytics_chart_theme.dart';
 import 'package:jfit/features/analytics/domain/entities/body_data.dart';
 import 'package:jfit/features/analytics/presentation/widgets/body_tab.dart';
+import 'package:intl/intl.dart';
 
 class BodyTrendChartWidget extends StatelessWidget {
   final List<BodyData> data;
@@ -40,21 +41,22 @@ class BodyTrendChartWidget extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 30,
-              interval: 1, // 각 데이터 포인트에 라벨을 표시하도록 설정
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index < 0 || index >= data.length) return Container();
 
-                // 모바일(작은 화면)에서 1개월 데이터는 라벨 일부만 노출하여 겹침 방지
-                if (!isDesktop && period == '1m' && index % 3 != 0) {
-                  return const SizedBox.shrink();
+                // 포인트가 있는 위치(정수 index)일 때만 라벨을 보여줌
+                if (value == index.toDouble()) {
+                  final label = period == '1y'
+                      ? DateFormat('yy/MM').format(DateTime.parse(data[index].dateLabel))
+                      : DateFormat('M/d').format(DateTime.parse(data[index].dateLabel));
+                  return SideTitleWidget(
+                    axisSide: meta.axisSide,
+                    space: 4.0,
+                    child: Text(label, style: AnalyticsChartTheme.axisLabelStyle),
+                  );
                 }
-                final label = data[index].dateLabel;
-                return SideTitleWidget(
-                  axisSide: meta.axisSide,
-                  space: 4.0,
-                  child: Text(label, style: AnalyticsChartTheme.axisLabelStyle),
-                );
+                return const SizedBox.shrink();
               },
             ),
           ),
@@ -125,6 +127,16 @@ class BodyTrendChartWidget extends StatelessWidget {
                 color: AnalyticsChartTheme.primaryAccent,
                 strokeColor: Colors.white,
                 strokeWidth: 1,
+              ),
+            ),
+            belowBarData: BarAreaData(
+              show: true,
+              gradient: LinearGradient(
+                colors: AnalyticsChartTheme.scoreBarGradient.colors
+                    .map((color) => color.withOpacity(0.3))
+                    .toList(),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
