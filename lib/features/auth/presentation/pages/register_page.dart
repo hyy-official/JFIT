@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
-
+import 'package:jfit/features/auth/bloc/auth_state.dart';
+import 'package:jfit/features/auth/bloc/auth_event.dart';
 import 'package:jfit/features/auth/presentation/pages/login_page.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
@@ -20,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
   bool _obscure = true;
+  String? _emailErrorText; // 이메일 에러 메시지 추가
 
   @override
   void dispose() {
@@ -44,10 +46,16 @@ class _RegisterPageState extends State<RegisterPage> {
             );
           }
         } else if (state is AuthError) {
-          // 에러 발생 시 스낵바 표시
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          if (state.message == '이미 등록된 이메일입니다.') {
+            setState(() {
+              _emailErrorText = state.message;
+            });
+          } else {
+            // 다른 에러 발생 시 스낵바 표시
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
         }
       },
       child: Scaffold(
@@ -83,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
           const SizedBox(height: 20),
           Text('Email', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
           const SizedBox(height: 8),
-          _buildTextField(_emailController, keyboard: TextInputType.emailAddress, hint: 'example@mail.com'),
+          _buildTextField(_emailController, keyboard: TextInputType.emailAddress, hint: 'example@mail.com', errorText: _emailErrorText, onChanged: (_) => setState(() => _emailErrorText = null)),
           const SizedBox(height: 20),
           Text('Password', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
           const SizedBox(height: 8),
@@ -135,17 +143,19 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController c, {TextInputType keyboard = TextInputType.text, String hint = ''}) {
+  Widget _buildTextField(TextEditingController c, {TextInputType keyboard = TextInputType.text, String hint = '', String? errorText, ValueChanged<String>? onChanged}) {
     return TextFormField(
       controller: c,
       keyboardType: keyboard,
       style: context.texts.bodyMedium?.copyWith(color: Colors.white),
+      onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted),
         filled: true,
         fillColor: AppTheme.surface2,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+        errorText: errorText, // 에러 텍스트 추가
       ),
       validator: (v) {
         if (v == null || v.isEmpty) return 'Required';

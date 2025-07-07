@@ -8,109 +8,70 @@ import 'package:jfit/features/analytics/domain/entities/workout_time_data.dart';
 import 'package:jfit/features/analytics/domain/entities/body_data.dart';
 import 'package:jfit/features/analytics/domain/repositories/analytics_repository.dart';
 
+
+//차트 데이터 모의 데이터 저장소
 class MockAnalyticsRepository implements AnalyticsRepository {
   final Random _random = Random();
 
-  // Helper to generate a list of dates ending today
-  List<DateTime> _getDates(String period) {
+  @override
+  Future<List<DietScoreData>> getDietScoreData() async {
     final now = DateTime.now();
-    switch (period) {
-      case '7d':
-        return List.generate(7, (i) => now.subtract(Duration(days: i))).reversed.toList();
-      case '1m':
-        return List.generate(30, (i) => now.subtract(Duration(days: i))).reversed.toList();
-      case '3m':
-        // Show 12 bars, one for each week's average
-        return List.generate(12, (i) => now.subtract(Duration(days: i * 7))).reversed.toList();
-      case '1y':
-        // Generate 12 dates, each representing the first day of the month,
-        // starting from (current month - 11) up to the current month.
-        final List<DateTime> months = [];
-        for (int i = 11; i >= 0; i--) {
-          final monthDate = DateTime(now.year, now.month - i, 1);
-          months.add(monthDate);
-        }
-        return months;
-      default:
-        return [];
-    }
-  }
-
-  // Helper to format date labels
-  String _getLabel(DateTime date, String period) {
-    switch (period) {
-      case '7d':
-        return DateFormat('E', 'ko_KR').format(date); // '월', '화'
-      case '1m':
-        return DateFormat('MM/dd').format(date); // '06/03'
-      case '3m':
-         return DateFormat('MM/dd').format(date); // '04/23'
-      case '1y':
-         return DateFormat('yy/MM').format(date); // '24/09'
-      default:
-        return '';
-    }
-  }
-
-  @override
-  Future<List<DietScoreData>> getDietScoreData(String period) async {
-    final dates = _getDates(period);
-    
-    return List.generate(dates.length, (index) {
+    return List.generate(7, (index) {
       return DietScoreData(
-        dateLabel: _getLabel(dates[index], period),
-        score: 1.0 + _random.nextDouble() * 4.0, // 1.0 to 5.0
+        date: now.subtract(Duration(days: 6 - index)),
+        score: 60 + _random.nextDouble() * 40, // 60-100 점수
       );
     });
   }
 
   @override
-  Future<List<NutritionData>> getNutritionData(String period) async {
-    final dates = _getDates(period);
-
-    return List.generate(dates.length, (index) {
-        return NutritionData(
-          dateLabel: _getLabel(dates[index], period),
-          carbs: 50.0 + _random.nextDouble() * 100.0, // 50 to 150
-          protein: 20.0 + _random.nextDouble() * 80.0,  // 20 to 100
-          fat: 10.0 + _random.nextDouble() * 50.0,      // 10 to 60
-        );
+  Future<List<NutritionData>> getNutritionData() async {
+    final now = DateTime.now();
+    return List.generate(7, (index) {
+      return NutritionData(
+        date: now.subtract(Duration(days: 6 - index)),
+        calories: 1500 + _random.nextDouble() * 800, // 1500-2300 칼로리
+        protein: 60 + _random.nextDouble() * 40, // 60-100g
+        carbs: 150 + _random.nextDouble() * 100, // 150-250g
+        fat: 40 + _random.nextDouble() * 30, // 40-70g
+      );
     });
   }
 
   @override
-  Future<List<WorkoutTimeData>> getWorkoutTimeData(String period) async {
-    final dates = _getDates(period);
-    return List.generate(dates.length, (index) {
+  Future<List<WorkoutTimeData>> getWorkoutTimeData() async {
+    final now = DateTime.now();
+    return List.generate(7, (index) {
       return WorkoutTimeData(
-        dateLabel: _getLabel(dates[index], period),
-        minutes: 20 + _random.nextInt(100).toDouble(), // 20~120분
+        date: now.subtract(Duration(days: 6 - index)),
+        duration: 30 + _random.nextDouble() * 90, // 30-120분
       );
     });
   }
 
   @override
-  Future<List<WorkoutCompositionData>> getWorkoutCompositionData(String period) async {
-    // 반환용 예시 데이터 5카테고리
-    final labels = ['웨이트', '유산소', '스트레칭', '스포츠', '워킹'];
-
-    return labels.map((label) {
+  Future<List<WorkoutCompositionData>> getWorkoutCompositionData() async {
+    final categories = ['웨이트', '유산소', '스트레칭', '기타'];
+    final colors = [0xFF4ECDC4, 0xFF45B7D1, 0xFF96CEB4, 0xFFFECE8A];
+    
+    return List.generate(categories.length, (index) {
       return WorkoutCompositionData(
-        category: label,
-        minutes: (30 + _random.nextInt(120)).toDouble(),
+        category: categories[index],
+        value: 20 + _random.nextDouble() * 60, // 20-80분
+        color: colors[index],
       );
-    }).toList();
+    });
   }
 
   @override
-  Future<List<BodyData>> getBodyData(String period) async {
-    final dates = _getDates(period);
-    return List.generate(dates.length, (index) {
+  Future<List<BodyData>> getBodyData() async {
+    final now = DateTime.now();
+    return List.generate(7, (index) {
       return BodyData(
-        dateLabel: DateFormat('yyyy-MM-dd').format(dates[index]),
-        weight: 60.0 + _random.nextDouble() * 20.0, // 60kg to 80kg
-        skeletalMuscleMass: 25.0 + _random.nextDouble() * 10.0, // 25kg to 35kg
-        bodyFatPercentage: 15.0 + _random.nextDouble() * 10.0, // 15% to 25%
+        date: now.subtract(Duration(days: 6 - index)),
+        weight: 65 + _random.nextDouble() * 10, // 65-75kg
+        muscleMass: 25 + _random.nextDouble() * 10, // 25-35kg
+        bodyFat: 15 + _random.nextDouble() * 10, // 15-25%
       );
     });
   }

@@ -54,11 +54,8 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
     emit(RecordLoading());
     try {
       await _recordRepository.deleteMealRecord(event.recordId);
-      // 삭제 후 다시 로드하여 최신 상태 반영
-      // TODO: 현재 사용자 ID와 날짜를 어떻게 가져올지 고민 필요 (AuthBloc에서 가져오거나, 이벤트에 포함)
-      // 임시로 1번 사용자 ID와 오늘 날짜 사용
-      final updatedRecords = await _recordRepository.getMealRecords(1, date: DateTime.now());
-      emit(MealRecordsLoaded(mealRecords: updatedRecords));
+      // 삭제 후에는 현재 상태를 유지하거나 새로고침이 필요한 경우 별도 이벤트 발생
+      // 현재는 삭제만 수행하고 UI에서 별도로 새로고침 호출
     } catch (e) {
       emit(RecordError(message: e.toString()));
     }
@@ -72,7 +69,11 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
         emit(DailySummaryLoaded(dailySummary: summary));
       } else {
         // 요약 데이터가 없는 경우, 기본값으로 초기화된 요약 반환
-        emit(DailySummaryLoaded(dailySummary: UserDailySummary(id: 'new', userId: event.userId, summaryDate: event.date)));
+        emit(DailySummaryLoaded(dailySummary: UserDailySummary(
+          id: 'new', 
+          userId: event.userId, 
+          summaryDate: event.date
+        )));
       }
     } catch (e) {
       emit(RecordError(message: e.toString()));

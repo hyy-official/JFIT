@@ -1,6 +1,17 @@
-class DietScoreData {
-  final String dateLabel; // X축 라벨 (예: '월', '07/15')
-  final double score;     // Y축 값 (1.0 ~ 5.0)
+import 'package:equatable/equatable.dart';
 
-  DietScoreData({required this.dateLabel, required this.score});
+class DietScoreData extends Equatable {
+  final DateTime date;
+  final double score;
+
+  const DietScoreData({
+    required this.date,
+    required this.score,
+  });
+
+  @override
+  List<Object> get props => [date, score];
+
+  // 호환성을 위한 getter
+  String get dateLabel => '${date.month}/${date.day}';
 } 

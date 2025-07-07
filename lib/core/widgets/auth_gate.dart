@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
-
+import 'package:jfit/features/auth/bloc/auth_state.dart';
+import 'package:jfit/features/auth/bloc/auth_event.dart';
 import 'package:jfit/features/auth/presentation/pages/login_page.dart';
 
 class AuthGate extends StatefulWidget {
@@ -17,7 +18,7 @@ class _AuthGateState extends State<AuthGate> {
   void initState() {
     super.initState();
     // 앱 시작 시 인증 상태 확인 요청
-    context.read<AuthBloc>().add(AuthStatusChecked());
+    context.read<AuthBloc>().add(const AuthCheckRequested());
   }
 
   Future<void> _promptLogin(BuildContext context) async {

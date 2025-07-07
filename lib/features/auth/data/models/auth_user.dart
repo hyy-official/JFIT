@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class AuthUser extends Equatable {
-  final int id;
+class AuthUser {
+  final String id;
   final String email;
   final String username;
   final String? fullName;
@@ -13,11 +13,58 @@ class AuthUser extends Equatable {
     this.fullName,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'email': email,
+      'username': username,
+      'full_name': fullName,
+    };
+  }
+
+  factory AuthUser.fromMap(Map<String, dynamic> map) {
+    return AuthUser(
+      id: map['id']?.toString() ?? '',
+      email: map['email'] ?? '',
+      username: map['username'] ?? '',
+      fullName: map['full_name'],
+    );
+  }
+
+  AuthUser copyWith({
+    String? id,
+    String? email,
+    String? username,
+    String? fullName,
+  }) {
+    return AuthUser(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      fullName: fullName ?? this.fullName,
+    );
+  }
+
   @override
-  List<Object?> get props => [id, email, username, fullName];
+  String toString() {
+    return 'AuthUser(id: $id, email: $email, username: $username, fullName: $fullName)';
+  }
 
-  static const empty = AuthUser(id: 0, email: '', username: '');
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is AuthUser &&
+        other.id == id &&
+        other.email == email &&
+        other.username == username &&
+        other.fullName == fullName;
+  }
 
-  bool get isEmpty => this == AuthUser.empty;
-  bool get isNotEmpty => this != AuthUser.empty;
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        email.hashCode ^
+        username.hashCode ^
+        (fullName?.hashCode ?? 0);
+  }
 }

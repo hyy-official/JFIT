@@ -1,6 +1,7 @@
-part of 'auth_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:jfit/features/auth/data/models/auth_user.dart';
 
-abstract class AuthState with EquatableMixin {
+abstract class AuthState extends Equatable {
   const AuthState();
 
   @override
@@ -12,13 +13,12 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
-  final int userId;
-  final String username;
+  final AuthUser user;
 
-  const AuthAuthenticated({required this.userId, required this.username});
+  const AuthAuthenticated(this.user);
 
   @override
-  List<Object?> get props => [userId, username];
+  List<Object?> get props => [user];
 }
 
 class AuthUnauthenticated extends AuthState {}
@@ -26,8 +26,35 @@ class AuthUnauthenticated extends AuthState {}
 class AuthError extends AuthState {
   final String message;
 
-  const AuthError({required this.message});
+  const AuthError(this.message);
 
   @override
   List<Object?> get props => [message];
+}
+
+class AuthSuccess extends AuthState {
+  final String message;
+
+  const AuthSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class AuthPasswordResetSent extends AuthState {
+  final String email;
+
+  const AuthPasswordResetSent(this.email);
+
+  @override
+  List<Object?> get props => [email];
+}
+
+class AuthEmailConfirmationSent extends AuthState {
+  final String email;
+
+  const AuthEmailConfirmationSent(this.email);
+
+  @override
+  List<Object?> get props => [email];
 }

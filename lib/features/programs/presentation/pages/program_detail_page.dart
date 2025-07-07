@@ -6,6 +6,7 @@ import 'package:jfit/core/database/database_helper.dart';
 import 'package:uuid/uuid.dart';
 import 'package:jfit/features/workout_session/presentation/pages/workout_session_page.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/utils/responsive_utils.dart';
 
 class ProgramDetailPage extends StatefulWidget {
   final Map<String, dynamic> program;
@@ -98,7 +99,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isWide = MediaQuery.of(context).size.width >= 768;
+    final isWide = !context.isMobile;
     final totalWeeks = widget.program['duration_weeks'] as int;
 
     return ResponsiveScaffold(

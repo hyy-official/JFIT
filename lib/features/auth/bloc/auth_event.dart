@@ -1,6 +1,7 @@
-part of 'auth_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:jfit/features/auth/data/models/auth_user.dart';
 
-abstract class AuthEvent with EquatableMixin {
+abstract class AuthEvent extends Equatable {
   const AuthEvent();
 
   @override
@@ -10,11 +11,16 @@ abstract class AuthEvent with EquatableMixin {
 class AuthLoginRequested extends AuthEvent {
   final String email;
   final String password;
+  final bool rememberMe;
 
-  const AuthLoginRequested({required this.email, required this.password});
+  const AuthLoginRequested({
+    required this.email,
+    required this.password,
+    this.rememberMe = false,
+  });
 
   @override
-  List<Object> get props => [email, password];
+  List<Object?> get props => [email, password, rememberMe];
 }
 
 class AuthRegisterRequested extends AuthEvent {
@@ -29,9 +35,40 @@ class AuthRegisterRequested extends AuthEvent {
   });
 
   @override
-  List<Object> get props => [email, password, username];
+  List<Object?> get props => [email, password, username];
 }
 
-class AuthLogoutRequested extends AuthEvent {}
+class AuthLogoutRequested extends AuthEvent {
+  const AuthLogoutRequested();
+}
 
-class AuthStatusChecked extends AuthEvent {}
+class AuthUserChanged extends AuthEvent {
+  final AuthUser? user;
+
+  const AuthUserChanged(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}
+
+class AuthCheckRequested extends AuthEvent {
+  const AuthCheckRequested();
+}
+
+class AuthResetPasswordRequested extends AuthEvent {
+  final String email;
+
+  const AuthResetPasswordRequested(this.email);
+
+  @override
+  List<Object?> get props => [email];
+}
+
+class AuthResendEmailConfirmationRequested extends AuthEvent {
+  final String email;
+
+  const AuthResendEmailConfirmationRequested(this.email);
+
+  @override
+  List<Object?> get props => [email];
+}

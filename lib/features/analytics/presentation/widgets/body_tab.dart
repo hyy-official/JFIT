@@ -5,6 +5,7 @@ import 'package:jfit/features/analytics/domain/entities/body_data.dart';
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:jfit/features/analytics/presentation/widgets/body_trend_chart_widget.dart';
 import 'package:jfit/features/analytics/presentation/widgets/body_comparison_card.dart';
+import 'package:jfit/core/utils/responsive_utils.dart';
 
 enum BodyFilter { weight, skeletalMuscleMass, bodyFatPercentage }
 
@@ -31,7 +32,7 @@ class BodyTab extends StatelessWidget {
     final bodyData = loadedState?.bodyData ?? [];
     final period = loadedState?.period ?? '7d';
 
-    final isDesktop = MediaQuery.of(context).size.width >= 700;
+    final isDesktop = !context.isMobile;
 
     return Stack(
       children: [

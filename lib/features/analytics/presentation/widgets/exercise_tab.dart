@@ -6,6 +6,7 @@ import 'package:jfit/features/analytics/domain/entities/workout_time_data.dart';
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:jfit/features/analytics/presentation/widgets/workout_composition_chart.dart';
 import 'package:jfit/features/analytics/presentation/widgets/workout_time_chart.dart';
+import 'package:jfit/core/utils/responsive_utils.dart';
 
 class ExerciseTab extends StatelessWidget {
   const ExerciseTab({super.key});
@@ -33,7 +34,7 @@ class ExerciseTab extends StatelessWidget {
 
     final totalMinutes = timeData.fold<double>(0, (sum, item) => sum + item.minutes);
     final avgMinutes = timeData.isNotEmpty ? totalMinutes / timeData.length : 0.0;
-    final isDesktop = MediaQuery.of(context).size.width >= 700;
+    final isDesktop = !context.isMobile;
 
     return Stack(
       children: [

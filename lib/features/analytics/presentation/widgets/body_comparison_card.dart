@@ -115,7 +115,7 @@ class BodyComparisonCard extends StatelessWidget {
 
   Widget _buildMeasurementText(String label, double? value, String unit) {
     return Text(
-      '$label: ${value != null ? '${value.toStringAsFixed(1)}$unit' : '-'}',
+        '$label: ${value != null ? '${value.toStringAsFixed(1)}$unit' : '-'}',
       style: const TextStyle(
         color: Color(0xFFCCCCCC),
         fontSize: 13,
@@ -204,7 +204,7 @@ class BodyComparisonCard extends StatelessWidget {
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
-        ),
+      ),
       ],
     );
   }

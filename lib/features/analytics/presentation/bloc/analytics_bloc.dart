@@ -25,19 +25,21 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   ) async {
     emit(AnalyticsLoading());
     try {
-      final dietScoreData = await _analyticsRepository.getDietScoreData(event.period);
-      final nutritionData = await _analyticsRepository.getNutritionData(event.period);
-      final workoutTimeData = await _analyticsRepository.getWorkoutTimeData(event.period);
-      final workoutCompositionData = await _analyticsRepository.getWorkoutCompositionData(event.period);
-      final bodyData = await _analyticsRepository.getBodyData(event.period);
+      final results = await Future.wait([
+        _analyticsRepository.getDietScoreData(),
+        _analyticsRepository.getNutritionData(),
+        _analyticsRepository.getWorkoutTimeData(),
+        _analyticsRepository.getWorkoutCompositionData(),
+        _analyticsRepository.getBodyData(),
+      ]);
 
       emit(AnalyticsLoaded(
         period: event.period,
-        dietScoreData: dietScoreData,
-        nutritionData: nutritionData,
-        workoutTimeData: workoutTimeData,
-        workoutCompositionData: workoutCompositionData,
-        bodyData: bodyData,
+        dietScoreData: results[0] as List<DietScoreData>,
+        nutritionData: results[1] as List<NutritionData>,
+        workoutTimeData: results[2] as List<WorkoutTimeData>,
+        workoutCompositionData: results[3] as List<WorkoutCompositionData>,
+        bodyData: results[4] as List<BodyData>,
       ));
     } catch (e) {
       emit(AnalyticsError(e.toString()));

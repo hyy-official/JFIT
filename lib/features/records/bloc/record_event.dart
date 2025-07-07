@@ -9,7 +9,7 @@ abstract class RecordEvent extends Equatable {
 }
 
 class LoadMealRecords extends RecordEvent {
-  final int userId;
+  final String userId;
   final DateTime? date;
 
   const LoadMealRecords({required this.userId, this.date});
@@ -46,7 +46,7 @@ class DeleteMealRecord extends RecordEvent {
 }
 
 class LoadDailySummary extends RecordEvent {
-  final int userId;
+  final String userId;
   final DateTime date;
 
   const LoadDailySummary({required this.userId, required this.date});

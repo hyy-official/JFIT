@@ -15,3 +15,7 @@ class FetchAnalyticsData extends AnalyticsEvent {
   @override
   List<Object> get props => [period];
 }
+
+class RefreshAnalyticsData extends AnalyticsEvent {
+  const RefreshAnalyticsData();
+}

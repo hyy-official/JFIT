@@ -6,12 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/widgets/responsive_scaffold.dart';
+import 'package:jfit/core/utils/responsive_utils.dart';
 import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
 import 'package:jfit/features/records/bloc/record_bloc.dart';
 import 'package:jfit/features/records/bloc/record_event.dart';
 import 'package:jfit/features/records/bloc/record_state.dart';
 import 'package:jfit/features/records/data/models/meal_record_model.dart';
 import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
+import 'package:jfit/features/auth/bloc/auth_bloc.dart';
+import 'package:jfit/features/auth/bloc/auth_state.dart';
+import 'package:jfit/features/records/presentation/widgets/diet_add_sheet.dart';
+import 'package:jfit/core/services/supabase_service.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -30,9 +36,25 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
     super.initState();
     _selectedDate = _today;
     _tabController = TabController(length: 3, vsync: this);
-    // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
-    context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate)); // 임시 사용자 ID 1
-    context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate)); // 임시 사용자 ID 1
+    _loadData();
+  }
+
+  void _loadData() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      final userId = authState.user.id;
+      context.read<RecordBloc>().add(LoadMealRecords(userId: userId, date: _selectedDate));
+      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: _selectedDate));
+    }
+  }
+
+  void _loadDataForDate(DateTime date) {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      final userId = authState.user.id;
+      context.read<RecordBloc>().add(LoadMealRecords(userId: userId, date: date));
+      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: date));
+    }
   }
 
   @override
@@ -43,82 +65,47 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isDesktop = constraints.maxWidth >= 700;
-        return BlocBuilder<RecordBloc, RecordState>(
-          builder: (context, state) {
-            List<MealRecord> mealRecords = [];
-            UserDailySummary? dailySummary;
+    return BlocBuilder<RecordBloc, RecordState>(
+      builder: (context, state) {
+        List<MealRecord> mealRecords = [];
+        UserDailySummary? dailySummary;
 
-            if (state is RecordLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is MealRecordsLoaded) {
-              mealRecords = state.mealRecords;
-            } else if (state is DailySummaryLoaded) {
-              dailySummary = state.dailySummary;
-            } else if (state is RecordError) {
-              return Center(child: Text('Error: ${state.message}', style: const TextStyle(color: Colors.white)));
-            }
+        if (state is RecordLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is MealRecordsLoaded) {
+          mealRecords = state.mealRecords;
+        } else if (state is DailySummaryLoaded) {
+          dailySummary = state.dailySummary;
+        } else if (state is RecordError) {
+          return Center(child: Text('Error: ${state.message}', style: const TextStyle(color: Colors.white)));
+        }
 
-            return Scaffold(
-              backgroundColor: context.colors.background,
-              body: SafeArea(
-                child: Row(
-                  children: [
-                    // 메인 콘텐츠 영역
-                    Expanded(
-                      flex: 3,
-                      child: _MainContent(
-                        today: _today,
-                        selectedDate: _selectedDate,
-                        onDateSelected: (d) {
-                          setState(() => _selectedDate = d);
-                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
-                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
-                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
-                        },
-                        tabController: _tabController,
-                        onPrevMonth: () {
-                          setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30)));
-                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
-                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
-                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
-                        },
-                        onNextMonth: () {
-                          setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30)));
-                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
-                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
-                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
-                        },
-                        onPrevWeek: () {
-                          setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7)));
-                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
-                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
-                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
-                        },
-                        onNextWeek: () {
-                          setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7)));
-                          // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
-                          context.read<RecordBloc>().add(LoadMealRecords(userId: 1, date: _selectedDate));
-                          context.read<RecordBloc>().add(LoadDailySummary(userId: 1, date: _selectedDate));
-                        },
-                        mealRecords: mealRecords,
-                      ),
-                    ),
-                    // 데스크톱 전용 사이드 패널
-                    if (isDesktop) ...[
-                      const VerticalDivider(width: 1, color: Color(0xFF1A1A1A)),
-                      Expanded(
-                        flex: 2,
-                        child: _SidePanel(selectedDate: _selectedDate, dailySummary: dailySummary),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            );
+        return RecordPageContent(
+          today: _today,
+          selectedDate: _selectedDate,
+          onDateSelected: (d) {
+            setState(() => _selectedDate = d);
+            _loadDataForDate(_selectedDate);
           },
+          tabController: _tabController,
+          onPrevMonth: () {
+            setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30)));
+            _loadDataForDate(_selectedDate);
+          },
+          onNextMonth: () {
+            setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30)));
+            _loadDataForDate(_selectedDate);
+          },
+          onPrevWeek: () {
+            setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7)));
+            _loadDataForDate(_selectedDate);
+          },
+          onNextWeek: () {
+            setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7)));
+            _loadDataForDate(_selectedDate);
+          },
+          mealRecords: mealRecords,
+          dailySummary: dailySummary,
         );
       },
     );
@@ -193,10 +180,15 @@ class _MainContent extends StatelessWidget {
             height: 400,
             child: TabBarView(
               controller: tabController,
-              children: const [
-                Center(child: Text('식단 컨텐츠', style: TextStyle(color: Colors.white54))),
-                Center(child: Text('신체 & 운동 컨텐츠', style: TextStyle(color: Colors.white54))),
-                Center(child: Text('계획 컨텐츠', style: TextStyle(color: Colors.white54))),
+              children: [
+                // ----- 식단 탭 -----
+                DietTabContent(
+                  selectedDate: selectedDate,
+                ),
+                // ----- 신체 & 운동 탭 -----
+                const Center(child: Text('신체 & 운동 컨텐츠', style: TextStyle(color: Colors.white54))),
+                // ----- 계획 탭 -----
+                const Center(child: Text('계획 컨텐츠', style: TextStyle(color: Colors.white54))),
               ],
             ),
           ),
@@ -267,10 +259,8 @@ class _DashboardHeader extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.bar_chart, color: Colors.white),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AnalyticsPage()),
-            );
+            // 중앙 Navigator 에서만 페이지를 푸시하여 좌우 패널을 유지합니다.
+            Navigator.of(context).pushNamed(AnalyticsPage.routeName);
           },
           splashRadius: 20,
         ),
@@ -619,135 +609,56 @@ class _QuickCardState extends State<_QuickCard> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
-      child: AnimatedScale(
-        scale: _hovering ? 1.05 : 1.0,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        child: AnimatedContainer(
+    void _handleTap() {
+      if (widget.label == '식단') {
+        _showAddDietSheet(context);
+      }
+    }
+
+    return GestureDetector(
+      onTap: _handleTap,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovering = true),
+        onExit: (_) => setState(() => _hovering = false),
+        child: AnimatedScale(
+          scale: _hovering ? 1.05 : 1.0,
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppTheme.surface1.withOpacity(0.75),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: _hovering ? widget.accent : AppTheme.surface2, width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(_hovering ? 0.25 : 0.15),
-                blurRadius: _hovering ? 16 : 12,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [widget.accent.withOpacity(0.8), widget.accent]),
-                  borderRadius: BorderRadius.circular(12),
+          curve: Curves.easeOut,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppTheme.surface1.withOpacity(0.75),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: _hovering ? widget.accent : AppTheme.surface2, width: 1),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(_hovering ? 0.25 : 0.15),
+                  blurRadius: _hovering ? 16 : 12,
+                  offset: const Offset(0, 6),
                 ),
-                child: Icon(widget.icon, color: Colors.white),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.label,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            ],
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [widget.accent.withOpacity(0.8), widget.accent]),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(widget.icon, color: Colors.white),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  widget.label,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// 우측 사이드 패널 (데스크톱 전용)
-class _SidePanel extends StatelessWidget {
-  final DateTime selectedDate;
-  final UserDailySummary? dailySummary;
-  const _SidePanel({required this.selectedDate, this.dailySummary});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.secondaryBackground1,
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '오늘의 요약',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            _SummaryTile(label: '운동', value: '${dailySummary?.totalWorkoutDurationMinutes ?? 0}분'),
-            _SummaryTile(label: '칼로리', value: '${dailySummary?.totalCaloriesConsumed ?? 0}kcal'),
-            const SizedBox(height: 24),
-            const _PremiumCard(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SummaryTile extends StatelessWidget {
-  final String label;
-  final String value;
-  const _SummaryTile({required this.label, required this.value});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppTheme.surface1,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Text(label, style: const TextStyle(color: Colors.white70)),
-          const Spacer(),
-          Text(value, style: const TextStyle(color: Colors.white)),
-        ],
-      ),
-    );
-  }
-}
-
-class _PremiumCard extends StatelessWidget {
-  const _PremiumCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        gradient: AppTheme.accentGradient,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.track_changes, color: Colors.white),
-          const SizedBox(height: 12),
-          const Text('프리미엄 플랜', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(height: 6),
-          const Text('더 많은 기능을 경험해보세요', style: TextStyle(color: Colors.white70)),
-          const SizedBox(height: 12),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
-              side: const BorderSide(color: Colors.white),
-            ),
-            onPressed: () {},
-            child: const Text('업그레이드'),
-          ),
-        ],
       ),
     );
   }
@@ -887,6 +798,326 @@ class _CustomTabBar extends StatelessWidget {
           ),
         )).toList(),
       ),
+    );
+  }
+}
+
+class RecordPageContent extends StatelessWidget {
+  final DateTime today;
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> onDateSelected;
+  final TabController tabController;
+  final VoidCallback onPrevMonth;
+  final VoidCallback onNextMonth;
+  final VoidCallback onPrevWeek;
+  final VoidCallback onNextWeek;
+  final List<MealRecord> mealRecords;
+  final UserDailySummary? dailySummary;
+
+  const RecordPageContent({
+    super.key,
+    required this.today,
+    required this.selectedDate,
+    required this.onDateSelected,
+    required this.tabController,
+    required this.onPrevMonth,
+    required this.onNextMonth,
+    required this.onPrevWeek,
+    required this.onNextWeek,
+    required this.mealRecords,
+    this.dailySummary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: _MainContent(
+        today: today,
+        selectedDate: selectedDate,
+        onDateSelected: onDateSelected,
+        tabController: tabController,
+        onPrevMonth: onPrevMonth,
+        onNextMonth: onNextMonth,
+        onPrevWeek: onPrevWeek,
+        onNextWeek: onNextWeek,
+        mealRecords: mealRecords,
+      ),
+    );
+  }
+}
+
+void _showAddDietSheet(BuildContext context, {DateTime? date}) {
+  final isDesktop = context.isDesktop;
+  if (isDesktop) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) => Dialog(
+        insetPadding: const EdgeInsets.all(32),
+        backgroundColor: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600, maxHeight: 800),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: DietAddSheetContent(selectedDate: date ?? DateTime.now()),
+          ),
+        ),
+      ),
+    );
+  } else {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => FractionallySizedBox(
+        heightFactor: 0.9,
+        child: DietAddSheetContent(selectedDate: date ?? DateTime.now()),
+      ),
+    );
+  }
+}
+
+/// 식단 탭 컨텐츠
+class DietTabContent extends StatefulWidget {
+  final DateTime selectedDate;
+
+  const DietTabContent({super.key, required this.selectedDate});
+
+  @override
+  State<DietTabContent> createState() => _DietTabContentState();
+}
+
+class _DietTabContentState extends State<DietTabContent> {
+  final SupabaseService _supabaseService = SupabaseService();
+  List<Map<String, dynamic>> _entries = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEntries();
+  }
+
+  @override
+  void didUpdateWidget(covariant DietTabContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedDate != widget.selectedDate) {
+      _loadEntries();
+    }
+  }
+
+  Future<void> _loadEntries() async {
+    setState(() => _isLoading = true);
+    final data = await _supabaseService.getMealEntriesForDate(widget.selectedDate);
+    setState(() {
+      _entries = data;
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    double totalCarbs = 0;
+    double totalProtein = 0;
+    double totalFat = 0;
+
+    for (final e in _entries) {
+      totalCarbs += (e['carbohydrates'] as num?)?.toDouble() ?? 0;
+      totalProtein += (e['protein'] as num?)?.toDouble() ?? 0;
+      totalFat += (e['fat'] as num?)?.toDouble() ?? 0;
+    }
+
+    // ----- meal_type 별로 그룹화 -----
+    final Map<String, _MealTypeSummary> grouped = {};
+    for (final e in _entries) {
+      final type = e['meal_type'] as String;
+      grouped.putIfAbsent(type, () => _MealTypeSummary(type));
+      grouped[type]!.addEntry(e);
+    }
+
+    // 정렬 순서 정의
+    const order = ['breakfast', 'lunch', 'dinner', 'snack'];
+    final summaries = grouped.values.toList()
+      ..sort((a, b) => order.indexOf(a.mealType).compareTo(order.indexOf(b.mealType)));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MacroRatioBar(carbs: totalCarbs, protein: totalProtein, fat: totalFat),
+        const SizedBox(height: 16),
+        Expanded(
+          child: summaries.isEmpty
+              ? const Center(child: Text('오늘 기록된 식단이 없습니다', style: TextStyle(color: Colors.white54)))
+              : ListView.separated(
+                  itemCount: summaries.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemBuilder: (context, index) {
+                    return MealTypeSummaryCard(summary: summaries[index]);
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+/// 내부 집계 모델
+class _MealTypeSummary {
+  final String mealType;
+  double totalCalories = 0;
+  double totalCarbs = 0;
+  double totalProtein = 0;
+  double totalFat = 0;
+
+  _MealTypeSummary(this.mealType);
+
+  void addEntry(Map<String, dynamic> e) {
+    totalCalories += (e['calories'] as num?)?.toDouble() ?? 0;
+    totalCarbs += (e['carbohydrates'] as num?)?.toDouble() ?? 0;
+    totalProtein += (e['protein'] as num?)?.toDouble() ?? 0;
+    totalFat += (e['fat'] as num?)?.toDouble() ?? 0;
+  }
+}
+
+/// meal_type 별 요약 카드
+class MealTypeSummaryCard extends StatelessWidget {
+  final _MealTypeSummary summary;
+
+  const MealTypeSummaryCard({super.key, required this.summary});
+
+  String _mealTypeKorean(String type) {
+    switch (type) {
+      case 'breakfast':
+        return '아침';
+      case 'lunch':
+        return '점심';
+      case 'dinner':
+        return '저녁';
+      case 'snack':
+        return '간식';
+      default:
+        return type;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2B35),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF3A3B45)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                _mealTypeKorean(summary.mealType),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              ),
+              const Spacer(),
+              Text('${summary.totalCalories.toStringAsFixed(1)} kcal', style: const TextStyle(color: Colors.white)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _macroText('탄수', summary.totalCarbs),
+              _macroText('단백질', summary.totalProtein),
+              _macroText('지방', summary.totalFat),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _macroText(String label, double value) {
+    return Text('$label ${value.toStringAsFixed(1)}g', style: const TextStyle(color: Colors.white60, fontSize: 12));
+  }
+}
+
+/// 탄단지 비율 바 – FoodNutritionCalculatorScreen 과 동일한 디자인
+class MacroRatioBar extends StatelessWidget {
+  final double carbs;
+  final double protein;
+  final double fat;
+
+  const MacroRatioBar({super.key, required this.carbs, required this.protein, required this.fat});
+
+  @override
+  Widget build(BuildContext context) {
+    final total = carbs + protein + fat;
+    if (total <= 0) {
+      return const SizedBox.shrink();
+    }
+
+    final carbsRatio = carbs / total;
+    final proteinRatio = protein / total;
+    final fatRatio = fat / total;
+
+    Widget _ratioText(String label, double ratio, Color color) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+          const SizedBox(width: 4),
+          Text('$label ${(ratio * 100).toInt()}%', style: const TextStyle(color: Colors.white, fontSize: 12)),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _ratioText('탄수화물', carbsRatio, const Color(0xFF6B73FF)),
+            _ratioText('단백질', proteinRatio, const Color(0xFFB794F6)),
+            _ratioText('지방', fatRatio, const Color(0xFFF687B3)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 8,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+          child: Row(children: [
+            if (carbsRatio > 0)
+              Expanded(
+                flex: (carbsRatio * 1000).toInt(),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF6B73FF),
+                    borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
+                  ),
+                ),
+              ),
+            if (proteinRatio > 0)
+              Expanded(
+                flex: (proteinRatio * 1000).toInt(),
+                child: Container(color: const Color(0xFFB794F6)),
+              ),
+            if (fatRatio > 0)
+              Expanded(
+                flex: (fatRatio * 1000).toInt(),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF687B3),
+                    borderRadius: BorderRadius.horizontal(right: Radius.circular(4)),
+                  ),
+                ),
+              ),
+          ]),
+        ),
+      ],
     );
   }
 }

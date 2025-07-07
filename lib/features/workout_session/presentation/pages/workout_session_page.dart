@@ -8,6 +8,8 @@ import 'package:jfit/core/navigation/main_navigation_page.dart';
 import 'package:jfit/core/widgets/responsive_scaffold.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/features/workout_session/presentation/widgets/workout_summary.dart';
+import 'package:jfit/core/utils/responsive_utils.dart';
 
 class WorkoutSessionPage extends StatefulWidget {
   final String? sessionId; // null이면 새 세션(프리스타일)
@@ -692,7 +694,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
   }
 
   Widget _buildMainContent() {
-    final isDesktop = MediaQuery.of(context).size.width >= 1024;
+    final isDesktop = context.isDesktop;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

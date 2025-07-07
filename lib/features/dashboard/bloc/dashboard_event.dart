@@ -8,7 +8,7 @@ abstract class DashboardEvent extends Equatable {
 }
 
 class LoadDashboardSummary extends DashboardEvent {
-  final int userId;
+  final String userId;
   final DateTime? startDate;
   final DateTime? endDate;
 

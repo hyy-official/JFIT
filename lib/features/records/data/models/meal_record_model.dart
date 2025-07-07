@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class MealRecord extends Equatable {
   final String id;
-  final int userId;
+  final String userId;
   final DateTime mealDate;
   final String mealType;
   final double? totalCalories;
@@ -42,7 +42,7 @@ class MealRecord extends Equatable {
   factory MealRecord.fromJson(Map<String, dynamic> json) {
     return MealRecord(
       id: json['id'] as String,
-      userId: json['user_id'] as int,
+      userId: json['user_id'] as String,
       mealDate: DateTime.parse(json['meal_date'] as String),
       mealType: json['meal_type'] as String,
       totalCalories: (json['total_calories'] as num?)?.toDouble(),

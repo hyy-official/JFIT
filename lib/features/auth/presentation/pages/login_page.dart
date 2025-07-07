@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
-
+import 'package:jfit/features/auth/bloc/auth_state.dart';
+import 'package:jfit/features/auth/bloc/auth_event.dart';
+import 'package:jfit/features/auth/presentation/pages/register_page.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/utils/responsive_utils.dart';
 
 
 
@@ -35,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final isDesktop = size.width >= 1024 && widget.showSidebar;
+    final isDesktop = context.isDesktop && widget.showSidebar;
     
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
@@ -638,18 +641,19 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleAuth() {
     if (_formKey.currentState!.validate()) {
-      if (_isSignUp) {
-        context.read<AuthBloc>().add(AuthRegisterRequested(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim(),
-              username: _fullNameController.text.trim(), // 임시로 Full Name을 username으로 사용
-            ));
-      } else {
-        context.read<AuthBloc>().add(AuthLoginRequested(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim(),
-            ));
-      }
+              if (_isSignUp) {
+          context.read<AuthBloc>().add(AuthRegisterRequested(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+            username: _fullNameController.text.trim(), // 임시로 Full Name을 username으로 사용
+          ));
+        } else {
+          context.read<AuthBloc>().add(AuthLoginRequested(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+            rememberMe: _rememberMe,
+          ));
+        }
     }
   }
 }

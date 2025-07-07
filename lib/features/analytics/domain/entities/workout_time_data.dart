@@ -1,6 +1,18 @@
-class WorkoutTimeData {
-  final String dateLabel; // 요일 또는 날짜
-  final double minutes; // 운동 분
+import 'package:equatable/equatable.dart';
 
-  WorkoutTimeData({required this.dateLabel, required this.minutes});
+class WorkoutTimeData extends Equatable {
+  final DateTime date;
+  final double duration;
+
+  const WorkoutTimeData({
+    required this.date,
+    required this.duration,
+  });
+
+  @override
+  List<Object> get props => [date, duration];
+
+  // 호환성을 위한 getter
+  String get dateLabel => '${date.month}/${date.day}';
+  double get minutes => duration;
 } 

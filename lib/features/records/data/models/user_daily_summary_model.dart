@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class UserDailySummary extends Equatable {
   final String id;
-  final int userId;
+  final String userId;
   final DateTime summaryDate;
   final int totalWorkoutDurationMinutes;
   final int totalCaloriesBurned;
@@ -39,14 +39,14 @@ class UserDailySummary extends Equatable {
   factory UserDailySummary.fromJson(Map<String, dynamic> json) {
     return UserDailySummary(
       id: json['id'] as String,
-      userId: json['user_id'] as int,
+      userId: json['user_id'] as String,
       summaryDate: DateTime.parse(json['summary_date'] as String),
-      totalWorkoutDurationMinutes: json['total_workout_duration_minutes'] as int,
-      totalCaloriesBurned: json['total_calories_burned'] as int,
-      totalCaloriesConsumed: (json['total_calories_consumed'] as num).toDouble(),
-      totalProteinConsumed: (json['total_protein_consumed'] as num).toDouble(),
-      totalCarbsConsumed: (json['total_carbs_consumed'] as num).toDouble(),
-      totalFatConsumed: (json['total_fat_consumed'] as num).toDouble(),
+      totalWorkoutDurationMinutes: (json['total_workout_duration_minutes'] as int?) ?? 0,
+      totalCaloriesBurned: (json['total_calories_burned'] as int?) ?? 0,
+      totalCaloriesConsumed: ((json['total_calories_consumed'] as num?) ?? 0).toDouble(),
+      totalProteinConsumed: ((json['total_protein_consumed'] as num?) ?? 0).toDouble(),
+      totalCarbsConsumed: ((json['total_carbs_consumed'] as num?) ?? 0).toDouble(),
+      totalFatConsumed: ((json['total_fat_consumed'] as num?) ?? 0).toDouble(),
     );
   }
 
@@ -54,7 +54,7 @@ class UserDailySummary extends Equatable {
     return {
       'id': id,
       'user_id': userId,
-      'summary_date': summaryDate.toIso8601String(),
+      'summary_date': summaryDate.toIso8601String().split('T')[0],
       'total_workout_duration_minutes': totalWorkoutDurationMinutes,
       'total_calories_burned': totalCaloriesBurned,
       'total_calories_consumed': totalCaloriesConsumed,

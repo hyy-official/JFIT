@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/data/repositories/auth_repository.dart';
@@ -12,6 +12,9 @@ import 'package:jfit/features/records/bloc/record_bloc.dart';
 import 'package:jfit/features/records/data/repositories/record_repository.dart';
 import 'package:jfit/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:jfit/features/dashboard/data/repositories/dashboard_repository.dart';
+import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
+import 'package:jfit/features/analytics/domain/repositories/analytics_repository.dart';
+import 'package:jfit/features/analytics/data/repositories/supabase_analytics_repository.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/locale_manager.dart';
 // import 'core/services/auth_service.dart'; // 주석 처리: 나중에 사용할 예정
@@ -24,11 +27,10 @@ import 'core/navigation/stack_logging_observer.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: ".env");
-
+  // Supabase 프로젝트 초기화
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    url: const String.fromEnvironment('SUPABASE_URL'),
+    anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
   );
   
   runApp(
@@ -46,12 +48,15 @@ Future<void> main() async {
         RepositoryProvider<DashboardRepository>(
           create: (context) => DashboardRepository(),
         ),
+        RepositoryProvider<AnalyticsRepository>(
+          create: (context) => SupabaseAnalyticsRepository(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(
             create: (context) => AuthBloc(
-              authRepository: RepositoryProvider.of<AuthRepository>(context),
+              RepositoryProvider.of<AuthRepository>(context),
             ),
           ),
           BlocProvider<ExerciseBloc>(
@@ -67,6 +72,11 @@ Future<void> main() async {
           BlocProvider<DashboardBloc>(
             create: (context) => DashboardBloc(
               dashboardRepository: RepositoryProvider.of<DashboardRepository>(context),
+            ),
+          ),
+          BlocProvider<AnalyticsBloc>(
+            create: (context) => AnalyticsBloc(
+              analyticsRepository: RepositoryProvider.of<AnalyticsRepository>(context),
             ),
           ),
         ],

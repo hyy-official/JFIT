@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/features/analytics/data/repositories/mock_analytics_repository.dart';
+import 'package:jfit/features/analytics/domain/repositories/analytics_repository.dart';
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:jfit/features/analytics/presentation/widgets/diet_tab.dart';
 import 'package:jfit/features/analytics/presentation/widgets/exercise_tab.dart';
@@ -16,7 +16,7 @@ class AnalyticsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AnalyticsBloc(
-        analyticsRepository: MockAnalyticsRepository(),
+        analyticsRepository: RepositoryProvider.of<AnalyticsRepository>(context),
       )..add(const FetchAnalyticsData(period: '7d')),
       child: const _AnalyticsView(),
     );
@@ -45,28 +45,7 @@ class _AnalyticsViewState extends State<_AnalyticsView> with SingleTickerProvide
     super.dispose();
   }
 
-  String _getHeaderRange(String period) {
-    final now = DateTime.now();
-    DateTime start;
-    switch (period) {
-      case '7d':
-        start = now.subtract(const Duration(days: 6));
-        break;
-      case '1m':
-        start = now.subtract(const Duration(days: 29));
-        break;
-      case '3m':
-        start = now.subtract(const Duration(days: 89));
-        break;
-      case '1y':
-      default:
-        start = DateTime(now.year - 1, now.month, now.day);
-        break;
-    }
-    String formatDate(DateTime d) =>
-        '${d.year}년 ${d.month.toString().padLeft(2, '0')}월 ${d.day.toString().padLeft(2, '0')}일';
-    return '${formatDate(start)} - ${formatDate(now)}';
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,16 +57,9 @@ class _AnalyticsViewState extends State<_AnalyticsView> with SingleTickerProvide
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: BlocBuilder<AnalyticsBloc, AnalyticsState>(
-          builder: (context, state) {
-            if (state is AnalyticsLoaded) {
-              return Text(
-                _getHeaderRange(state.period),
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-              );
-            }
-            return const Text('');
-          },
+        title: const Text(
+          '최근 7일 분석',
+          style: TextStyle(color: Colors.white, fontSize: 16),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),

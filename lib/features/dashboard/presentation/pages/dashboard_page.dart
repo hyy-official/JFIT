@@ -31,6 +31,8 @@ import 'package:jfit/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:jfit/features/dashboard/bloc/dashboard_event.dart';
 import 'package:jfit/features/dashboard/bloc/dashboard_state.dart';
 import 'package:jfit/l10n/app_localizations.dart';
+import 'package:jfit/features/auth/bloc/auth_bloc.dart';
+import 'package:jfit/features/auth/bloc/auth_state.dart';
 
 
 class DashboardPage extends StatefulWidget {
@@ -44,8 +46,15 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
-    context.read<DashboardBloc>().add(LoadDashboardSummary(userId: 1)); // 임시 사용자 ID 1
+    _loadData();
+  }
+
+  void _loadData() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      final userId = authState.user.id;
+      context.read<DashboardBloc>().add(LoadDashboardSummary(userId: userId));
+    }
   }
 
   @override

@@ -6,7 +6,7 @@ class DashboardRepository {
 
   DashboardRepository() : _supabaseClient = Supabase.instance.client;
 
-  Future<List<UserDailySummary>> getDailySummaries(int userId, {DateTime? startDate, DateTime? endDate}) async {
+  Future<List<UserDailySummary>> getDailySummaries(String userId, {DateTime? startDate, DateTime? endDate}) async {
     try {
       var query = _supabaseClient
           .from('user_daily_summaries')

@@ -6,6 +6,7 @@ import 'package:jfit/features/analytics/domain/entities/nutrition_data.dart';
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:jfit/features/analytics/presentation/widgets/diet_score_chart.dart';
 import 'package:jfit/features/analytics/presentation/widgets/nutrition_stats_chart.dart';
+import 'package:jfit/core/utils/responsive_utils.dart';
 
 class DietTab extends StatelessWidget {
   const DietTab({super.key});
@@ -84,7 +85,7 @@ class DietTab extends StatelessWidget {
             child: DietScoreChartWidget(
               data: data,
               period: period,
-              isDesktop: MediaQuery.of(context).size.width >= 700,
+              isDesktop: !context.isMobile,
             ),
           ),
         ],

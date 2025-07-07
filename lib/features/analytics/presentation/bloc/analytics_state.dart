@@ -30,13 +30,13 @@ class AnalyticsLoaded extends AnalyticsState {
 
   @override
   List<Object> get props => [
-        period,
-        dietScoreData,
-        nutritionData,
-        workoutTimeData,
-        workoutCompositionData,
-        bodyData,
-      ];
+    period,
+    dietScoreData,
+    nutritionData,
+    workoutTimeData,
+    workoutCompositionData,
+    bodyData,
+  ];
 }
 
 class AnalyticsError extends AnalyticsState {
