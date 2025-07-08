@@ -34,7 +34,9 @@ class SupabaseAnalyticsRepository implements AnalyticsRepository {
 
       return response.map<BodyData>((row) {
         return BodyData(
-          date: DateTime.parse(row['measured_date']),
+          date: row['measured_date'] is String
+              ? DateTime.parse(row['measured_date'])
+              : (row['measured_date'] as DateTime),
           weight: (row['weight'] as num?)?.toDouble() ?? 0.0,
           muscleMass: (row['muscle_mass'] as num?)?.toDouble() ?? 0.0,
           bodyFat: (row['body_fat_percentage'] as num?)?.toDouble() ?? 0.0,

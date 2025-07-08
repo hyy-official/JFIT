@@ -181,6 +181,8 @@ class AuthRepository {
         return '현재 회원가입이 비활성화되어 있습니다.';
       case 'email not confirmed':
         return '이메일 인증을 완료해주세요.';
+      case 'invalid argument(s): no host specified in uri /auth/v1/token?grant_type=password':
+        return '서버 설정이 잘못되어 로그인할 수 없습니다.';
       default:
         return message;
     }

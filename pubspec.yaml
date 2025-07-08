@@ -50,6 +50,7 @@ dependencies:
   supabase_flutter: ^2.0.0 # 최신 안정 버전으로 업데이트될 수 있습니다.
   image_picker: ^1.0.4
   dotted_border: ^2.0.0
+  mask_text_input_formatter: ^2.5.0
   lucide_icons: ^0.231.0
 
 

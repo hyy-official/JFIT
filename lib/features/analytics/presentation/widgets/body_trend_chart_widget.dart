@@ -48,8 +48,8 @@ class BodyTrendChartWidget extends StatelessWidget {
                 // 포인트가 있는 위치(정수 index)일 때만 라벨을 보여줌
                 if (value == index.toDouble()) {
                   final label = period == '1y'
-                      ? DateFormat('yy/MM').format(DateTime.parse(data[index].dateLabel))
-                      : DateFormat('M/d').format(DateTime.parse(data[index].dateLabel));
+                      ? DateFormat('yy/MM').format(data[index].date)
+                      : DateFormat('M/d').format(data[index].date);
                   return SideTitleWidget(
                     axisSide: meta.axisSide,
                     space: 4.0,

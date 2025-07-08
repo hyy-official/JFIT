@@ -583,4 +583,51 @@ class SupabaseService {
         .eq('id', entryId)
         .eq('user_id', _currentUserId!);
   }
+
+  Future<void> saveBodyMeasurement({
+    required DateTime measuredDate,
+    double? weight,
+    double? muscleMass,
+    double? bodyFatPercentage,
+    int? conditionRating,
+    DateTime? sleepTime,
+    DateTime? wakeTime,
+    int? bowelCount,
+    bool? menstruation,
+    String? memo,
+    String? photoUrl,
+  }) async {
+    if (_currentUserId == null) {
+      throw Exception('User not logged in');
+    }
+
+    final payload = {
+      'user_id': _currentUserId,
+      'measured_date': measuredDate.toIso8601String(),
+      if (weight != null) 'weight': weight,
+      if (muscleMass != null) 'muscle_mass': muscleMass,
+      if (bodyFatPercentage != null) 'body_fat_percentage': bodyFatPercentage,
+      if (conditionRating != null) 'condition_rating': conditionRating,
+      if (sleepTime != null) 'sleep_time': DateFormat('HH:mm').format(sleepTime),
+      if (wakeTime != null) 'wake_time': DateFormat('HH:mm').format(wakeTime),
+      if (bowelCount != null) 'bowel_count': bowelCount,
+      if (menstruation != null) 'menstruation': menstruation,
+      if (memo != null && memo.isNotEmpty) 'memo': memo,
+      if (photoUrl != null) 'photo_url': photoUrl,
+    };
+
+    await _supabase.from('user_body_measurements').insert(payload);
+  }
+
+  Future<Map<String, dynamic>?> getBodyMeasurementForDate(DateTime date) async {
+    if (_currentUserId == null) return null;
+    final dateStr = DateFormat('yyyy-MM-dd').format(date);
+    final res = await _supabase
+        .from('user_body_measurements')
+        .select('*')
+        .eq('user_id', _currentUserId!)
+        .eq('measured_date', dateStr)
+        .maybeSingle();
+    return res;
+  }
 }

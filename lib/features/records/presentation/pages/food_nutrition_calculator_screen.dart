@@ -39,13 +39,6 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
   String _selectedMealType = 'breakfast'; // 기본값: 아침식사
   bool _isSaving = false;
 
-  // 식사 타입 옵션
-  final Map<String, String> _mealTypes = {
-    'breakfast': '아침',
-    'lunch': '점심',
-    'dinner': '저녁',
-    'snack': '간식',
-  };
   
   @override
   void initState() {
@@ -144,7 +137,7 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
                 const SizedBox(height: 32),
                 _buildWeightControl(),
                 const SizedBox(height: 24),
-                _buildNutritionRatioBar(),
+                _buildNutritionDonut(),
                 const SizedBox(height: 24),
                 _buildNutritionCard(),
                 const Spacer(),
@@ -158,7 +151,10 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
   }
   
   Widget _buildHeader() {
-    return Center(
+    return Row(
+      children: [
+        const SizedBox(width: 8),
+        Expanded(
       child: Text(
         widget.foodData.foodName,
         style: const TextStyle(
@@ -166,172 +162,113 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
           fontSize: 20,
           fontWeight: FontWeight.w600,
         ),
-        textAlign: TextAlign.center,
+          ),
       ),
-    );
-  }
-  
-  Widget _buildWeightControl() {
-    return Row(
-      children: [
-        // 감소 버튼
-        Container(
-          width: 120,
-          height: 56,
-          decoration: BoxDecoration(
-            color: const Color(0xFF2A2B35),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF3A3B45)),
-          ),
-          child: IconButton(
-            onPressed: () {
-              final newWeight = (_currentWeight - 10).clamp(10, 9999).toDouble();
-              _updateWeight(newWeight);
-            },
-            icon: const Icon(Icons.remove, color: Colors.white, size: 24),
-          ),
-        ),
-        const SizedBox(width: 12),
-        
-        // 중량 입력 필드
-        Expanded(
-          child: Container(
-            height: 56,
-            decoration: BoxDecoration(
-              color: const Color(0xFF2A2B35),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF3A3B45)),
-            ),
-            child: TextField(
-              controller: _weightController,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(4),
-              ],
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 16),
-              ),
-              onChanged: (value) {
-                final weight = double.tryParse(value);
-                if (weight != null && weight > 0) {
-                  setState(() {
-                    _currentWeight = weight;
-                    _recalculateNutrition();
-                  });
-                }
-              },
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        
-        // g 단위 표시
-        Container(
-          width: 80,
-          height: 56,
-          decoration: BoxDecoration(
-            color: const Color(0xFF2A2B35),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF3A3B45)),
-          ),
-          child: const Center(
-            child: Text(
-              'g',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        
-        // 증가 버튼
-        Container(
-          width: 120,
-          height: 56,
-          decoration: BoxDecoration(
-            color: const Color(0xFF2A2B35),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF3A3B45)),
-          ),
-          child: IconButton(
-            onPressed: () {
-              final newWeight = (_currentWeight + 10).clamp(10, 9999).toDouble();
-              _updateWeight(newWeight);
-            },
-            icon: const Icon(Icons.add, color: Colors.white, size: 24),
-          ),
-        ),
       ],
     );
   }
   
-  Widget _buildNutritionRatioBar() {
+  Widget _buildWeightControl() {
+    const maxWeight = 500.0;
+    return Container(
+      padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2A2B35),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFF3A3B45)),
+          ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _roundIconButton(Icons.remove, () {
+                final newWeight = (_currentWeight - 10).clamp(0, maxWeight).toDouble();
+                _updateWeight(newWeight);
+              }),
+              Column(
+                children: [
+                  Text('${_currentWeight.toInt()} g', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 4),
+                  const Text('섭취량', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                ],
+              ),
+              _roundIconButton(Icons.add, () {
+                final newWeight = (_currentWeight + 10).clamp(0, maxWeight).toDouble();
+              _updateWeight(newWeight);
+              }),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              trackHeight: 4,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+              overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+              activeTrackColor: const Color(0xFF6B73FF),
+              inactiveTrackColor: const Color(0xFF3A3B45),
+              thumbColor: const Color(0xFFB794F6),
+            ),
+            child: Slider(
+              value: _currentWeight.clamp(0, maxWeight),
+              min: 0,
+              max: maxWeight,
+              onChanged: (value) => _updateWeight(value),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('0g', style: TextStyle(color: Colors.white60, fontSize: 12)),
+              Text('500g', style: TextStyle(color: Colors.white60, fontSize: 12)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _roundIconButton(IconData icon, VoidCallback onPressed) {
+    return Container(
+      width: 40,
+      height: 40,
+          decoration: BoxDecoration(
+        color: const Color(0xFF3A3B45),
+        borderRadius: BorderRadius.circular(8),
+          ),
+          child: IconButton(
+        padding: EdgeInsets.zero,
+        icon: Icon(icon, color: Colors.white),
+        onPressed: onPressed,
+      ),
+    );
+  }
+  
+  Widget _buildNutritionDonut() {
     final total = _result.carbs + _result.protein + _result.fat;
     if (total <= 0) return const SizedBox.shrink();
     
-    final carbsRatio = _result.carbs / total;
-    final proteinRatio = _result.protein / total;
-    final fatRatio = _result.fat / total;
-    
-    return Column(
+    return Row(
       children: [
-        // 비율 텍스트
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildRatioText('탄수화물', '${(carbsRatio * 100).toInt()}%', const Color(0xFF6B73FF)),
-            _buildRatioText('단백질', '${(proteinRatio * 100).toInt()}%', const Color(0xFFB794F6)),
-            _buildRatioText('지방', '${(fatRatio * 100).toInt()}%', const Color(0xFFF687B3)),
-          ],
+        MacroDonutChart(
+          carbs: _result.carbs,
+          protein: _result.protein,
+          fat: _result.fat,
+          calories: _result.calories,
+          size: 120,
         ),
-        const SizedBox(height: 8),
-        
-        // 비율 바
-        Container(
-          height: 8,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Row(
+        const SizedBox(width: 100),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (carbsRatio > 0)
-                Expanded(
-                  flex: (carbsRatio * 1000).toInt(),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF6B73FF),
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
-                    ),
-                  ),
-                ),
-              if (proteinRatio > 0)
-                Expanded(
-                  flex: (proteinRatio * 1000).toInt(),
-                  child: Container(
-                    color: const Color(0xFFB794F6),
-                  ),
-                ),
-              if (fatRatio > 0)
-                Expanded(
-                  flex: (fatRatio * 1000).toInt(),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF687B3),
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(4)),
-                    ),
-                  ),
-                ),
+              _buildLegendItem('탄수화물', _result.carbs, const Color(0xFF6B73FF)),
+              const SizedBox(height: 1),
+              _buildLegendItem('단백질', _result.protein, const Color(0xFFB794F6)),
+              const SizedBox(height: 1),
+              _buildLegendItem('지방', _result.fat, const Color(0xFFF687B3)),
             ],
           ),
         ),
@@ -339,27 +276,12 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
     );
   }
   
-  Widget _buildRatioText(String label, String ratio, Color color) {
+  Widget _buildLegendItem(String label, double value, Color color) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          '$label $ratio',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        const SizedBox(width: 8),
+        Text('$label ${value.toStringAsFixed(1)}g', style: const TextStyle(color: Colors.white, fontSize: 14)),
       ],
     );
   }
@@ -367,7 +289,7 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
   Widget _buildNutritionCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFF2A2B35),
         borderRadius: BorderRadius.circular(16),
@@ -384,7 +306,7 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 5),
           
           // 영양성분 그리드
           Row(
@@ -394,18 +316,6 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
               _buildNutritionItem('단백질', '${_result.protein.toStringAsFixed(1)}g'),
               _buildNutritionItem('지방', '${_result.fat.toStringAsFixed(1)}g'),
             ],
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // 추가 영양성분 (나트륨 등)
-          const Text(
-            '나트륨 134mg',
-            style: TextStyle(
-              color: Color(0xFF8B8B8B),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
           ),
         ],
       ),
@@ -423,7 +333,7 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 1),
         Text(
           value,
           style: const TextStyle(
@@ -439,49 +349,35 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
   Widget _buildBottomSection() {
     return Column(
       children: [
-        // 식사 타입 선택
-        _buildMealTypeSelector(),
-        
-        const SizedBox(height: 24),
-        
-        // 정보가 잘못되었나요?
-        TextButton(
-          onPressed: () {
-            // TODO: 피드백 기능
+        // 정보 제보 배너
+        GestureDetector(
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('제보 기능은 아직 미구현입니다.')),
+            );
           },
-          child: const Text(
-            '음식 정보가 잘못됐나요?',
-            style: TextStyle(
-              color: Color(0xFF8B8B8B),
-              fontSize: 14,
-            ),
-          ),
-        ),
-        
-        TextButton(
-          onPressed: () {
-            // TODO: 제보하기 기능  
-          },
-          style: TextButton.styleFrom(
-            backgroundColor: const Color(0xFF2A2B35),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            shape: RoundedRectangleBorder(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF2D2814), // 어두운 옐로우 톤 배경
               borderRadius: BorderRadius.circular(8),
-              side: const BorderSide(color: Color(0xFF3A3B45)),
             ),
-          ),
-          child: const Text(
-            '제보하기',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+            child: Row(
+              children: const [
+                Icon(Icons.warning_amber_rounded, color: Color(0xFFFFC107)),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    '음식 정보가 정확한가요? 제보해 주세요!',
+                    style: TextStyle(color: Color(0xFFFFC107), fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        
         const SizedBox(height: 24),
-        
         // 추가하기 버튼
         SizedBox(
           width: double.infinity,
@@ -508,65 +404,94 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
     );
   }
 
-  Widget _buildMealTypeSelector() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2A2B35),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF3A3B45)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '식사 타입',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: _mealTypes.entries.map((entry) {
-              final isSelected = _selectedMealType == entry.key;
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedMealType = entry.key;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFF6B73FF) : const Color(0xFF3A3B45),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        entry.value,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: isSelected ? Colors.white : const Color(0xFF8B8B8B),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
 
   Future<void> _returnResult() async {
     Navigator.pop(context, _result);
   }
+}
+
+/// 도넛 차트: 탄수/단백질/지방 비율을 원형으로 표시
+class MacroDonutChart extends StatelessWidget {
+  final double carbs;
+  final double protein;
+  final double fat;
+  final double calories;
+  final double size;
+
+  const MacroDonutChart({
+    super.key,
+    required this.carbs,
+    required this.protein,
+    required this.fat,
+    required this.calories,
+    this.size = 120,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final total = carbs + protein + fat;
+    if (total <= 0) {
+      return SizedBox(width: size, height: size);
+    }
+
+    final carbsSweep = carbs / total * 360;
+    final proteinSweep = protein / total * 360;
+    final fatSweep = fat / total * 360;
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _DonutPainter(
+          carbsSweep: carbsSweep,
+          proteinSweep: proteinSweep,
+          fatSweep: fatSweep,
+        ),
+        child: Center(
+                      child: Text(
+            '${calories.toStringAsFixed(0)}\nkcal',
+                        textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DonutPainter extends CustomPainter {
+  final double carbsSweep;
+  final double proteinSweep;
+  final double fatSweep;
+
+  _DonutPainter({required this.carbsSweep, required this.proteinSweep, required this.fatSweep});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    const thickness = 16.0;
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = thickness
+      ..strokeCap = StrokeCap.round;
+
+    double startAngle = -90 * 3.1415926535 / 180; // top
+
+    // Carbs - blue
+    paint.color = const Color(0xFF6B73FF);
+    canvas.drawArc(rect.deflate(thickness / 2), startAngle, carbsSweep * 3.1415926535 / 180, false, paint);
+    startAngle += carbsSweep * 3.1415926535 / 180;
+
+    // Protein - purple
+    paint.color = const Color(0xFFB794F6);
+    canvas.drawArc(rect.deflate(thickness / 2), startAngle, proteinSweep * 3.1415926535 / 180, false, paint);
+    startAngle += proteinSweep * 3.1415926535 / 180;
+
+    // Fat - pink
+    paint.color = const Color(0xFFF687B3);
+    canvas.drawArc(rect.deflate(thickness / 2), startAngle, fatSweep * 3.1415926535 / 180, false, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 } 

@@ -17,6 +17,7 @@ import 'package:jfit/features/records/data/models/user_daily_summary_model.dart'
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/records/presentation/widgets/diet_add_sheet.dart';
+import 'package:jfit/features/records/presentation/widgets/body_add_sheet.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 
 class RecordPage extends StatefulWidget {
@@ -186,7 +187,7 @@ class _MainContent extends StatelessWidget {
                   selectedDate: selectedDate,
                 ),
                 // ----- 신체 & 운동 탭 -----
-                const Center(child: Text('신체 & 운동 컨텐츠', style: TextStyle(color: Colors.white54))),
+                BodyTabContent(selectedDate: selectedDate),
                 // ----- 계획 탭 -----
                 const Center(child: Text('계획 컨텐츠', style: TextStyle(color: Colors.white54))),
               ],
@@ -612,6 +613,8 @@ class _QuickCardState extends State<_QuickCard> {
     void _handleTap() {
       if (widget.label == '식단') {
         _showAddDietSheet(context);
+      } else if (widget.label == '신체') {
+        _showAddBodySheet(context);
       }
     }
 
@@ -877,6 +880,37 @@ void _showAddDietSheet(BuildContext context, {DateTime? date}) {
   }
 }
 
+void _showAddBodySheet(BuildContext context, {DateTime? date}) {
+  final isDesktop = context.isDesktop;
+  if (isDesktop) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) => Dialog(
+        insetPadding: const EdgeInsets.all(32),
+        backgroundColor: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600, maxHeight: 800),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: BodyAddSheetContent(selectedDate: date ?? DateTime.now()),
+          ),
+        ),
+      ),
+    );
+  } else {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => FractionallySizedBox(
+        heightFactor: 0.9,
+        child: BodyAddSheetContent(selectedDate: date ?? DateTime.now()),
+      ),
+    );
+  }
+}
+
 /// 식단 탭 컨텐츠
 class DietTabContent extends StatefulWidget {
   final DateTime selectedDate;
@@ -1117,6 +1151,96 @@ class MacroRatioBar extends StatelessWidget {
               ),
           ]),
         ),
+      ],
+    );
+  }
+}
+
+/// 신체 & 운동 탭 컨텐츠
+class BodyTabContent extends StatefulWidget {
+  final DateTime selectedDate;
+  const BodyTabContent({super.key, required this.selectedDate});
+
+  @override
+  State<BodyTabContent> createState() => _BodyTabContentState();
+}
+
+class _BodyTabContentState extends State<BodyTabContent> {
+  final SupabaseService _supabaseService = SupabaseService();
+  Map<String, dynamic>? _data;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  @override
+  void didUpdateWidget(covariant BodyTabContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedDate != widget.selectedDate) {
+      _fetch();
+    }
+  }
+
+  Future<void> _fetch() async {
+    setState(() => _loading = true);
+    final res = await _supabaseService.getBodyMeasurementForDate(widget.selectedDate);
+    setState(() {
+      _data = res;
+      _loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_data == null) {
+      return const Center(child: Text('오늘 기록된 신체 정보가 없습니다', style: TextStyle(color: Colors.white54)));
+    }
+
+    return _BodyMeasurementCard(data: _data!);
+  }
+}
+
+class _BodyMeasurementCard extends StatelessWidget {
+  final Map<String, dynamic> data;
+  const _BodyMeasurementCard({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    final weight = (data['weight'] as num?)?.toDouble();
+    final muscle = (data['muscle_mass'] as num?)?.toDouble();
+    final fat = (data['body_fat_percentage'] as num?)?.toDouble();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2B35),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF3A3B45)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _metric('체중', weight, 'kg'),
+          _metric('골격근량', muscle, 'kg'),
+          _metric('체지방률', fat, '%'),
+        ],
+      ),
+    );
+  }
+
+  Widget _metric(String label, double? value, String unit) {
+    return Column(
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+        const SizedBox(height: 4),
+        Text(value != null ? value.toStringAsFixed(1) : '-',
+            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 2),
+        Text(unit, style: const TextStyle(color: Colors.white38, fontSize: 12)),
       ],
     );
   }

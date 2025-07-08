@@ -53,7 +53,7 @@ class BodyComparisonCard extends StatelessWidget {
   }
 
   Widget _buildPhotoSection(BuildContext context, BodyData? data, String title) {
-    final String dateText = data != null ? DateFormat('yyyy.MM.dd').format(DateTime.parse(data.dateLabel)) : '-';
+    final String dateText = data != null ? DateFormat('yyyy.MM.dd').format(data.date) : '-';
 
     return Column(
       children: [
@@ -129,9 +129,7 @@ class BodyComparisonCard extends StatelessWidget {
       return const SizedBox.shrink(); // No data to compare
     }
 
-    final int daysDiff = currentData!.dateLabel != previousData!.dateLabel
-        ? DateTime.parse(currentData!.dateLabel).difference(DateTime.parse(previousData!.dateLabel)).inDays
-        : 0;
+    final int daysDiff = currentData!.date.difference(previousData!.date).inDays;
 
     return Container(
       padding: const EdgeInsets.all(16),
