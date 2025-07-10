@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/features/programs/presentation/widgets/program_card_vertical.dart';
+import '../../domain/entities/workout_program.dart';
 
 class MatchingProgramsSection extends StatelessWidget {
   final List<String> matchFilters;
-  final List<Map<String, dynamic>> matchPrograms;
+  final List<WorkoutProgram> matchPrograms;
   
   const MatchingProgramsSection({
     required this.matchFilters,
@@ -56,7 +57,7 @@ class MatchingProgramsSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              ...matchPrograms.map((p) => ProgramCardVertical(data: p)),
+              ...matchPrograms.map((p) => ProgramCardVertical(program: p)),
             ],
           ),
         ),

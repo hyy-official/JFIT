@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/features/programs/presentation/pages/program_detail_page.dart';
+import '../../domain/entities/workout_program.dart';
 
 class ProgramCardVertical extends StatelessWidget {
-  final Map<String, dynamic> data;
-  const ProgramCardVertical({required this.data, super.key});
+  final WorkoutProgram program;
+  const ProgramCardVertical({required this.program, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class ProgramCardVertical extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ProgramDetailPage(program: data),
+            builder: (_) => ProgramDetailPage(program: program),
           ),
         );
       },
@@ -32,15 +33,15 @@ class ProgramCardVertical extends StatelessWidget {
                 width: 60,
                 height: 60,
                 color: Colors.grey[800],
-                child: data['image'] != null
+                child: program.imageUrl != null
                     ? Image.network(
-                        data['image'],
+                        program.imageUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Center(
+                        errorBuilder: (context, error, stackTrace) => const Center(
                           child: Icon(Icons.image, color: Colors.white24, size: 24),
                         ),
                       )
-                    : Center(
+                    : const Center(
                         child: Icon(Icons.image, color: Colors.white24, size: 24),
                       ),
               ),
@@ -52,20 +53,20 @@ class ProgramCardVertical extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      if ((data['badge'] ?? '').isNotEmpty) ...[
+                      if (program.isPopular) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: AppTheme.accent1,
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text(data['badge'], style: const TextStyle(color: Colors.white, fontSize: 10)),
+                          child: const Text('인기', style: TextStyle(color: Colors.white, fontSize: 10)),
                         ),
                         const SizedBox(width: 6),
                       ],
                       Expanded(
                         child: Text(
-                          data['title'],
+                          program.name,
                           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -75,7 +76,7 @@ class ProgramCardVertical extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    data['coach'],
+                    program.creator,
                     style: const TextStyle(color: Colors.white70, fontSize: 12),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -83,9 +84,9 @@ class ProgramCardVertical extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Text(data['level'], style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                      Text(program.difficultyLevel, style: const TextStyle(color: Colors.white54, fontSize: 11)),
                       const SizedBox(width: 8),
-                      Text(data['weeks'], style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                      Text('주 ${program.workoutsPerWeek ?? 0}일', style: const TextStyle(color: Colors.white54, fontSize: 11)),
                     ],
                   ),
                 ],

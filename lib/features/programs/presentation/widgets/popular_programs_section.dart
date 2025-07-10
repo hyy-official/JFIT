@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/features/programs/presentation/widgets/program_card_horizontal.dart';
+import '../../domain/entities/workout_program.dart';
 
 class PopularProgramsSection extends StatelessWidget {
-  final List<Map<String, dynamic>> popularPrograms;
+  final List<WorkoutProgram> popularPrograms;
   
   const PopularProgramsSection({
     required this.popularPrograms,
@@ -40,7 +41,7 @@ class PopularProgramsSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: popularPrograms.length,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, idx) => ProgramCardHorizontal(data: popularPrograms[idx]),
+            itemBuilder: (context, idx) => ProgramCardHorizontal(program: popularPrograms[idx]),
           ),
         ),
       ],

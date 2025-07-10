@@ -18,6 +18,7 @@ import 'package:jfit/features/records/presentation/widgets/advertisement_banner.
 import 'package:jfit/features/records/presentation/widgets/quick_add_section.dart';
 import 'package:jfit/features/records/presentation/widgets/diet_tab_content.dart';
 import 'package:jfit/features/records/presentation/widgets/body_tab_content.dart';
+import 'package:jfit/features/records/presentation/widgets/exercise_tab_content.dart';
 
 // 1. 상단 고정 Scaffold 위젯 추가
 class RecordPageScaffold extends StatelessWidget {
@@ -73,7 +74,7 @@ class RecordPageScaffold extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: _horizontalPadding(context)),
               child: CustomTabBar(
                 controller: tabController,
-                tabs: const ['식단', '신체 & 운동', '계획'],
+                tabs: const ['신체', '식단', '운동', '계획'],
               ),
             ),
             SizedBox(height: _verticalSpacing(context)),
@@ -119,16 +120,19 @@ class RecordTabContent extends StatelessWidget {
         children: [
           BlocBuilder<RecordBloc, RecordState>(
             builder: (context, state) {
-              // 식단 탭 컨텐츠
-              return DietTabContent(selectedDate: selectedDate);
+              // 신체 탭 컨텐츠
+              return BodyTabContent(selectedDate: selectedDate);
             },
           ),
           BlocBuilder<RecordBloc, RecordState>(
             builder: (context, state) {
-              // 신체 & 운동 탭 컨텐츠
-              return BodyTabContent(selectedDate: selectedDate);
+              // 식단 탭 컨텐츠
+              return DietTabContent(selectedDate: selectedDate);
             },
           ),
+          // 운동 탭 컨텐츠
+          ExerciseTabContent(hasRoutine: true),
+          // 계획 탭 컨텐츠
           const Center(child: Text('계획 컨텐츠', style: TextStyle(color: Colors.white54))),
         ],
       ),
@@ -153,7 +157,7 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _selectedDate = _today;
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _loadData();
   }
 

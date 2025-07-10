@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/features/programs/presentation/widgets/program_card_vertical.dart';
+import '../../domain/entities/workout_program.dart';
 
 class DailyRoutinesSection extends StatelessWidget {
   final List<String> partFilters;
-  final List<Map<String, dynamic>> partPrograms;
+  final List<WorkoutProgram> partPrograms;
   
   const DailyRoutinesSection({
     required this.partFilters,
@@ -56,7 +57,7 @@ class DailyRoutinesSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              ...partPrograms.map((p) => ProgramCardVertical(data: p)),
+              ...partPrograms.map((p) => ProgramCardVertical(program: p)),
             ],
           ),
         ),

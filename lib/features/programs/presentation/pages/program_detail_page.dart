@@ -1,39 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jfit/core/theme/app_theme.dart';
+import '../../domain/entities/workout_program.dart';
+import '../bloc/programs_bloc.dart';
+import '../bloc/programs_event.dart';
+import '../bloc/programs_state.dart';
 
 class ProgramDetailPage extends StatelessWidget {
-  final Map<String, dynamic> program;
+  final WorkoutProgram program;
   const ProgramDetailPage({required this.program, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String intro = program['intro'] ?? '직장인을 위한 주2일 루틴입니다. 바쁜 직장인도 실천할 수 있도록 주 2회, 4주간 진행하는 근비대/수행능력 향상 루틴입니다. 각 세션은 60분 내외로 구성되어 있습니다.';
-    final List<Map<String, String>> exercises = program['exercises'] ?? [
-      {'name': '스쿼트', 'desc': '하체 근력 강화', 'icon': '🏋️‍♂️'},
-      {'name': '벤치프레스', 'desc': '가슴/삼두 강화', 'icon': '🏋️'},
-      {'name': '데드리프트', 'desc': '전신 근력 강화', 'icon': '🏋️‍♀️'},
-      {'name': '풀업', 'desc': '등/광배 강화', 'icon': '💪'},
-      {'name': '플랭크', 'desc': '코어 안정성', 'icon': '🧘'},
-    ];
-
-    return Scaffold(
+    return BlocProvider(
+      create: (context) => GetIt.instance<ProgramsBloc>(),
+      child: Scaffold(
       backgroundColor: AppTheme.programDetailBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: BackButton(color: Colors.white),
-        title: Text(program['title'] ?? '', style: const TextStyle(color: Colors.white)),
+          leading: const BackButton(color: Colors.white),
+          title: Text(program.name, style: const TextStyle(color: Colors.white)),
       ),
-      body: SingleChildScrollView(
+        body: BlocConsumer<ProgramsBloc, ProgramsState>(
+          listener: (context, state) {
+            if (state is ProgramAddedToUser) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+            } else if (state is ProgramAddError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+            }
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: program['image'] != null
+                    child: program.imageUrl != null
                   ? Image.network(
-                      program['image'],
+                            program.imageUrl!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) =>
                           Container(
@@ -53,31 +65,29 @@ class ProgramDetailPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(program['title'] ?? '', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+                            Expanded(
+                              child: Text(program.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+                            ),
                       const SizedBox(width: 8),
-                      if (program['badge'] == 'PRO')
+                            if (program.isPopular)
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: AppTheme.programAccentPurple,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text('PRO', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                                child: const Text('인기', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
                         ),
                     ],
                   ),
                   const SizedBox(height: 6),
-                  Text(program['coach'] ?? '', style: const TextStyle(color: Colors.white70, fontSize: 15)),
+                        Text(program.creator, style: const TextStyle(color: Colors.white70, fontSize: 15)),
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      const Icon(Icons.thumb_up, color: Colors.greenAccent, size: 18),
+                            const Icon(Icons.star, color: Colors.amber, size: 18),
                       const SizedBox(width: 4),
-                      Text('100% 후기 2개', style: const TextStyle(color: Colors.white70, fontSize: 13)),
-                      const SizedBox(width: 16),
-                      const Icon(Icons.people, color: Colors.white54, size: 18),
-                      const SizedBox(width: 4),
-                      Text('136명 도전', style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                            Text('${program.rating.toStringAsFixed(1)} (${program.totalRatings}명)', style: const TextStyle(color: Colors.white70, fontSize: 13)),
                     ],
                   ),
                   const SizedBox(height: 14),
@@ -91,55 +101,65 @@ class ProgramDetailPage extends StatelessWidget {
                       children: [
                         const Icon(Icons.calendar_today, color: Colors.white38, size: 18),
                         const SizedBox(width: 6),
-                        Text('주 2일 · 총 4주차', style: const TextStyle(color: Colors.white, fontSize: 14)),
+                              Text('주 ${program.workoutsPerWeek ?? 0}일 · 총 ${program.durationWeeks}주차', style: const TextStyle(color: Colors.white, fontSize: 14)),
                         const SizedBox(width: 16),
                         const Icon(Icons.bar_chart, color: Colors.white38, size: 18),
                         const SizedBox(width: 6),
-                        Text('중급', style: const TextStyle(color: Colors.white, fontSize: 14)),
+                              Text(program.difficultyLevel, style: const TextStyle(color: Colors.white, fontSize: 14)),
                         const SizedBox(width: 16),
                         const Icon(Icons.fitness_center, color: Colors.white38, size: 18),
                         const SizedBox(width: 6),
-                        Text('근비대 · 수행능력', style: const TextStyle(color: Colors.white, fontSize: 14)),
+                              Text(program.programType, style: const TextStyle(color: Colors.white, fontSize: 14)),
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Text(intro, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                        Text(program.description, style: const TextStyle(color: Colors.white, fontSize: 16)),
                 ],
               ),
             ),
             const SizedBox(height: 32),
             const Divider(color: Colors.white24, thickness: 1),
             const SizedBox(height: 16),
-            const Text('운동 상세', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
+                  const Text('운동 장비', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
             const SizedBox(height: 16),
-            ...exercises.map((ex) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: ListTile(
-                leading: Text(ex['icon'] ?? '🏋️', style: const TextStyle(fontSize: 28)),
-                title: Text(ex['name'] ?? '', style: const TextStyle(color: Colors.white)),
-                subtitle: Text(ex['desc'] ?? '', style: const TextStyle(color: Colors.white70)),
-                                  tileColor: AppTheme.programCardBackground,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              ),
-            )),
+                  if (program.equipmentNeeded != null)
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: program.equipmentNeeded!.map((equipment) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.programCardBackground,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(equipment, style: const TextStyle(color: Colors.white)),
+                      )).toList(),
+                    ),
             const SizedBox(height: 32),
           ],
         ),
+            );
+          },
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: ElevatedButton.icon(
+          child: BlocBuilder<ProgramsBloc, ProgramsState>(
+            builder: (context, state) {
+              return ElevatedButton(
           style: ElevatedButton.styleFrom(
                                   backgroundColor: AppTheme.programAccentBlue,
             foregroundColor: Colors.white,
             minimumSize: const Size.fromHeight(48),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          onPressed: () {},
-          
-          label: const Text('내 루틴에 추가하기'),
+                onPressed: () {
+                  context.read<ProgramsBloc>().add(AddProgramToUser(program.id));
+                },
+                child: const Text('내 루틴에 추가하기'),
+              );
+            },
+          ),
         ),
       ),
     );

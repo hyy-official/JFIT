@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/features/programs/presentation/pages/program_detail_page.dart';
+import '../../domain/entities/workout_program.dart';
 
 class ProgramCardHorizontal extends StatelessWidget {
-  final Map<String, dynamic> data;
-  const ProgramCardHorizontal({required this.data, super.key});
+  final WorkoutProgram program;
+  const ProgramCardHorizontal({required this.program, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class ProgramCardHorizontal extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ProgramDetailPage(program: data),
+            builder: (_) => ProgramDetailPage(program: program),
           ),
         );
       },
@@ -34,15 +35,15 @@ class ProgramCardHorizontal extends StatelessWidget {
                 height: 90,
                 width: double.infinity,
                 color: Colors.grey[800],
-                child: data['image'] != null
+                child: program.imageUrl != null
                     ? Image.network(
-                        data['image'],
+                        program.imageUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Center(
+                        errorBuilder: (context, error, stackTrace) => const Center(
                           child: Icon(Icons.image, color: Colors.white24, size: 40),
                         ),
                       )
-                    : Center(
+                    : const Center(
                         child: Icon(Icons.image, color: Colors.white24, size: 40),
                       ),
               ),
@@ -53,25 +54,25 @@ class ProgramCardHorizontal extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if ((data['badge'] ?? '').isNotEmpty)
+                  if (program.isPopular)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: AppTheme.accent1,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Text(data['badge'], style: const TextStyle(color: Colors.white, fontSize: 11)),
+                      child: const Text('인기', style: TextStyle(color: Colors.white, fontSize: 11)),
                     ),
-                  if ((data['badge'] ?? '').isNotEmpty) const SizedBox(height: 4),
+                  if (program.isPopular) const SizedBox(height: 4),
                   Text(
-                    data['title'],
+                    program.name,
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    data['coach'],
+                    program.creator,
                     style: const TextStyle(color: Colors.white70, fontSize: 11),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -79,9 +80,9 @@ class ProgramCardHorizontal extends StatelessWidget {
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      Text(data['level'], style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                      Text(program.difficultyLevel, style: const TextStyle(color: Colors.white54, fontSize: 11)),
                       const SizedBox(width: 8),
-                      Text(data['weeks'], style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                      Text('주 ${program.workoutsPerWeek ?? 0}일', style: const TextStyle(color: Colors.white54, fontSize: 11)),
                     ],
                   ),
                 ],

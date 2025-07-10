@@ -23,6 +23,7 @@ import 'l10n/app_localizations.dart'; // 추가
 import 'core/navigation/main_navigation_page.dart';
 import 'core/widgets/auth_gate.dart';
 import 'core/navigation/stack_logging_observer.dart';
+import 'core/di/injection_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,9 @@ Future<void> main() async {
     url: const String.fromEnvironment('SUPABASE_URL'),
     anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
   );
+  
+  // 의존성 주입 초기화
+  setupDependencies();
   
   runApp(
     MultiRepositoryProvider(
