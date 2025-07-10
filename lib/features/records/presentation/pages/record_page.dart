@@ -184,29 +184,29 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return RecordPageScaffold(
-      today: _today,
-      selectedDate: _selectedDate,
-      onDateSelected: (d) {
-        setState(() => _selectedDate = d);
-        _loadDataForDate(_selectedDate);
-      },
-      tabController: _tabController,
-      onPrevMonth: () {
-        setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30)));
-        _loadDataForDate(_selectedDate);
-      },
-      onNextMonth: () {
-        setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30)));
-        _loadDataForDate(_selectedDate);
-      },
-      onPrevWeek: () {
-        setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7)));
-        _loadDataForDate(_selectedDate);
-      },
-      onNextWeek: () {
-        setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7)));
-        _loadDataForDate(_selectedDate);
-      },
+          today: _today,
+          selectedDate: _selectedDate,
+          onDateSelected: (d) {
+            setState(() => _selectedDate = d);
+            _loadDataForDate(_selectedDate);
+          },
+          tabController: _tabController,
+          onPrevMonth: () {
+            setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30)));
+            _loadDataForDate(_selectedDate);
+          },
+          onNextMonth: () {
+            setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30)));
+            _loadDataForDate(_selectedDate);
+          },
+          onPrevWeek: () {
+            setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7)));
+            _loadDataForDate(_selectedDate);
+          },
+          onNextWeek: () {
+            setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7)));
+            _loadDataForDate(_selectedDate);
+          },
       child: RecordTabContent(
         selectedDate: _selectedDate,
         tabController: _tabController,
