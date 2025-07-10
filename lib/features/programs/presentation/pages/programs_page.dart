@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/features/programs/presentation/widgets/popular_programs_section.dart';
 import 'package:jfit/features/programs/presentation/widgets/matching_programs_section.dart';
 import 'package:jfit/features/programs/presentation/widgets/daily_routines_section.dart';
@@ -119,7 +120,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF181A20),
+              backgroundColor: AppTheme.programBackground,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),

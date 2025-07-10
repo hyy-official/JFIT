@@ -21,7 +21,7 @@ class ProgramCardVertical extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: const Color(0xFF23242B),
+          color: AppTheme.programCardBackground,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(

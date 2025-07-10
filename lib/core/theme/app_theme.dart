@@ -45,6 +45,15 @@ class AppTheme {
   // 이전 코드 호환용 alias
   static const Color cardBackgroundColor = surface1;
 
+  // ------------------------------
+  // 프로그램 페이지 전용 색상
+  // ------------------------------
+  static const Color programBackground = Color(0xFF181A20); // 프로그램 페이지 배경
+  static const Color programDetailBackground = Color(0xFF18191C); // 프로그램 디테일 배경
+  static const Color programCardBackground = Color(0xFF23242B); // 프로그램 카드 배경
+  static const Color programAccentPurple = Color(0xFF7B61FF); // 프로그램 액센트 보라
+  static const Color programAccentBlue = Color(0xFF4F7CFF); // 프로그램 액센트 파랑
+
   static ThemeData get lightTheme => ThemeData(
         brightness: Brightness.dark, // 다크 베이스 유지
         colorScheme: const ColorScheme.dark(

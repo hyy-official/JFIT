@@ -21,7 +21,7 @@ class ProgramCardHorizontal extends StatelessWidget {
         width: 140,
         height: 200,
         decoration: BoxDecoration(
-          color: const Color(0xFF23242B),
+          color: AppTheme.programCardBackground,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(

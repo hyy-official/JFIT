@@ -19,7 +19,7 @@ class FilterChipsRow extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, idx) => FilterChip(
           label: Text(filters[idx], style: const TextStyle(color: Colors.white)),
-          backgroundColor: const Color(0xFF23242B),
+          backgroundColor: AppTheme.programCardBackground,
           selectedColor: AppTheme.accent1,
           selected: false,
           onSelected: (_) {},

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/features/programs/presentation/pages/search_page.dart';
 
 class SearchBarWidget extends StatelessWidget {
@@ -17,7 +18,7 @@ class SearchBarWidget extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF23242B),
+          color: AppTheme.programCardBackground,
           borderRadius: BorderRadius.circular(12),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

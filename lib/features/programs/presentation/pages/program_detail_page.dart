@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/app_theme.dart';
 
 class ProgramDetailPage extends StatelessWidget {
   final Map<String, dynamic> program;
@@ -16,7 +17,7 @@ class ProgramDetailPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF18191C),
+      backgroundColor: AppTheme.programDetailBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -58,7 +59,7 @@ class ProgramDetailPage extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Color(0xFF7B61FF),
+                            color: AppTheme.programAccentPurple,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Text('PRO', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
@@ -83,7 +84,7 @@ class ProgramDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF23242B),
+                      color: AppTheme.programCardBackground,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -118,7 +119,7 @@ class ProgramDetailPage extends StatelessWidget {
                 leading: Text(ex['icon'] ?? '🏋️', style: const TextStyle(fontSize: 28)),
                 title: Text(ex['name'] ?? '', style: const TextStyle(color: Colors.white)),
                 subtitle: Text(ex['desc'] ?? '', style: const TextStyle(color: Colors.white70)),
-                tileColor: const Color(0xFF23242B),
+                                  tileColor: AppTheme.programCardBackground,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
@@ -131,7 +132,7 @@ class ProgramDetailPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF4F7CFF),
+                                  backgroundColor: AppTheme.programAccentBlue,
             foregroundColor: Colors.white,
             minimumSize: const Size.fromHeight(48),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
