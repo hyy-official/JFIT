@@ -320,4 +320,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registration_successful => 'Registration successful!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get noRoutinesFound => 'No routines found.';
 }

@@ -715,6 +715,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Registration successful!'**
   String get registration_successful;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @noRoutinesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No routines found.'**
+  String get noRoutinesFound;
 }
 
 class _AppLocalizationsDelegate

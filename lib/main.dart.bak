@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:jfit/core/di/injection_container.dart';
+import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/features/auth/bloc/auth_bloc.dart';
+import 'package:jfit/features/records/bloc/record_bloc.dart';
+import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
+import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
+import 'package:jfit/features/dashboard/bloc/dashboard_bloc.dart';
+import 'package:jfit/features/exercise/bloc/exercise_bloc.dart';
+import 'package:jfit/l10n/app_localizations.dart';
+import 'package:jfit/core/navigation/main_navigation_page.dart';
+import 'package:jfit/core/widgets/auth_gate.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  try {
+    // Supabase 초기화
+    await Supabase.initialize(
+    url: const String.fromEnvironment('SUPABASE_URL'),
+    anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
+  );
+    
+    // 의존성 주입 초기화
+    await initializeDependencies();
+    
+    runApp(const MyApp());
+  } catch (e) {
+    print('환경 변수 로드 실패: $e');
+    // 환경 변수 로드에 실패해도 앱은 실행하되, 경고 메시지 출력
+    runApp(const MyApp());
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => getIt<AuthBloc>()),
+        BlocProvider(create: (context) => RecordBloc()),
+        BlocProvider(create: (context) => getIt<ProgramsBloc>()),
+        BlocProvider(create: (context) => getIt<AnalyticsBloc>()),
+        BlocProvider(create: (context) => getIt<DashboardBloc>()),
+        BlocProvider(create: (context) => getIt<ExerciseBloc>()),
+      ],
+      child: MaterialApp(
+        title: 'JFit',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', ''),
+          Locale('ko', ''),
+        ],
+        home: const AuthGate(),
+        routes: {
+          '/main': (context) => const MainNavigationPage(),
+        },
+      ),
+    );
+  }
+}

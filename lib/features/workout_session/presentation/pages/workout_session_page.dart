@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/database/database_helper.dart';
 import 'package:jfit/features/workout_session/presentation/widgets/exercise_card.dart';
+import 'package:jfit/features/records/bloc/record_state.dart';
 // import 'package:jfit/features/workout_session/presentation/widgets/add_exercise_modal.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
@@ -16,6 +17,10 @@ class WorkoutSessionPage extends StatefulWidget {
   final String? programId; // 워크아웃 프로그램 ID
   final String? programDay; // 프로그램의 특정 day (예: "Day 1: 전신 A")
   final bool showNavigation; // 네비게이션 바 표시 여부 (ProgramDetail → Start 시 true)
+  
+  // 새로운 매개변수들
+  final UserProgram? userProgram;
+  final List<Map<String, dynamic>>? exercises;
 
   const WorkoutSessionPage({
     super.key, 
@@ -23,6 +28,8 @@ class WorkoutSessionPage extends StatefulWidget {
     this.programId,
     this.programDay,
     this.showNavigation = false,
+    this.userProgram,
+    this.exercises,
   });
 
   @override
@@ -67,46 +74,62 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         String sessionName = '프리스타일 워크아웃';
         List<Map<String, dynamic>> programExercises = [];
 
-        String? effectiveProgramId = widget.programId;
-
-        // 1) 우선 위젯에서 프로그램 ID가 전달된 경우 사용
-        // 2) 없으면 사용자의 활성 프로그램을 조회하여 사용
-        if (effectiveProgramId == null) {
-          final latestProgram = await db.getLatestActiveUserProgram();
-          if (latestProgram != null) {
-            activeUserProgram = latestProgram;
-            effectiveProgramId = latestProgram['program_id'] as String?;
-          }
-        }
-
-        if (effectiveProgramId != null) {
-          program = await db.getWorkoutProgramById(effectiveProgramId);
+        // 새로운 방식: userProgram과 exercises가 직접 전달된 경우
+        if (widget.userProgram != null && widget.exercises != null) {
+          sessionName = widget.userProgram!.programName;
+          programExercises = _convertExercisesToSessionFormat(widget.exercises!);
           
-          if (program != null && program!.isNotEmpty) {
-            // 사용자 프로그램 인스턴스를 조회하거나 생성
-            activeUserProgram ??= await db.getActiveUserProgram(effectiveProgramId);
-            if (activeUserProgram == null) {
-              activeUserProgram = {
-                'id': _uuid.v4(),
-                'program_id': effectiveProgramId,
-                'current_week': 1,
-                'current_day': 1,
-                'started_at': DateTime.now().toIso8601String(),
-              };
-              await db.insertUserProgram(activeUserProgram!);
-            }
+          // 사용자 프로그램 정보를 activeUserProgram으로 설정
+          activeUserProgram = {
+            'id': widget.userProgram!.id,
+            'program_id': widget.userProgram!.programId,
+            'current_week': widget.userProgram!.currentWeek,
+            'current_day': widget.userProgram!.currentDay,
+            'started_at': widget.userProgram!.startedAt.toIso8601String(),
+          };
+        } else {
+          // 기존 방식: 프로그램 ID로 세션 생성
+          String? effectiveProgramId = widget.programId;
 
-            sessionName = program!['name'] ?? '프로그램 운동';
-            if (widget.programDay != null) {
-              sessionName += ' - ${widget.programDay}';
+          // 1) 우선 위젯에서 프로그램 ID가 전달된 경우 사용
+          // 2) 없으면 사용자의 활성 프로그램을 조회하여 사용
+          if (effectiveProgramId == null) {
+            final latestProgram = await db.getLatestActiveUserProgram();
+            if (latestProgram != null) {
+              activeUserProgram = latestProgram;
+              effectiveProgramId = latestProgram['program_id'] as String?;
             }
+          }
+
+          if (effectiveProgramId != null) {
+            program = await db.getWorkoutProgramById(effectiveProgramId);
             
-            // 프로그램의 운동들을 로드
-            int w = activeUserProgram!['current_week'];
-            int d = activeUserProgram!['current_day'];
-            programExercises = _loadProgramExercises(week: w, dayIndex: d-1);
-          } else {
-            // 프로그램을 찾을 수 없음
+            if (program != null && program!.isNotEmpty) {
+              // 사용자 프로그램 인스턴스를 조회하거나 생성
+              activeUserProgram ??= await db.getActiveUserProgram(effectiveProgramId);
+              if (activeUserProgram == null) {
+                activeUserProgram = {
+                  'id': _uuid.v4(),
+                  'program_id': effectiveProgramId,
+                  'current_week': 1,
+                  'current_day': 1,
+                  'started_at': DateTime.now().toIso8601String(),
+                };
+                await db.insertUserProgram(activeUserProgram!);
+              }
+
+              sessionName = program!['name'] ?? '프로그램 운동';
+              if (widget.programDay != null) {
+                sessionName += ' - ${widget.programDay}';
+              }
+              
+              // 프로그램의 운동들을 로드
+              int w = activeUserProgram!['current_week'];
+              int d = activeUserProgram!['current_day'];
+              programExercises = _loadProgramExercises(week: w, dayIndex: d-1);
+            } else {
+              // 프로그램을 찾을 수 없음
+            }
           }
         }
 
@@ -115,7 +138,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
           'start_time': DateTime.now().toIso8601String(),
           'exercises': programExercises,
           'is_completed': 0,
-          'program_id': effectiveProgramId,
+          'program_id': activeUserProgram?['program_id'],
           'program_day': activeUserProgram?['current_day'],
           'user_program_id': activeUserProgram?['id'],
           'program_week': activeUserProgram?['current_week'],
@@ -150,6 +173,31 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
     
     setState(() => loading = false);
     _startTimer();
+  }
+
+  List<Map<String, dynamic>> _convertExercisesToSessionFormat(List<Map<String, dynamic>> exercisesList) {
+    return exercisesList.map((exercise) {
+      final exerciseName = exercise['name'] as String? ?? '운동';
+      final sets = exercise['sets'] as int? ?? 3;
+      final reps = exercise['reps'] as String? ?? '10회';
+      
+      // 각 운동에 대해 지정된 세트 수만큼 세트 생성
+      final exerciseSets = List.generate(sets, (index) => {
+        'weight': 0,
+        'reps': 0,
+        'completed': false,
+        'target_reps': reps,
+        'target_weight': 0,
+      });
+
+      return {
+        'exercise_name': exerciseName,
+        'sets': exerciseSets,
+        'program_sets': sets,
+        'program_reps': reps,
+        'notes': '',
+      };
+    }).toList();
   }
 
   List<Map<String, dynamic>> _loadProgramExercises({int? week, int? dayIndex}) {

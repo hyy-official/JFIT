@@ -15,23 +15,21 @@ WorkoutProgramModel _$WorkoutProgramModelFromJson(Map<String, dynamic> json) =>
       durationWeeks: (json['durationWeeks'] as num).toInt(),
       difficultyLevel: json['difficultyLevel'] as String,
       programType: json['programType'] as String,
-      workoutsPerWeek: (json['workoutsPerWeek'] as num).toInt(),
-      equipmentNeeded: (json['equipmentNeeded'] as List<dynamic>)
-          .map((e) => e as String)
+      workoutsPerWeek: (json['workoutsPerWeek'] as num?)?.toInt(),
+      equipmentNeeded: (json['equipmentNeeded'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
-      weeklySchedule: (json['weeklySchedule'] as List<dynamic>)
-          .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
-          .toList(),
-      tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
+      weeklySchedule: json['weeklySchedule'] as Map<String, dynamic>?,
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
       rating: (json['rating'] as num).toDouble(),
       totalRatings: (json['totalRatings'] as num).toInt(),
       isPopular: json['isPopular'] as bool,
       isPublic: json['isPublic'] as bool,
-      createdBy: json['createdBy'] as String,
+      createdBy: json['createdBy'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       version: (json['version'] as num).toInt(),
-      imageUrl: json['imageUrl'] as String,
+      imageUrl: json['imageUrl'] as String?,
       isSample: json['isSample'] as bool,
     );
 

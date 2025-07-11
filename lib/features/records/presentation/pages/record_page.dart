@@ -131,7 +131,7 @@ class RecordTabContent extends StatelessWidget {
             },
           ),
           // 운동 탭 컨텐츠
-          ExerciseTabContent(hasRoutine: true),
+          ExerciseTabContent(selectedDate: selectedDate),
           // 계획 탭 컨텐츠
           const Center(child: Text('계획 컨텐츠', style: TextStyle(color: Colors.white54))),
         ],
