@@ -21,6 +21,9 @@ class AppTheme {
   static const Color surface1 = SecondTheme.bgTertiary;
   static const Color surface2 = SecondTheme.border;
 
+  // Primary color
+  static const Color primary = SecondTheme.accentPrimary;
+
   // Accents
   static const Color accent1 = SecondTheme.accentPrimary;
   static const Color accent2 = SecondTheme.accentSecondary;

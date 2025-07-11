@@ -102,5 +102,7 @@
   "login_with_email": "이메일로 로그인",
   "or_continue_with": "또는 다음으로 계속",
   "terms_agreement": "가입 시 이용약관 및 개인정보처리방침에 동의하게 됩니다.",
-  "registration_successful": "회원가입이 성공적으로 완료되었습니다!"
+  "registration_successful": "회원가입이 성공적으로 완료되었습니다!",
+  "retry": "다시 시도",
+  "noRoutinesFound": "운동 루틴이 없습니다."
 } 

@@ -148,35 +148,14 @@ class RecordPage extends StatefulWidget {
   State<RecordPage> createState() => _RecordPageState();
 }
 
-class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
-  late final TabController _tabController;
-  final DateTime _today = DateTime.now();
-  late DateTime _selectedDate;
-  
+class _RecordPageState extends State<RecordPage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  DateTime selectedDate = DateTime.now();
+
   @override
   void initState() {
     super.initState();
-    _selectedDate = _today;
-    _tabController = TabController(length: 4, vsync: this);
-    _loadData();
-  }
-
-  void _loadData() {
-    final authState = context.read<AuthBloc>().state;
-    if (authState is AuthAuthenticated) {
-      final userId = authState.user.id;
-      context.read<RecordBloc>().add(LoadMealRecords(userId: userId, date: _selectedDate));
-      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: _selectedDate));
-    }
-  }
-
-  void _loadDataForDate(DateTime date) {
-    final authState = context.read<AuthBloc>().state;
-    if (authState is AuthAuthenticated) {
-      final userId = authState.user.id;
-      context.read<RecordBloc>().add(LoadMealRecords(userId: userId, date: date));
-      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: date));
-    }
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -187,33 +166,28 @@ class _RecordPageState extends State<RecordPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return RecordPageScaffold(
-          today: _today,
-          selectedDate: _selectedDate,
-          onDateSelected: (d) {
-            setState(() => _selectedDate = d);
-            _loadDataForDate(_selectedDate);
-          },
-          tabController: _tabController,
-          onPrevMonth: () {
-            setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30)));
-            _loadDataForDate(_selectedDate);
-          },
-          onNextMonth: () {
-            setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30)));
-            _loadDataForDate(_selectedDate);
-          },
-          onPrevWeek: () {
-            setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7)));
-            _loadDataForDate(_selectedDate);
-          },
-          onNextWeek: () {
-            setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7)));
-            _loadDataForDate(_selectedDate);
-          },
-      child: RecordTabContent(
-        selectedDate: _selectedDate,
-        tabController: _tabController,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('기록'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: '식단'),
+            Tab(text: '운동'),
+            Tab(text: '몸무게'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          // 식단 탭
+          DietTabContent(selectedDate: selectedDate),
+          // 운동 탭
+          ExerciseTabContent(selectedDate: selectedDate),
+          // 몸무게 탭
+          BodyTabContent(selectedDate: selectedDate),
+        ],
       ),
     );
   }

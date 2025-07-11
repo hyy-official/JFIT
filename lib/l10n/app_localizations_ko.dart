@@ -317,10 +317,4 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get registration_successful => '회원가입이 성공적으로 완료되었습니다!';
-
-  @override
-  String get retry => '다시 시도';
-
-  @override
-  String get noRoutinesFound => '운동 루틴이 없습니다.';
 }

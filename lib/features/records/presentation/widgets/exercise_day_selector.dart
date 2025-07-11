@@ -3,158 +3,197 @@ import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/features/records/bloc/record_state.dart';
 
 class ExerciseDaySelector extends StatelessWidget {
-  final int currentWeek;
-  final int currentDay;
   final UserProgram userProgram;
-  
+  final DateTime selectedDate;
+
   const ExerciseDaySelector({
     super.key,
-    required this.currentWeek,
-    required this.currentDay,
     required this.userProgram,
+    required this.selectedDate,
   });
-
-  List<String> _generateWeeks() {
-    final totalWeeks = 12; // 기본값, 실제로는 프로그램에서 가져와야 함
-    return List.generate(totalWeeks, (index) => '${index + 1}주차');
-  }
-
-  List<Map<String, String>> _generateDays() {
-    // 주 7일 스케줄 생성
-    final days = <Map<String, String>>[];
-    
-    for (int i = 1; i <= 7; i++) {
-      final isWorkoutDay = _isWorkoutDay(i);
-      final isCurrent = i == currentDay;
-      final isCompleted = i < currentDay;
-      
-      String type;
-      String label;
-      
-      if (isCompleted) {
-        type = 'done';
-        label = isWorkoutDay ? 'Day $i' : '휴식';
-      } else if (isCurrent) {
-        type = 'today';
-        label = isWorkoutDay ? 'Day $i' : '휴식';
-      } else {
-        type = 'rest';
-        label = isWorkoutDay ? 'Day $i' : '휴식';
-      }
-      
-      days.add({
-        'type': type,
-        'label': label,
-      });
-    }
-    
-    return days;
-  }
-
-  bool _isWorkoutDay(int day) {
-    // 간단한 로직: 홀수 날을 운동일로 가정
-    // 실제로는 프로그램의 weekly_schedule에 따라 결정되어야 함
-    return day % 2 == 1;
-  }
-
-  Color _getDayColor(String type) {
-    switch (type) {
-      case 'done':
-        return AppTheme.accent1;
-      case 'today':
-        return AppTheme.programAccentBlue;
-      case 'rest':
-      default:
-        return AppTheme.textSub;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    final weeks = _generateWeeks();
-    final days = _generateDays();
+    final workoutDays = _getWorkoutDays();
     
+    if (workoutDays.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 주차 선택기
-        SizedBox(
-          height: 36,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: weeks.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 8),
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                // 주차 변경 기능 (나중에 구현)
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: index == currentWeek - 1 
-                      ? AppTheme.programAccentBlue.withOpacity(0.2)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: index == currentWeek - 1
-                        ? AppTheme.programAccentBlue
-                        : AppTheme.textSub.withOpacity(0.3),
-                  ),
-                ),
-                child: Text(
-                  weeks[index],
-                  style: TextStyle(
-                    color: index == currentWeek - 1 
-                        ? AppTheme.programAccentBlue 
-                        : AppTheme.textSub,
-                    fontWeight: index == currentWeek - 1 
-                        ? FontWeight.bold 
-                        : FontWeight.normal,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ),
+        Text(
+          '${userProgram.currentWeek}주차 운동일',
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 16),
-        // 일차 선택기
-        SizedBox(
-          height: 36,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: days.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 8),
-            itemBuilder: (context, index) {
-              final day = days[index];
-              final color = _getDayColor(day['type']!);
+        const SizedBox(height: 8),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: workoutDays.map((day) {
+              final isActive = day == userProgram.currentDay;
+              final isCompleted = day < userProgram.currentDay;
               
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: day['type'] == 'today' 
-                      ? color.withOpacity(0.2)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: color.withOpacity(0.5),
-                  ),
-                ),
-                child: Text(
-                  day['label']!,
-                  style: TextStyle(
-                    color: color,
-                    fontWeight: day['type'] == 'today' 
-                        ? FontWeight.bold 
-                        : FontWeight.normal,
-                    fontSize: 14,
-                  ),
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: _DayChip(
+                  day: day,
+                  isActive: isActive,
+                  isCompleted: isCompleted,
                 ),
               );
-            },
+            }).toList(),
           ),
         ),
       ],
+    );
+  }
+
+  List<int> _getWorkoutDays() {
+    try {
+      // exercisesJson이나 weeklySchedule에서 운동일 추출
+      if (userProgram.exercisesJson.isNotEmpty) {
+        final exercises = userProgram.exercisesJson;
+        
+        // exercises_json에서 days 정보 추출
+        if (exercises.containsKey('days')) {
+          final days = exercises['days'] as List?;
+          if (days != null) {
+            return days.map((day) => day['day'] as int).toList()..sort();
+          }
+        }
+        
+        // 또는 week별 일정에서 추출
+        if (exercises.containsKey('weeks')) {
+          final weeks = exercises['weeks'] as List?;
+          if (weeks != null && weeks.isNotEmpty) {
+            final currentWeekData = weeks.firstWhere(
+              (week) => week['week'] == userProgram.currentWeek,
+              orElse: () => weeks.first,
+            );
+            if (currentWeekData != null && currentWeekData.containsKey('days')) {
+              final days = currentWeekData['days'] as List?;
+              if (days != null) {
+                return days.map((day) => day['day'] as int).toList()..sort();
+              }
+            }
+          }
+        }
+      }
+      
+      // weeklySchedule에서 운동일 추출
+      if (userProgram.weeklySchedule.isNotEmpty) {
+        final schedule = userProgram.weeklySchedule;
+        if (schedule is List && schedule.isNotEmpty) {
+          final weekData = schedule.firstWhere(
+            (week) => week['week'] == userProgram.currentWeek,
+            orElse: () => schedule.first,
+          );
+          
+          if (weekData != null && weekData.containsKey('days')) {
+            final days = weekData['days'] as List?;
+            if (days != null) {
+              return days.map((day) => day['day'] as int).toList()..sort();
+            }
+          }
+        }
+      }
+      
+      // 기본값: 주당 운동 횟수를 바탕으로 생성
+      return _generateDefaultWorkoutDays();
+    } catch (e) {
+      // 오류 발생 시 기본값 반환
+      return _generateDefaultWorkoutDays();
+    }
+  }
+
+  List<int> _generateDefaultWorkoutDays() {
+    final workoutsPerWeek = userProgram.workoutsPerWeek;
+    
+    // 주당 운동 횟수에 따라 운동일 생성
+    switch (workoutsPerWeek) {
+      case 1:
+        return [1];
+      case 2:
+        return [1, 4];
+      case 3:
+        return [1, 3, 5];
+      case 4:
+        return [1, 2, 4, 5];
+      case 5:
+        return [1, 2, 3, 4, 5];
+      case 6:
+        return [1, 2, 3, 4, 5, 6];
+      case 7:
+        return [1, 2, 3, 4, 5, 6, 7];
+      default:
+        return [1, 3, 5]; // 기본값
+    }
+  }
+}
+
+class _DayChip extends StatelessWidget {
+  final int day;
+  final bool isActive;
+  final bool isCompleted;
+
+  const _DayChip({
+    required this.day,
+    required this.isActive,
+    required this.isCompleted,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Color backgroundColor;
+    Color textColor;
+    
+    if (isCompleted) {
+      backgroundColor = Colors.green;
+      textColor = Colors.white;
+    } else if (isActive) {
+      backgroundColor = AppTheme.primary;
+      textColor = Colors.white;
+    } else {
+      backgroundColor = Colors.grey[200]!;
+      textColor = Colors.grey[600]!;
+    }
+
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(20),
+        border: isActive
+            ? Border.all(color: AppTheme.primary, width: 2)
+            : null,
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'D$day',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
+            ),
+            if (isCompleted)
+              Icon(
+                Icons.check,
+                size: 12,
+                color: textColor,
+              ),
+          ],
+        ),
+      ),
     );
   }
 } 
