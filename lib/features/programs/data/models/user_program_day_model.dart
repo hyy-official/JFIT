@@ -6,12 +6,22 @@ part 'user_program_day_model.g.dart';
 @JsonSerializable()
 class UserProgramDayModel extends Equatable {
   final String id;
+  
+  @JsonKey(name: 'user_program_id')
   final String userProgramId;
+  
   final int week;
   final int day;
+  
+  @JsonKey(name: 'completed_at')
   final DateTime? completedAt;
+  
   final String? note;
+  
+  @JsonKey(name: 'created_at')
   final DateTime createdAt;
+  
+  @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
 
   const UserProgramDayModel({

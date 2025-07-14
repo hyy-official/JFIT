@@ -45,32 +45,52 @@ class ExerciseRoutineList extends StatelessWidget {
         } else {
           statusText = 'Day ${currentDay} 운동일';
           
-          // exercises_json에서 오늘의 운동 정보 추출
-          final exercisesJson = userProgram['exercises_json'] as Map<String, dynamic>?;
-          if (exercisesJson != null && exercisesJson.containsKey('week_$currentWeek')) {
-            final weekData = exercisesJson['week_$currentWeek'] as Map<String, dynamic>?;
-            if (weekData != null && weekData.containsKey('day_$currentDay')) {
-              final dayData = weekData['day_$currentDay'] as Map<String, dynamic>?;
-              if (dayData != null && dayData.containsKey('exercises')) {
-                final exercises = dayData['exercises'] as List<dynamic>?;
-                if (exercises != null && exercises.isNotEmpty) {
-                  // 첫 번째 몇 개의 운동 이름을 표시
-                  final exerciseNames = exercises.take(2).map((e) => e['name'] ?? '운동').toList();
-                  descText = exerciseNames.join(', ');
-                  if (exercises.length > 2) {
-                    descText += ' 외 ${exercises.length - 2}개';
+          // exercises_json에서 오늘의 운동 정보 추출 (새로운 구조 지원)
+          final exercisesJson = userProgram['exercises_json'];
+          List<dynamic>? exercises;
+          
+          if (exercisesJson is List) {
+            // 새로운 구조: [{"week": 1, "days": [{"day": 1, "exercises": [...]}]}]
+            for (final weekItem in exercisesJson) {
+              if (weekItem is Map<String, dynamic> && weekItem['week'] == currentWeek) {
+                final days = weekItem['days'] as List<dynamic>?;
+                if (days != null) {
+                  for (final dayItem in days) {
+                    if (dayItem is Map<String, dynamic> && dayItem['day'] == currentDay) {
+                      exercises = dayItem['exercises'] as List<dynamic>?;
+                      break;
+                    }
                   }
-                } else {
-                  descText = '오늘의 운동 정보가 없습니다.';
                 }
-              } else {
-                descText = '오늘의 운동 정보가 없습니다.';
+                break;
               }
-            } else {
-              descText = '오늘의 운동 정보가 없습니다.';
+            }
+          } else if (exercisesJson is Map<String, dynamic>) {
+            // 기존 구조: {"week_1": {"day_1": {"exercises": [...]}}}
+            if (exercisesJson.containsKey('week_$currentWeek')) {
+              final weekData = exercisesJson['week_$currentWeek'] as Map<String, dynamic>?;
+              if (weekData != null && weekData.containsKey('day_$currentDay')) {
+                final dayData = weekData['day_$currentDay'] as Map<String, dynamic>?;
+                if (dayData != null && dayData.containsKey('exercises')) {
+                  exercises = dayData['exercises'] as List<dynamic>?;
+                }
+              }
+            }
+          }
+          
+          if (exercises != null && exercises.isNotEmpty) {
+            // 첫 번째 몇 개의 운동 이름을 표시 (새로운 구조 지원)
+            final exerciseNames = exercises.take(2).map((e) {
+              // 새로운 구조: exercise_name 또는 custom_name
+              // 기존 구조: name
+              return e['exercise_name'] ?? e['custom_name'] ?? e['name'] ?? '운동';
+            }).toList();
+            descText = exerciseNames.join(', ');
+            if (exercises.length > 2) {
+              descText += ' 외 ${exercises.length - 2}개';
             }
           } else {
-            descText = '운동 정보를 불러오는 중...';
+            descText = '오늘의 운동 정보가 없습니다.';
           }
         }
         

@@ -52,6 +52,15 @@ class AddProgramToUser extends ProgramsEvent {
   List<Object?> get props => [programId];
 }
 
+class SaveAsMyRoutine extends ProgramsEvent {
+  final String templateProgramId;
+
+  const SaveAsMyRoutine(this.templateProgramId);
+
+  @override
+  List<Object?> get props => [templateProgramId];
+}
+
 class LoadUserPrograms extends ProgramsEvent {}
 
 class SearchPrograms extends ProgramsEvent {
@@ -65,7 +74,7 @@ class SearchPrograms extends ProgramsEvent {
 
 class RefreshPrograms extends ProgramsEvent {}
 
-class ClearSearch extends ProgramsEvent {}
+class ClearSearch extends ProgramsEvent {} 
 
 // Day별 상태/운동 루틴 관련 이벤트
 class LoadUserProgramDays extends ProgramsEvent {
@@ -94,4 +103,26 @@ class LoadExerciseById extends ProgramsEvent {
   const LoadExerciseById(this.exerciseId);
   @override
   List<Object?> get props => [exerciseId];
+}
+
+// 프로그램 중복 체크 및 관리 이벤트들
+class CheckProgramDuplicate extends ProgramsEvent {
+  final String programId;
+  const CheckProgramDuplicate(this.programId);
+  @override
+  List<Object?> get props => [programId];
+}
+
+class RestartProgram extends ProgramsEvent {
+  final String programId;
+  const RestartProgram(this.programId);
+  @override
+  List<Object?> get props => [programId];
+}
+
+class ContinueProgram extends ProgramsEvent {
+  final String programId;
+  const ContinueProgram(this.programId);
+  @override
+  List<Object?> get props => [programId];
 } 

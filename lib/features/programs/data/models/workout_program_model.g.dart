@@ -19,7 +19,7 @@ WorkoutProgramModel _$WorkoutProgramModelFromJson(Map<String, dynamic> json) =>
       equipmentNeeded: (json['equipmentNeeded'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      weeklySchedule: json['weeklySchedule'] as Map<String, dynamic>?,
+      weeklySchedule: json['weeklySchedule'],
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
       rating: (json['rating'] as num).toDouble(),
       totalRatings: (json['totalRatings'] as num).toInt(),

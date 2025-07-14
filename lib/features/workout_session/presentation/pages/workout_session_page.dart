@@ -21,6 +21,8 @@ class WorkoutSessionPage extends StatefulWidget {
   final String? sessionId; // null이면 새 세션(프리스타일)
   final String? programId; // 워크아웃 프로그램 ID
   final String? programDay; // 프로그램의 특정 day (예: "Day 1: 전신 A")
+  final int? targetWeek; // 특정 주차 선택 (null이면 current_week 사용)
+  final int? targetDay; // 특정 day 선택 (null이면 current_day 사용)
   final bool showNavigation; // 네비게이션 바 표시 여부 (ProgramDetail → Start 시 true)
 
   const WorkoutSessionPage({
@@ -28,6 +30,8 @@ class WorkoutSessionPage extends StatefulWidget {
     this.sessionId,
     this.programId,
     this.programDay,
+    this.targetWeek,
+    this.targetDay,
     this.showNavigation = false,
   });
 
@@ -91,6 +95,17 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         String? effectiveProgramId = widget.programId;
 
         // 1) 우선 위젯에서 프로그램 ID가 전달된 경우 사용
+        if (effectiveProgramId != null) {
+          // 특정 프로그램 ID에 해당하는 사용자 프로그램 조회
+          final userPrograms = await _recordRepository.getUserPrograms(userId);
+          for (final userProgram in userPrograms) {
+            final workoutProgram = userProgram['workout_programs'];
+            if (workoutProgram != null && workoutProgram['id'] == effectiveProgramId) {
+              activeUserProgram = userProgram;
+              break;
+            }
+          }
+        }
         // 2) 없으면 사용자의 활성 프로그램을 조회하여 사용
         if (effectiveProgramId == null) {
           activeUserProgram = await _recordRepository.getLatestActiveUserProgram(userId);
@@ -99,7 +114,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
           }
         }
 
-        if (effectiveProgramId != null) {
+        if (effectiveProgramId != null && activeUserProgram != null) {
           // 프로그램 정보와 사용자 프로그램 정보 조회
           final userProgramDetails = await _recordRepository.getUserProgramDetails(activeUserProgram!['id']);
           if (userProgramDetails != null) {
@@ -112,8 +127,9 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
             }
             
             // 프로그램의 운동들을 로드
-            int w = activeUserProgram!['current_week'];
-            int d = activeUserProgram!['current_day'];
+            // targetWeek/targetDay가 있으면 사용, 없으면 current 값 사용
+            int w = widget.targetWeek ?? activeUserProgram!['current_week'];
+            int d = widget.targetDay ?? activeUserProgram!['current_day'];
             programExercises = _loadProgramExercises(week: w, dayIndex: d-1);
           }
         }

@@ -64,11 +64,28 @@ class ProgramRepositoryImpl implements ProgramRepository {
   Future<Either<Failure, void>> addProgramToUser(String programId) async {
     try {
       final user = supabaseClient.auth.currentUser;
+      print('현재 로그인된 사용자 UID: ${user?.id}');
       if (user == null) {
         return const Left(AuthFailure('사용자가 로그인되지 않았습니다.'));
       }
 
       await remoteDataSource.addProgramToUser(programId, user.id);
+      return const Right(null);
+    } on Exception catch (e) {
+      return Left(DatabaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> saveAsMyRoutine(String templateProgramId) async {
+    try {
+      final user = supabaseClient.auth.currentUser;
+      print('현재 로그인된 사용자 UID: ${user?.id}');
+      if (user == null) {
+        return const Left(AuthFailure('사용자가 로그인되지 않았습니다.'));
+      }
+
+      await remoteDataSource.saveAsMyRoutine(templateProgramId, user.id);
       return const Right(null);
     } on Exception catch (e) {
       return Left(DatabaseFailure(e.toString()));
@@ -135,6 +152,51 @@ class ProgramRepositoryImpl implements ProgramRepository {
     try {
       final exercise = await remoteDataSource.getExerciseById(exerciseId);
       return Right(exercise);
+    } on Exception catch (e) {
+      return Left(DatabaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Map<String, dynamic>?>> checkProgramDuplicate(String programId) async {
+    try {
+      final user = supabaseClient.auth.currentUser;
+      if (user == null) {
+        return const Left(AuthFailure('사용자가 로그인되지 않았습니다.'));
+      }
+
+      final duplicate = await remoteDataSource.checkProgramDuplicate(programId, user.id);
+      return Right(duplicate);
+    } on Exception catch (e) {
+      return Left(DatabaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> restartProgram(String programId) async {
+    try {
+      final user = supabaseClient.auth.currentUser;
+      if (user == null) {
+        return const Left(AuthFailure('사용자가 로그인되지 않았습니다.'));
+      }
+
+      await remoteDataSource.restartProgram(programId, user.id);
+      return const Right(null);
+    } on Exception catch (e) {
+      return Left(DatabaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> continueProgram(String programId) async {
+    try {
+      final user = supabaseClient.auth.currentUser;
+      if (user == null) {
+        return const Left(AuthFailure('사용자가 로그인되지 않았습니다.'));
+      }
+
+      await remoteDataSource.continueProgram(programId, user.id);
+      return const Right(null);
     } on Exception catch (e) {
       return Left(DatabaseFailure(e.toString()));
     }

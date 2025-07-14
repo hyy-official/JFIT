@@ -14,6 +14,7 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     on<LoadPrograms>(_onLoadPrograms);
     on<LoadProgramById>(_onLoadProgramById);
     on<AddProgramToUser>(_onAddProgramToUser);
+    on<SaveAsMyRoutine>(_onSaveAsMyRoutine);
     on<LoadUserPrograms>(_onLoadUserPrograms);
     on<SearchPrograms>(_onSearchPrograms);
     on<RefreshPrograms>(_onRefreshPrograms);
@@ -22,6 +23,9 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     on<LoadWorkoutSessionsByUserProgram>(_onLoadWorkoutSessionsByUserProgram);
     on<LoadWorkoutLogsBySession>(_onLoadWorkoutLogsBySession);
     on<LoadExerciseById>(_onLoadExerciseById);
+    on<CheckProgramDuplicate>(_onCheckProgramDuplicate);
+    on<RestartProgram>(_onRestartProgram);
+    on<ContinueProgram>(_onContinueProgram);
   }
 
   Future<void> _onLoadPopularPrograms(
@@ -101,6 +105,18 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     result.fold(
       (failure) => emit(ProgramAddError(failure.message)),
       (_) => emit(const ProgramAddedToUser('프로그램이 내 루틴에 추가되었습니다!')),
+    );
+  }
+
+  Future<void> _onSaveAsMyRoutine(
+    SaveAsMyRoutine event,
+    Emitter<ProgramsState> emit,
+  ) async {
+    final result = await _repository.saveAsMyRoutine(event.templateProgramId);
+    
+    result.fold(
+      (failure) => emit(RoutineSaveError(failure.message)),
+      (_) => emit(const RoutineSaved('프로그램이 내 루틴으로 저장되었습니다!')),
     );
   }
 
@@ -199,11 +215,42 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     LoadUserProgramDays event,
     Emitter<ProgramsState> emit,
   ) async {
-    emit(UserProgramDaysLoading());
+    // 기존 ProgramDetailData 상태가 있으면 로딩 상태로 업데이트
+    if (state is ProgramDetailData) {
+      emit((state as ProgramDetailData).copyWith(isLoading: true));
+    } else {
+      emit(const ProgramDetailData(isLoading: true));
+    }
+    
     final result = await _repository.getUserProgramDays(event.userProgramId);
     result.fold(
-      (failure) => emit(UserProgramDaysError(failure.message)),
-      (days) => emit(UserProgramDaysLoaded(days)),
+      (failure) {
+        if (state is ProgramDetailData) {
+          emit((state as ProgramDetailData).copyWith(
+            isLoading: false,
+            error: failure.message,
+          ));
+        } else {
+          emit(ProgramDetailData(
+            isLoading: false,
+            error: failure.message,
+          ));
+        }
+      },
+      (days) {
+        if (state is ProgramDetailData) {
+          emit((state as ProgramDetailData).copyWith(
+            days: days,
+            isLoading: false,
+            error: null,
+          ));
+        } else {
+          emit(ProgramDetailData(
+            days: days,
+            isLoading: false,
+          ));
+        }
+      },
     );
   }
 
@@ -211,11 +258,42 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     LoadWorkoutSessionsByUserProgram event,
     Emitter<ProgramsState> emit,
   ) async {
-    emit(WorkoutSessionsLoading());
+    // 기존 ProgramDetailData 상태가 있으면 로딩 상태로 업데이트
+    if (state is ProgramDetailData) {
+      emit((state as ProgramDetailData).copyWith(isLoading: true));
+    } else {
+      emit(const ProgramDetailData(isLoading: true));
+    }
+    
     final result = await _repository.getWorkoutSessionsByUserProgram(event.userProgramId);
     result.fold(
-      (failure) => emit(WorkoutSessionsError(failure.message)),
-      (sessions) => emit(WorkoutSessionsLoaded(sessions)),
+      (failure) {
+        if (state is ProgramDetailData) {
+          emit((state as ProgramDetailData).copyWith(
+            isLoading: false,
+            error: failure.message,
+          ));
+        } else {
+          emit(ProgramDetailData(
+            isLoading: false,
+            error: failure.message,
+          ));
+        }
+      },
+      (sessions) {
+        if (state is ProgramDetailData) {
+          emit((state as ProgramDetailData).copyWith(
+            sessions: sessions,
+            isLoading: false,
+            error: null,
+          ));
+        } else {
+          emit(ProgramDetailData(
+            sessions: sessions,
+            isLoading: false,
+          ));
+        }
+      },
     );
   }
 
@@ -223,11 +301,41 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     LoadWorkoutLogsBySession event,
     Emitter<ProgramsState> emit,
   ) async {
-    emit(WorkoutLogsLoading());
+    if (state is ProgramDetailData) {
+      emit((state as ProgramDetailData).copyWith(isLoading: true));
+    } else {
+      emit(const ProgramDetailData(isLoading: true));
+    }
+    
     final result = await _repository.getWorkoutLogsBySession(event.sessionId);
     result.fold(
-      (failure) => emit(WorkoutLogsError(failure.message)),
-      (logs) => emit(WorkoutLogsLoaded(logs)),
+      (failure) {
+        if (state is ProgramDetailData) {
+          emit((state as ProgramDetailData).copyWith(
+            isLoading: false,
+            error: failure.message,
+          ));
+        } else {
+          emit(ProgramDetailData(
+            isLoading: false,
+            error: failure.message,
+          ));
+        }
+      },
+      (logs) {
+        if (state is ProgramDetailData) {
+          emit((state as ProgramDetailData).copyWith(
+            logs: logs,
+            isLoading: false,
+            error: null,
+          ));
+        } else {
+          emit(ProgramDetailData(
+            logs: logs,
+            isLoading: false,
+          ));
+        }
+      },
     );
   }
 
@@ -240,6 +348,58 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     result.fold(
       (failure) => emit(ExerciseError(failure.message)),
       (exercise) => emit(ExerciseLoaded(exercise)),
+    );
+  }
+
+  Future<void> _onCheckProgramDuplicate(
+    CheckProgramDuplicate event,
+    Emitter<ProgramsState> emit,
+  ) async {
+    final result = await _repository.checkProgramDuplicate(event.programId);
+    
+    result.fold(
+      (failure) => emit(ProgramAddError(failure.message)),
+      (duplicateInfo) {
+        if (duplicateInfo == null) {
+          // 중복 없음, 바로 추가
+          add(AddProgramToUser(event.programId));
+        } else {
+          // 중복 발견, 팝업 표시
+          emit(ProgramDuplicateFound(
+            programId: event.programId,
+            programName: duplicateInfo['programName'] as String,
+            currentWeek: duplicateInfo['currentWeek'] as int,
+            currentDay: duplicateInfo['currentDay'] as int,
+            totalWeeks: duplicateInfo['totalWeeks'] as int,
+            progressPercent: duplicateInfo['progressPercent'] as double,
+            isCompleted: duplicateInfo['isCompleted'] as bool,
+          ));
+        }
+      },
+    );
+  }
+
+  Future<void> _onRestartProgram(
+    RestartProgram event,
+    Emitter<ProgramsState> emit,
+  ) async {
+    final result = await _repository.restartProgram(event.programId);
+    
+    result.fold(
+      (failure) => emit(ProgramAddError(failure.message)),
+      (_) => emit(const ProgramRestarted('프로그램을 처음부터 다시 시작합니다!')),
+    );
+  }
+
+  Future<void> _onContinueProgram(
+    ContinueProgram event,
+    Emitter<ProgramsState> emit,
+  ) async {
+    final result = await _repository.continueProgram(event.programId);
+    
+    result.fold(
+      (failure) => emit(ProgramAddError(failure.message)),
+      (_) => emit(const ProgramContinued('프로그램을 이어서 진행합니다!')),
     );
   }
 } 

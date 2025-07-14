@@ -37,8 +37,8 @@ class ProgramCardVertical extends StatelessWidget {
             builder: (context) => BlocProvider.value(
               value: bloc,
               child: ProgramDetailPage(program: program),
-            ),
-          );
+          ),
+        );
         }
       },
       child: Container(

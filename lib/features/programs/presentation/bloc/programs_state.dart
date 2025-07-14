@@ -100,6 +100,24 @@ class ProgramAddedToUser extends ProgramsState {
   List<Object?> get props => [message];
 }
 
+class RoutineSaved extends ProgramsState {
+  final String message;
+
+  const RoutineSaved(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class RoutineSaveError extends ProgramsState {
+  final String message;
+
+  const RoutineSaveError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class ProgramAddError extends ProgramsState {
   final String message;
 
@@ -164,4 +182,86 @@ class ExerciseError extends ProgramsState {
   const ExerciseError(this.message);
   @override
   List<Object?> get props => [message];
+}
+
+// 프로그램 중복 및 진행 상황 관련 상태들
+class ProgramDuplicateFound extends ProgramsState {
+  final String programId;
+  final String programName;
+  final int currentWeek;
+  final int currentDay;
+  final int totalWeeks;
+  final double progressPercent;
+  final bool isCompleted;
+  
+  const ProgramDuplicateFound({
+    required this.programId,
+    required this.programName,
+    required this.currentWeek,
+    required this.currentDay,
+    required this.totalWeeks,
+    required this.progressPercent,
+    required this.isCompleted,
+  });
+  
+  @override
+  List<Object?> get props => [
+    programId, 
+    programName, 
+    currentWeek, 
+    currentDay, 
+    totalWeeks, 
+    progressPercent, 
+    isCompleted
+  ];
+}
+
+class ProgramRestarted extends ProgramsState {
+  final String message;
+  const ProgramRestarted(this.message);
+  @override
+  List<Object?> get props => [message];
+}
+
+class ProgramContinued extends ProgramsState {
+  final String message;
+  const ProgramContinued(this.message);
+  @override
+  List<Object?> get props => [message];
+}
+
+// ProgramDetailSheet에서 사용할 복합 상태
+class ProgramDetailData extends ProgramsState {
+  final List<UserProgramDayModel> days;
+  final List<WorkoutSessionModel> sessions;
+  final List<WorkoutLogModel>? logs;
+  final bool isLoading;
+  final String? error;
+
+  const ProgramDetailData({
+    this.days = const [],
+    this.sessions = const [],
+    this.logs,
+    this.isLoading = false,
+    this.error,
+  });
+
+  @override
+  List<Object?> get props => [days, sessions, logs, isLoading, error];
+
+  ProgramDetailData copyWith({
+    List<UserProgramDayModel>? days,
+    List<WorkoutSessionModel>? sessions,
+    List<WorkoutLogModel>? logs,
+    bool? isLoading,
+    String? error,
+  }) {
+    return ProgramDetailData(
+      days: days ?? this.days,
+      sessions: sessions ?? this.sessions,
+      logs: logs ?? this.logs,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
 } 

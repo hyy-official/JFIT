@@ -17,10 +17,16 @@ abstract class ProgramRepository {
   });
   Future<Either<Failure, WorkoutProgram>> getProgramById(String id);
   Future<Either<Failure, void>> addProgramToUser(String programId);
+  Future<Either<Failure, void>> saveAsMyRoutine(String templateProgramId);
   Future<Either<Failure, List<WorkoutProgram>>> getUserPrograms();
   Future<Either<Failure, List<WorkoutProgram>>> searchPrograms(String query);
   Future<Either<Failure, List<UserProgramDayModel>>> getUserProgramDays(String userProgramId);
   Future<Either<Failure, List<WorkoutSessionModel>>> getWorkoutSessionsByUserProgram(String userProgramId);
   Future<Either<Failure, List<WorkoutLogModel>>> getWorkoutLogsBySession(String sessionId);
   Future<Either<Failure, ExerciseModel>> getExerciseById(String exerciseId);
+  
+  // 프로그램 중복 체크 및 관리
+  Future<Either<Failure, Map<String, dynamic>?>> checkProgramDuplicate(String programId);
+  Future<Either<Failure, void>> restartProgram(String programId);
+  Future<Either<Failure, void>> continueProgram(String programId);
 } 

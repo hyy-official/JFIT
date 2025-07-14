@@ -6,17 +6,29 @@ part 'workout_session_model.g.dart';
 @JsonSerializable()
 class WorkoutSessionModel extends Equatable {
   final String id;
+  
+  @JsonKey(name: 'user_program_id')
   final String userProgramId;
-  final DateTime sessionDate;
+  
+  @JsonKey(name: 'session_date')
+  final DateTime? sessionDate;
+  
+  @JsonKey(name: 'started_at')
   final DateTime? startedAt;
+  
+  @JsonKey(name: 'ended_at')
   final DateTime? endedAt;
+  
+  @JsonKey(name: 'is_completed')
   final bool isCompleted;
-  final Map<String, dynamic>? exercisesJson;
+  
+  @JsonKey(name: 'exercises_json')
+  final List<dynamic>? exercisesJson;
 
   const WorkoutSessionModel({
     required this.id,
     required this.userProgramId,
-    required this.sessionDate,
+    this.sessionDate,
     this.startedAt,
     this.endedAt,
     required this.isCompleted,
