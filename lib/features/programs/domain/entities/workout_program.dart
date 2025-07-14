@@ -16,7 +16,7 @@ class WorkoutProgram extends Equatable {
 
   final int? workoutsPerWeek; // 주 당 운동 횟수 (nullable)
   final List<String>? equipmentNeeded; // 필요한 기구 목록 (nullable)
-  final Map<String, dynamic>? weeklySchedule; // 예: {"mon": [...], "tue": [...]}
+  final dynamic? weeklySchedule; // 예: [{"week": 1, "days": [...]}] 또는 {"mon": [...], "tue": [...]}
   final List<String>? tags; // 검색·필터 태그 (nullable)
 
   final double rating; // 평균 평점
@@ -93,7 +93,7 @@ class WorkoutProgram extends Equatable {
     String? programType,
     int? workoutsPerWeek,
     List<String>? equipmentNeeded,
-    Map<String, dynamic>? weeklySchedule,
+    dynamic? weeklySchedule,
     List<String>? tags,
     double? rating,
     int? totalRatings,

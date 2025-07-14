@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/features/programs/presentation/pages/program_detail_page.dart';
+import 'package:jfit/features/records/presentation/widgets/program_detail_sheet.dart';
 import '../../domain/entities/workout_program.dart';
+import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProgramCardHorizontal extends StatelessWidget {
   final WorkoutProgram program;
@@ -11,12 +14,32 @@ class ProgramCardHorizontal extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ProgramDetailPage(program: program),
-          ),
-        );
+        final bloc = context.read<ProgramsBloc>();
+        final isDesktop = MediaQuery.of(context).size.width > 600;
+        if (isDesktop) {
+          showDialog(
+            context: context,
+            builder: (context) => Center(
+              child: SizedBox(
+                width: 600,
+                child: BlocProvider.value(
+                  value: bloc,
+                  child: ProgramDetailPage(program: program),
+                ),
+              ),
+            ),
+          );
+        } else {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => BlocProvider.value(
+              value: bloc,
+              child: ProgramDetailPage(program: program),
+            ),
+          );
+        }
       },
       child: Container(
         width: 140,

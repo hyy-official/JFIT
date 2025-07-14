@@ -9,6 +9,7 @@ import 'package:jfit/core/utils/responsive_utils.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 import 'package:jfit/models/nutrition_info.dart';
 import 'package:jfit/features/records/presentation/pages/nutrition_manual_input_screen.dart';
@@ -418,7 +419,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
     _nutritionItems.isNotEmpty;
 
   void _save() async {
-    final supabaseService = SupabaseService();
+    final supabaseService = GetIt.instance<SupabaseService>();
     showDialog(
       context: context,
       barrierDismissible: false,

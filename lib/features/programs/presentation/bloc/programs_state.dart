@@ -1,5 +1,9 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/workout_program.dart';
+import '../../data/models/user_program_day_model.dart';
+import '../../data/models/workout_session_model.dart';
+import '../../data/models/workout_log_model.dart';
+import '../../data/models/exercise_model.dart';
 
 abstract class ProgramsState extends Equatable {
   const ProgramsState();
@@ -101,6 +105,63 @@ class ProgramAddError extends ProgramsState {
 
   const ProgramAddError(this.message);
 
+  @override
+  List<Object?> get props => [message];
+}
+
+// Day별 상태/운동 루틴 관련 상태
+class UserProgramDaysLoading extends ProgramsState {}
+class UserProgramDaysLoaded extends ProgramsState {
+  final List<UserProgramDayModel> days;
+  const UserProgramDaysLoaded(this.days);
+  @override
+  List<Object?> get props => [days];
+}
+class UserProgramDaysError extends ProgramsState {
+  final String message;
+  const UserProgramDaysError(this.message);
+  @override
+  List<Object?> get props => [message];
+}
+
+class WorkoutSessionsLoading extends ProgramsState {}
+class WorkoutSessionsLoaded extends ProgramsState {
+  final List<WorkoutSessionModel> sessions;
+  const WorkoutSessionsLoaded(this.sessions);
+  @override
+  List<Object?> get props => [sessions];
+}
+class WorkoutSessionsError extends ProgramsState {
+  final String message;
+  const WorkoutSessionsError(this.message);
+  @override
+  List<Object?> get props => [message];
+}
+
+class WorkoutLogsLoading extends ProgramsState {}
+class WorkoutLogsLoaded extends ProgramsState {
+  final List<WorkoutLogModel> logs;
+  const WorkoutLogsLoaded(this.logs);
+  @override
+  List<Object?> get props => [logs];
+}
+class WorkoutLogsError extends ProgramsState {
+  final String message;
+  const WorkoutLogsError(this.message);
+  @override
+  List<Object?> get props => [message];
+}
+
+class ExerciseLoading extends ProgramsState {}
+class ExerciseLoaded extends ProgramsState {
+  final ExerciseModel exercise;
+  const ExerciseLoaded(this.exercise);
+  @override
+  List<Object?> get props => [exercise];
+}
+class ExerciseError extends ProgramsState {
+  final String message;
+  const ExerciseError(this.message);
   @override
   List<Object?> get props => [message];
 } 

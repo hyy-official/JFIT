@@ -106,34 +106,47 @@ class RecordPageScaffold extends StatelessWidget {
 }
 
 // 2. 날짜/탭별 컨텐츠만 리렌더링되는 위젯
-class RecordTabContent extends StatelessWidget {
+class RecordTabContent extends StatefulWidget {
   final DateTime selectedDate;
   final TabController tabController;
   const RecordTabContent({super.key, required this.selectedDate, required this.tabController});
 
   @override
+  State<RecordTabContent> createState() => _RecordTabContentState();
+}
+
+class _RecordTabContentState extends State<RecordTabContent> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+    
     return SizedBox(
       height: 400,
       child: TabBarView(
-        controller: tabController,
+        controller: widget.tabController,
         children: [
-          BlocBuilder<RecordBloc, RecordState>(
-            builder: (context, state) {
-              // 신체 탭 컨텐츠
-              return BodyTabContent(selectedDate: selectedDate);
-            },
+          // 신체 탭 컨텐츠
+          BodyTabContent(
+            key: const PageStorageKey('body_tab'),
+            selectedDate: widget.selectedDate,
           ),
-          BlocBuilder<RecordBloc, RecordState>(
-            builder: (context, state) {
-              // 식단 탭 컨텐츠
-              return DietTabContent(selectedDate: selectedDate);
-            },
+          // 식단 탭 컨텐츠
+          DietTabContent(
+            key: const PageStorageKey('diet_tab'),
+            selectedDate: widget.selectedDate,
           ),
           // 운동 탭 컨텐츠
-          ExerciseTabContent(selectedDate: selectedDate),
+          const ExerciseTabContent(
+            key: PageStorageKey('exercise_tab'),
+          ),
           // 계획 탭 컨텐츠
-          const Center(child: Text('계획 컨텐츠', style: TextStyle(color: Colors.white54))),
+          const Center(
+            key: PageStorageKey('plan_tab'),
+            child: Text('계획 컨텐츠', style: TextStyle(color: Colors.white54)),
+          ),
         ],
       ),
     );
@@ -148,46 +161,92 @@ class RecordPage extends StatefulWidget {
   State<RecordPage> createState() => _RecordPageState();
 }
 
-class _RecordPageState extends State<RecordPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  DateTime selectedDate = DateTime.now();
-
+class _RecordPageState extends State<RecordPage> 
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+  late final TabController _tabController;
+  final DateTime _today = DateTime.now();
+  late DateTime _selectedDate;
+  
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _selectedDate = _today;
+    _tabController = TabController(length: 4, vsync: this);
+    _loadData();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // 앱이 포커스를 다시 받을 때 운동 프로그램 새로고침
+      _refreshExerciseData();
+    }
+  }
+
+  void _refreshExerciseData() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      context.read<RecordBloc>().add(LoadUserPrograms(userId: authState.user.id));
+    }
+  }
+
+  void _loadData() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      final userId = authState.user.id;
+      context.read<RecordBloc>().add(LoadMealRecords(userId: userId, date: _selectedDate));
+      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: _selectedDate));
+      // 운동 프로그램도 함께 로드
+      context.read<RecordBloc>().add(LoadUserPrograms(userId: userId));
+    }
+  }
+
+  void _loadDataForDate(DateTime date) {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      final userId = authState.user.id;
+      context.read<RecordBloc>().add(LoadMealRecords(userId: userId, date: date));
+      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: date));
+    }
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('기록'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: '식단'),
-            Tab(text: '운동'),
-            Tab(text: '몸무게'),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          // 식단 탭
-          DietTabContent(selectedDate: selectedDate),
-          // 운동 탭
-          ExerciseTabContent(selectedDate: selectedDate),
-          // 몸무게 탭
-          BodyTabContent(selectedDate: selectedDate),
-        ],
+    return RecordPageScaffold(
+          today: _today,
+          selectedDate: _selectedDate,
+          onDateSelected: (d) {
+            setState(() => _selectedDate = d);
+            _loadDataForDate(_selectedDate);
+          },
+          tabController: _tabController,
+          onPrevMonth: () {
+            setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 30)));
+            _loadDataForDate(_selectedDate);
+          },
+          onNextMonth: () {
+            setState(() => _selectedDate = _selectedDate.add(const Duration(days: 30)));
+            _loadDataForDate(_selectedDate);
+          },
+          onPrevWeek: () {
+            setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 7)));
+            _loadDataForDate(_selectedDate);
+          },
+          onNextWeek: () {
+            setState(() => _selectedDate = _selectedDate.add(const Duration(days: 7)));
+            _loadDataForDate(_selectedDate);
+          },
+      child: RecordTabContent(
+        selectedDate: _selectedDate,
+        tabController: _tabController,
       ),
     );
   }

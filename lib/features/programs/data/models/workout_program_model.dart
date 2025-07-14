@@ -47,7 +47,9 @@ class WorkoutProgramModel extends WorkoutProgram {
       weeklySchedule: json['weekly_schedule'] != null
           ? (json['weekly_schedule'] is Map
               ? Map<String, dynamic>.from(json['weekly_schedule'] as Map)
-              : null)
+              : json['weekly_schedule'] is List
+                  ? json['weekly_schedule'] as List<dynamic>
+                  : null)
           : null,
       tags: json['tags'] != null
           ? (json['tags'] is List

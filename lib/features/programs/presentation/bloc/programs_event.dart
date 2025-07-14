@@ -65,4 +65,33 @@ class SearchPrograms extends ProgramsEvent {
 
 class RefreshPrograms extends ProgramsEvent {}
 
-class ClearSearch extends ProgramsEvent {} 
+class ClearSearch extends ProgramsEvent {}
+
+// Day별 상태/운동 루틴 관련 이벤트
+class LoadUserProgramDays extends ProgramsEvent {
+  final String userProgramId;
+  const LoadUserProgramDays(this.userProgramId);
+  @override
+  List<Object?> get props => [userProgramId];
+}
+
+class LoadWorkoutSessionsByUserProgram extends ProgramsEvent {
+  final String userProgramId;
+  const LoadWorkoutSessionsByUserProgram(this.userProgramId);
+  @override
+  List<Object?> get props => [userProgramId];
+}
+
+class LoadWorkoutLogsBySession extends ProgramsEvent {
+  final String sessionId;
+  const LoadWorkoutLogsBySession(this.sessionId);
+  @override
+  List<Object?> get props => [sessionId];
+}
+
+class LoadExerciseById extends ProgramsEvent {
+  final String exerciseId;
+  const LoadExerciseById(this.exerciseId);
+  @override
+  List<Object?> get props => [exerciseId];
+} 

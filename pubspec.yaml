@@ -38,9 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   fl_chart: ^0.69.0
   intl: any
-  sqflite: ^2.3.0
-  path: ^1.8.3
-  path_provider: ^2.1.1
+  
   uuid: ^4.3.3
   http: ^1.2.0
   shared_preferences: ^2.2.2
@@ -62,6 +60,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.4.7
   json_serializable: ^6.7.1
+  mockito: ^5.4.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

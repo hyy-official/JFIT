@@ -25,20 +25,9 @@ class UserProgramDayModel extends Equatable {
     required this.updatedAt,
   });
 
-  @override
-  List<Object?> get props => [
-    id,
-    userProgramId,
-    week,
-    day,
-    completedAt,
-    note,
-    createdAt,
-    updatedAt,
-  ];
-
-  factory UserProgramDayModel.fromJson(Map<String, dynamic> json) =>
-      _$UserProgramDayModelFromJson(json);
-
+  factory UserProgramDayModel.fromJson(Map<String, dynamic> json) => _$UserProgramDayModelFromJson(json);
   Map<String, dynamic> toJson() => _$UserProgramDayModelToJson(this);
+
+  @override
+  List<Object?> get props => [id, userProgramId, week, day, completedAt, note, createdAt, updatedAt];
 } 

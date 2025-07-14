@@ -13,7 +13,12 @@ class ExerciseTodayList extends StatelessWidget {
       itemCount: exercises.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, idx) {
-        final ex = exercises[idx];
+        final exercise = exercises[idx];
+        final name = exercise['name'] ?? exercise['exercise_name'] ?? '운동';
+        final sets = exercise['sets'] ?? exercise['recommended_sets'] ?? 3;
+        final reps = exercise['reps'] ?? exercise['recommended_reps'] ?? '10회';
+        final imageUrl = exercise['image_url'] ?? exercise['img'] ?? '';
+        
         return Container(
           decoration: BoxDecoration(
             color: AppTheme.programCardBackground,
@@ -22,26 +27,103 @@ class ExerciseTodayList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(ex['img'], width: 48, height: 48, fit: BoxFit.cover),
-              ),
+              _buildExerciseImage(imageUrl),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(ex['name'], style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text('x ${ex['sets']}세트   ${ex['reps']}', style: TextStyle(color: AppTheme.textSub, fontSize: 13)),
+                    Text(
+                      'x ${sets}세트   ${reps}',
+                      style: TextStyle(
+                        color: AppTheme.textSub,
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Icon(Icons.sync, color: AppTheme.textMuted),
+              Icon(
+                Icons.play_arrow,
+                color: AppTheme.textMuted,
+                size: 24,
+              ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildExerciseImage(String imageUrl) {
+    if (imageUrl.isEmpty) {
+      return Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          color: AppTheme.programBackground,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.fitness_center,
+          color: AppTheme.textMuted,
+          size: 24,
+        ),
+      );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.network(
+        imageUrl,
+        width: 48,
+        height: 48,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppTheme.programBackground,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.image_not_supported,
+              color: AppTheme.textMuted,
+              size: 20,
+            ),
+          );
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppTheme.programBackground,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+                strokeWidth: 2,
+                color: AppTheme.textMuted,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 } 

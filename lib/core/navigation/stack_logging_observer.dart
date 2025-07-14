@@ -9,7 +9,6 @@ class StackLoggingObserver extends NavigatorObserver {
   void _logStack() {
     if (!kDebugMode) return; // 릴리즈 빌드에서는 출력 생략
     final names = _stack.map((r) => r.settings.name ?? r.runtimeType.toString()).toList();
-    debugPrint('[NAV] Current stack (${names.length}): $names');
   }
 
   @override

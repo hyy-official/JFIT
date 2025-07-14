@@ -6,6 +6,7 @@ import 'package:jfit/services/food_api_service.dart';
 import 'package:jfit/core/theme/nutrition_input_theme.dart';
 import 'nutrition_manual_input_screen.dart';
 import 'food_nutrition_calculator_screen.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 import 'package:jfit/core/theme/app_theme.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
@@ -36,7 +37,7 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
   }
 
   Future<void> _loadRecentFoods() async {
-    final supa = SupabaseService();
+    final supa = GetIt.instance<SupabaseService>();
     final rows = await supa.searchFoodItems(''); // fetch all? implement query later
     setState(() {
       _recentFoods.clear();

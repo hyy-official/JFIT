@@ -65,9 +65,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     // 데스크톱에서는 항상 우측 패널을 표시
     return BlocBuilder<RecordBloc, RecordState>(
       builder: (context, state) {
-        List<UserProgram> userPrograms = [];
-        if (state is UserProgramsLoaded && _currentIndex == 0) {
-          userPrograms = state.userPrograms;
+        UserDailySummary? dailySummary;
+        if (state is DailySummaryLoaded && _currentIndex == 0) {
+          dailySummary = state.dailySummary;
         }
         
         return ResponsiveScaffold(
@@ -111,7 +111,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           // 데스크톱에서 항상 우측 패널 표시를 위해 selectedDate는 항상 제공
           selectedDate: DateTime.now(),
           // RecordPage일 때만 실제 데이터 제공, 다른 페이지에서는 null
-          dailySummary: _currentIndex == 0 ? null : null, // 임시로 null 설정
+          dailySummary: _currentIndex == 0 ? dailySummary : null,
         );
       },
     );
@@ -120,7 +120,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   void _loadRecordData() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      context.read<RecordBloc>().add(LoadUserPrograms());
+      final userId = authState.user.id;
+      final today = DateTime.now();
+      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: today));
     }
   }
 } 

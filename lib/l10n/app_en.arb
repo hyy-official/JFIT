@@ -102,7 +102,5 @@
   "login_with_email": "Login with Email",
   "or_continue_with": "Or continue with",
   "terms_agreement": "By signing up, you agree to our Terms and Privacy Policy.",
-  "registration_successful": "Registration successful!",
-  "retry": "Retry",
-  "noRoutinesFound": "No routines found."
+  "registration_successful": "Registration successful!"
 } 

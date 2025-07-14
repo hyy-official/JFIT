@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 
 /// 신체 & 운동 탭 컨텐츠
@@ -10,8 +11,9 @@ class BodyTabContent extends StatefulWidget {
   State<BodyTabContent> createState() => _BodyTabContentState();
 }
 
-class _BodyTabContentState extends State<BodyTabContent> {
-  final SupabaseService _supabaseService = SupabaseService();
+class _BodyTabContentState extends State<BodyTabContent>
+    with AutomaticKeepAliveClientMixin {
+  final SupabaseService _supabaseService = GetIt.instance<SupabaseService>();
   Map<String, dynamic>? _data;
   bool _loading = true;
 
@@ -39,7 +41,12 @@ class _BodyTabContentState extends State<BodyTabContent> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // AutomaticKeepAliveClientMixin 요구사항
+    
     if (_loading) return const Center(child: CircularProgressIndicator());
     if (_data == null) {
       return const Center(child: Text('오늘 기록된 신체 정보가 없습니다', style: TextStyle(color: Colors.white54)));

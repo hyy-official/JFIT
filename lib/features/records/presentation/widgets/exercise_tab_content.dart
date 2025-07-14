@@ -1,126 +1,112 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/features/auth/bloc/auth_bloc.dart';
+import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/records/bloc/record_bloc.dart';
 import 'package:jfit/features/records/bloc/record_event.dart';
 import 'package:jfit/features/records/bloc/record_state.dart';
-import 'package:jfit/features/records/presentation/widgets/exercise_routine_list.dart';
-import 'package:jfit/l10n/app_localizations.dart';
+import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'exercise_routine_list.dart';
+import 'exercise_empty_state.dart';
 
 class ExerciseTabContent extends StatefulWidget {
-  final DateTime selectedDate;
-
-  const ExerciseTabContent({super.key, required this.selectedDate});
+  const ExerciseTabContent({super.key});
 
   @override
   State<ExerciseTabContent> createState() => _ExerciseTabContentState();
 }
 
-class _ExerciseTabContentState extends State<ExerciseTabContent> {
+class _ExerciseTabContentState extends State<ExerciseTabContent> 
+    with AutomaticKeepAliveClientMixin {
+  
   @override
   void initState() {
     super.initState();
-    // 사용자 프로그램 로드
-    context.read<RecordBloc>().add(LoadUserPrograms());
+    // 로딩 로직 제거 - RecordPage에서 이미 처리함
+  }
+
+  void _refreshUserPrograms() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      context.read<RecordBloc>().add(LoadUserPrograms(userId: authState.user.id));
+    }
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    super.build(context); // AutomaticKeepAliveClientMixin 요구사항
     
-    return BlocBuilder<RecordBloc, RecordState>(
+    return BlocProvider(
+      create: (context) => GetIt.instance<ProgramsBloc>(),
+      child: BlocConsumer<RecordBloc, RecordState>(
+      listener: (context, state) {
+        if (state is UserProgramDayCompleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+          _refreshUserPrograms(); // 완료 후 새로고침
+        } else if (state is UserProgramProgressUpdated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+          _refreshUserPrograms(); // 업데이트 후 새로고침
+        } else if (state is UserProgramDeleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+          _refreshUserPrograms(); // 삭제 후 새로고침
+        }
+      },
       builder: (context, state) {
+        // 단순하게 BLoC 상태만 구독
         if (state is RecordLoading) {
           return const Center(child: CircularProgressIndicator());
+        } else if (state is UserProgramsLoaded) {
+          if (state.userPrograms.isEmpty) {
+            return const ExerciseEmptyState();
+          } else {
+            return ExerciseRoutineList(
+              userPrograms: state.userPrograms,
+              onReturnFromDetail: _refreshUserPrograms, // 돌아올 때 새로고침
+            );
+          }
         } else if (state is RecordError) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Colors.red[300],
-                ),
+                const Icon(Icons.error, color: Colors.red, size: 48),
                 const SizedBox(height: 16),
                 Text(
+                  '운동 프로그램을 불러오는 중 오류가 발생했습니다',
+                  style: const TextStyle(color: Colors.white54),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
                   state.message,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.red[300],
-                  ),
+                  style: const TextStyle(color: Colors.white38, fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () {
-                    context.read<RecordBloc>().add(LoadUserPrograms());
-                  },
-                  child: Text(localizations.retry),
+                  onPressed: _refreshUserPrograms,
+                  child: const Text('다시 시도'),
                 ),
               ],
             ),
-          );
-        } else if (state is UserProgramsLoaded) {
-          final userPrograms = state.userPrograms;
-          
-          if (userPrograms.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.fitness_center,
-                    size: 64,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    localizations.noRoutinesFound,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return ExerciseRoutineList(
-            userPrograms: userPrograms,
-            selectedDate: widget.selectedDate,
-            onRoutineSelected: (userProgram) {
-              // 루틴 선택 시 상세 페이지로 이동
-              Navigator.pushNamed(
-                context,
-                '/exercise-routine-detail',
-                arguments: userProgram,
-              );
-            },
           );
         } else {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.fitness_center,
-                  size: 64,
-                  color: Colors.grey[400],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  localizations.noRoutinesFound,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          );
+          // 초기 상태이거나 다른 상태면 빈 상태 표시
+          return const ExerciseEmptyState();
         }
       },
+    ),
     );
   }
 } 

@@ -302,7 +302,7 @@ class _ExerciseSetState extends State<ExerciseSet> {
             height: 32,
             child: GestureDetector(
                 onTap: () {
-                  debugPrint('[DBG] Toggle complete set ${widget.setIndex}');
+                  
                   widget.onUpdate({'completed': !completed});
                 
                 // 햅틱 피드백

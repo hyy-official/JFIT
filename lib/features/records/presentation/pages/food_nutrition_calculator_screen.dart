@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:jfit/core/theme/nutrition_input_theme.dart';
 import 'package:jfit/models/nutrition_info.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 
 /// 영양성분 계산기 전용 페이지
@@ -23,7 +24,7 @@ class FoodNutritionCalculatorScreen extends StatefulWidget {
 }
 
 class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorScreen> {
-  final SupabaseService _supabaseService = SupabaseService();
+  final SupabaseService _supabaseService = GetIt.instance<SupabaseService>();
   
   late NutritionInfo _result;
   late TextEditingController _weightController;

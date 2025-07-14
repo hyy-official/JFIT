@@ -4,6 +4,10 @@ import '../../../../core/error/failures.dart';
 import '../../domain/entities/workout_program.dart';
 import '../../domain/repositories/program_repository.dart';
 import '../datasources/program_remote_datasource.dart';
+import '../models/user_program_day_model.dart';
+import '../models/workout_session_model.dart';
+import '../models/workout_log_model.dart';
+import '../models/exercise_model.dart';
 
 class ProgramRepositoryImpl implements ProgramRepository {
   final ProgramRemoteDataSource remoteDataSource;
@@ -91,6 +95,46 @@ class ProgramRepositoryImpl implements ProgramRepository {
     try {
       final programs = await remoteDataSource.searchPrograms(query);
       return Right(programs.map((model) => model.toEntity()).toList());
+    } on Exception catch (e) {
+      return Left(DatabaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<UserProgramDayModel>>> getUserProgramDays(String userProgramId) async {
+    try {
+      final days = await remoteDataSource.getUserProgramDays(userProgramId);
+      return Right(days);
+    } on Exception catch (e) {
+      return Left(DatabaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<WorkoutSessionModel>>> getWorkoutSessionsByUserProgram(String userProgramId) async {
+    try {
+      final sessions = await remoteDataSource.getWorkoutSessionsByUserProgram(userProgramId);
+      return Right(sessions);
+    } on Exception catch (e) {
+      return Left(DatabaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<WorkoutLogModel>>> getWorkoutLogsBySession(String sessionId) async {
+    try {
+      final logs = await remoteDataSource.getWorkoutLogsBySession(sessionId);
+      return Right(logs);
+    } on Exception catch (e) {
+      return Left(DatabaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ExerciseModel>> getExerciseById(String exerciseId) async {
+    try {
+      final exercise = await remoteDataSource.getExerciseById(exerciseId);
+      return Right(exercise);
     } on Exception catch (e) {
       return Left(DatabaseFailure(e.toString()));
     }

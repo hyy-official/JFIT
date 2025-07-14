@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 
 /// 신체 정보 입력 시트 컨텐츠
@@ -29,7 +30,7 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
   bool _menstruation = false;
   bool _lifestyleExpanded = true;
 
-  final SupabaseService _supabaseService = SupabaseService();
+  final SupabaseService _supabaseService = GetIt.instance<SupabaseService>();
 
   // 마스킹 포맷터 (데스크톱용)
   final MaskTextInputFormatter _timeMask = MaskTextInputFormatter(

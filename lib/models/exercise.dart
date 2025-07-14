@@ -59,31 +59,6 @@ class Exercise {
     this.popularityScore = 0,
   });
 
-  // sets getter - recommendedSets를 정수로 파싱
-  int? get sets {
-    if (recommendedSets == null) return null;
-    try {
-      // "3", "3-4", "3x4" 등의 형태를 처리
-      final cleaned = recommendedSets!.replaceAll(RegExp(r'[^0-9]'), '');
-      return int.tryParse(cleaned);
-    } catch (e) {
-      return 3; // 기본값
-    }
-  }
-
-  // reps getter - recommendedReps를 정수로 파싱
-  int? get reps {
-    if (recommendedReps == null) return null;
-    try {
-      // "10", "10-12", "AMRAP" 등의 형태를 처리
-      if (recommendedReps!.contains('AMRAP')) return 0; // AMRAP는 0으로 처리
-      final cleaned = recommendedReps!.replaceAll(RegExp(r'[^0-9]'), '');
-      return int.tryParse(cleaned);
-    } catch (e) {
-      return 10; // 기본값
-    }
-  }
-
   factory Exercise.fromMap(Map<String, dynamic> map) {
     return Exercise(
       id: map['id'] ?? 0,
@@ -113,39 +88,6 @@ class Exercise {
       isActive: (map['is_active'] ?? 1) == 1,
       isPartnerExercise: (map['is_partner_exercise'] ?? 0) == 1,
       popularityScore: (map['popularity_score'] ?? 0).toInt(),
-    );
-  }
-
-  // JSON으로부터 Exercise 생성 (운동 세션용)
-  factory Exercise.fromJson(Map<String, dynamic> json) {
-    return Exercise(
-      id: json['id'] ?? 0,
-      titleKo: json['name'] ?? json['exercise_name'] ?? '',
-      titleEn: json['title_en'],
-      descKo: json['desc_ko'] ?? '',
-      descEn: json['desc_en'],
-      difficulty: json['difficulty'] ?? 'intermediate',
-      difficultyKo: json['difficulty_ko'] ?? '중급',
-      type: json['type'] ?? 'strength',
-      typeKo: json['type_ko'] ?? '근력',
-      equipment: json['equipment'] ?? '',
-      equipmentKo: json['equipment_ko'] ?? '',
-      primaryMusclesKo: _parseJsonList(json['primary_muscles_ko']) ?? [],
-      secondaryMusclesKo: _parseJsonList(json['secondary_muscles_ko']) ?? [],
-      musclesUsedKo: _parseJsonList(json['muscles_used_ko']) ?? [],
-      caloriesPerMinute: json['calories_per_minute']?.toDouble(),
-      metValue: json['met_value']?.toDouble(),
-      instructions: json['instructions'],
-      tips: _parseJsonList(json['tips']),
-      commonMistakes: json['common_mistakes'],
-      category: json['category'],
-      tags: _parseJsonList(json['tags']),
-      recommendedSets: json['sets']?.toString() ?? json['recommended_sets']?.toString(),
-      recommendedReps: json['reps']?.toString() ?? json['recommended_reps']?.toString(),
-      recommendedRestSeconds: json['recommended_rest_seconds']?.toInt(),
-      isActive: json['is_active'] ?? true,
-      isPartnerExercise: json['is_partner_exercise'] ?? false,
-      popularityScore: json['popularity_score'] ?? 0,
     );
   }
 

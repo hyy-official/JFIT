@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 import 'package:jfit/features/records/presentation/widgets/meal_type_summary_card.dart';
 import 'package:jfit/features/records/presentation/widgets/macro_ratio_bar.dart';
@@ -13,8 +14,9 @@ class DietTabContent extends StatefulWidget {
   State<DietTabContent> createState() => _DietTabContentState();
 }
 
-class _DietTabContentState extends State<DietTabContent> {
-  final SupabaseService _supabaseService = SupabaseService();
+class _DietTabContentState extends State<DietTabContent>
+    with AutomaticKeepAliveClientMixin {
+  final SupabaseService _supabaseService = GetIt.instance<SupabaseService>();
   List<Map<String, dynamic>> _entries = [];
   bool _isLoading = true;
 
@@ -42,7 +44,12 @@ class _DietTabContentState extends State<DietTabContent> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // AutomaticKeepAliveClientMixin 요구사항
+    
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }

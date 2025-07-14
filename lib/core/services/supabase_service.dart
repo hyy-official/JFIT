@@ -11,7 +11,9 @@ import 'package:uuid/uuid.dart';
 import 'package:jfit/features/records/data/models/diet_entry.dart';
 
 class SupabaseService {
-  final SupabaseClient _supabase = Supabase.instance.client;
+  final SupabaseClient _supabase;
+
+  SupabaseService(this._supabase);
 
   String? get _currentUserId => _supabase.auth.currentUser?.id;
 
