@@ -23,12 +23,12 @@ import 'package:jfit/core/theme/second_theme.dart';
 import 'package:jfit/core/navigation/main_navigation_page.dart';
 
 // Component imports
-import 'program_detail/components/program_header.dart';
-import 'program_detail/components/week_navigation.dart';
-import 'program_detail/components/day_cards.dart';
-import 'program_detail/components/exercise_list.dart';
-import 'program_detail/components/start_workout_button.dart';
-import 'program_detail/program_detail_controller.dart';
+import 'components/program_header.dart';
+import 'components/week_navigation.dart';
+import 'components/day_cards.dart';
+import 'components/exercise_list.dart';
+import 'components/start_workout_button.dart';
+import 'program_detail_controller.dart';
 
 class ProgramDetailSheet extends StatefulWidget {
   final String programName;
@@ -293,7 +293,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
         
         // 운동 루틴 영역
         Expanded(
-          child: _buildExerciseSection(context, controller, selectedDayObj, session, weekDays, horizontalPadding),
+          child: _buildExerciseSection(context, controller, selectedDayObj, session, horizontalPadding),
         ),
       ],
     );
@@ -329,7 +329,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
     );
   }
 
-  Widget _buildExerciseSection(BuildContext context, ProgramDetailController controller, UserProgramDayModel? selectedDayObj, WorkoutSessionModel? session, List<UserProgramDayModel> weekDays, double horizontalPadding) {
+  Widget _buildExerciseSection(BuildContext context, ProgramDetailController controller, UserProgramDayModel? selectedDayObj, WorkoutSessionModel? session, double horizontalPadding) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 8),
       child: Column(
@@ -381,7 +381,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
           // 시작 버튼
           const SizedBox(height: 12),
           StartWorkoutButton(
-            weekDays: weekDays,
+            weekDays: [],
             selectedDay: controller.selectedDay,
             selectedDayObj: selectedDayObj,
             session: session,
