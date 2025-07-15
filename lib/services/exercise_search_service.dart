@@ -1,4 +1,3 @@
-/*
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
@@ -407,5 +406,4 @@ class ExerciseSearchService {
     })
     return options;
   }
-} 
-*/
+}

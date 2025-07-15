@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
-import 'package:jfit/features/programs/presentation/bloc/programs_event.dart' as programs_events;
+import 'package:jfit/features/programs/presentation/bloc/programs_event.dart' as programs_event;
 import 'package:jfit/features/programs/presentation/bloc/programs_state.dart';
 import 'package:jfit/features/programs/data/models/exercise_model.dart';
 import 'package:jfit/features/programs/data/models/workout_session_model.dart';
@@ -60,8 +60,8 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
     recordBloc.add(LoadUserProgramDetails(userProgramId: widget.userProgramId));
     
     // Day별 상태와 세션 정보 로드
-    bloc.add(programs_events.LoadUserProgramDays(widget.userProgramId));
-    bloc.add(programs_events.LoadWorkoutSessionsByUserProgram(widget.userProgramId));
+    bloc.add(programs_event.LoadUserProgramDays(widget.userProgramId));
+    bloc.add(programs_event.LoadWorkoutSessionsByUserProgram(widget.userProgramId));
   }
 
   /// 다음에 해야 할 운동 일차 찾기
@@ -162,7 +162,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
               _exerciseCache[sessionKey] = session.exercisesJson!;
             }
             // sessionId로 workout_logs fetch (필요한 경우에만)
-            context.read<ProgramsBloc>().add(programs_events.LoadWorkoutLogsBySession(session.id));
+            context.read<ProgramsBloc>().add(programs_event.LoadWorkoutLogsBySession(session.id));
           } else {
             selectedSessionId = null;
           }
@@ -242,59 +242,59 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
                 ),
               ],
               child: BlocBuilder<ProgramsBloc, ProgramsState>(
-              builder: (context, state) {
-                
-                // ProgramDetailData 상태가 아니면 로딩 표시
-                if (state is! ProgramDetailData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: AppTheme.accent1,
-                    ),
-                  );
-                }
-                
-                final detailData = state as ProgramDetailData;
-                
-                // 에러가 있으면 에러 표시
-                if (detailData.error != null) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error, color: Colors.red[400], size: 48),
-                        const SizedBox(height: 16),
-                        Text(
-                          '데이터를 불러오는 중 오류가 발생했습니다',
-                          style: TextStyle(color: SecondTheme.textSecondary),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                
-                // 안전한 데이터 접근
-                final days = <UserProgramDayModel>[];
-                final sessions = <WorkoutSessionModel>[];
-                
-                if (detailData.days.isNotEmpty) {
-                  days.addAll(detailData.days);
-                  _cachedDays = detailData.days;
+                builder: (context, state) {
+                  
+                  // ProgramDetailData 상태가 아니면 로딩 표시
+                  if (state is! ProgramDetailData) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppTheme.accent1,
+                      ),
+                    );
+                  }
+                  
+                  final detailData = state as ProgramDetailData;
+                  
+                  // 에러가 있으면 에러 표시
+                  if (detailData.error != null) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error, color: Colors.red[400], size: 48),
+                          const SizedBox(height: 16),
+                          Text(
+                            '데이터를 불러오는 중 오류가 발생했습니다',
+                            style: TextStyle(color: SecondTheme.textSecondary),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  
+                  // 안전한 데이터 접근
+                  final days = <UserProgramDayModel>[];
+                  final sessions = <WorkoutSessionModel>[];
+                  
+                  if (detailData.days.isNotEmpty) {
+                    days.addAll(detailData.days);
+                    _cachedDays = detailData.days;
                     
                     // RecordBloc에서 프로그램 상세 정보가 이미 로드되었다면 다음 운동 일차 설정
                     final recordState = context.read<RecordBloc>().state;
                     if (recordState is UserProgramDetailsLoaded) {
                       _setNextWorkoutDay(recordState.programDetails, detailData.days);
                     }
-                } else if (_cachedDays != null && _cachedDays!.isNotEmpty) {
-                  days.addAll(_cachedDays!.cast<UserProgramDayModel>());
-                }
-                
-                if (detailData.sessions.isNotEmpty) {
-                  sessions.addAll(detailData.sessions);
-                  _cachedSessions = detailData.sessions;
-                } else if (_cachedSessions != null && _cachedSessions!.isNotEmpty) {
-                  sessions.addAll(_cachedSessions!.cast<WorkoutSessionModel>());
-                }
+                  } else if (_cachedDays != null && _cachedDays!.isNotEmpty) {
+                    days.addAll(_cachedDays!.cast<UserProgramDayModel>());
+                  }
+                  
+                  if (detailData.sessions.isNotEmpty) {
+                    sessions.addAll(detailData.sessions);
+                    _cachedSessions = detailData.sessions;
+                  } else if (_cachedSessions != null && _cachedSessions!.isNotEmpty) {
+                    sessions.addAll(_cachedSessions!.cast<WorkoutSessionModel>());
+                  }
                 
 
                 
@@ -565,7 +565,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
                                         );
                                       },
                                     );
-                                },
+                                  },
                                 ),
                               ),
                             ] else ...[
@@ -655,7 +655,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
             ),
           ),
         ),
-      ),)
+      ),
     );
   }
 

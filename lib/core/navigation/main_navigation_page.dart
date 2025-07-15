@@ -19,10 +19,12 @@ import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
 /// 추후 auth 완료 후 로그인 상태에서만 접근하도록 변경할 수 있다.
 class MainNavigationPage extends StatefulWidget {
   final int initialIndex;
+  final Map<String, dynamic>? workoutSessionArgs;
 
   const MainNavigationPage({
     super.key,
     this.initialIndex = 0,
+    this.workoutSessionArgs,
   });
 
   @override
@@ -47,7 +49,14 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       // 2: 운동 기록(ExercisePage)
       const ExercisePage(),
       // 3: 내 운동(현재 진행 중인 워크아웃 또는 프리스타일 세션)
-      const WorkoutSessionPage(),
+      WorkoutSessionPage(
+        sessionId: widget.workoutSessionArgs?['sessionId'],
+        programId: widget.workoutSessionArgs?['programId'],
+        programDay: widget.workoutSessionArgs?['programDay'],
+        targetWeek: widget.workoutSessionArgs?['targetWeek'],
+        targetDay: widget.workoutSessionArgs?['targetDay'],
+        showNavigation: widget.workoutSessionArgs?['showNavigation'] ?? false,
+      ),
       // 4: 루틴(프로그램 목록)
       const ProgramsPage(),
     ];
@@ -100,6 +109,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                   settings: settings,
                 );
               }
+
+
 
               // 기본: 현재 탭 페이지
               return MaterialPageRoute(

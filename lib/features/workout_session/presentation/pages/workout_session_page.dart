@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/workout_session/presentation/widgets/exercise_card.dart';
-// import 'package:jfit/features/workout_session/presentation/widgets/add_exercise_modal.dart';
+import 'package:jfit/features/workout_session/presentation/widgets/add_exercise_modal.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
 import 'package:jfit/core/navigation/main_navigation_page.dart';
@@ -63,6 +63,16 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       return authState.user.id;
     }
     return null;
+  }
+
+  String _getAppBarTitle() {
+    if (widget.programDay != null) {
+      return widget.programDay!;
+    }
+    if (session != null) {
+      return session!['session_name'] ?? '워크아웃 세션';
+    }
+    return '워크아웃 세션';
   }
 
   @override
@@ -130,17 +140,22 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
             // targetWeek/targetDay가 있으면 사용, 없으면 current 값 사용
             int w = widget.targetWeek ?? activeUserProgram!['current_week'];
             int d = widget.targetDay ?? activeUserProgram!['current_day'];
+            print('🔍 프로그램 운동 로드 시작 - Week: $w, Day: $d');
+            print('🔍 targetWeek: ${widget.targetWeek}, targetDay: ${widget.targetDay}');
+            print('🔍 activeUserProgram current_week: ${activeUserProgram!['current_week']}, current_day: ${activeUserProgram!['current_day']}');
             programExercises = _loadProgramExercises(week: w, dayIndex: d-1);
+            print('🔍 로드된 프로그램 운동 수: ${programExercises.length}');
+            for (int i = 0; i < programExercises.length; i++) {
+              print('🔍 운동 $i: ${programExercises[i]['exercise_name']}');
+            }
           }
         }
 
         final newSession = {
           'user_id': userId,
-          'session_name': sessionName,
           'started_at': DateTime.now().toIso8601String(),
           'exercises_json': programExercises,
           'is_completed': false,
-          'program_id': effectiveProgramId,
           'user_program_id': activeUserProgram?['id'],
         };
         
@@ -150,15 +165,17 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         session = Map<String, dynamic>.from(newSession);
         session!['id'] = sessionId;
         exercises = programExercises;
+        print('🔍 최종 exercises 설정 완료 - 운동 수: ${exercises.length}');
+        print('🔍 setState 호출 전 - loading: $loading');
       }
 
       // 이전 기록을 기반으로 타겟 정보 적용
       await _applyPreviousTargets();
     } catch (e) {
+      print('🔍 세션 로드 중 오류: $e');
       // 세션 로드 중 오류 발생 시 기본 프리스타일 세션 생성
       final newSession = {
         'user_id': userId,
-        'session_name': '프리스타일 워크아웃',
         'started_at': DateTime.now().toIso8601String(),
         'exercises_json': [],
         'is_completed': false,
@@ -173,52 +190,73 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
         session = newSession;
         exercises = [];
       }
+    } finally {
+      if (mounted) {
+        setState(() => loading = false);
+        print('🔍 setState 완료 - loading: $loading, exercises.length: ${exercises.length}');
+      }
+      _startTimer();
     }
-    
-    setState(() => loading = false);
-    _startTimer();
   }
 
   List<Map<String, dynamic>> _loadProgramExercises({int? week, int? dayIndex}) {
-    if (program == null) return [];
+    if (activeUserProgram == null) {
+      print('🔍 activeUserProgram이 null입니다');
+      return [];
+    }
 
     try {
-      final weeklySchedule = program!['weekly_schedule'] as List<dynamic>? ?? [];
-      if (weeklySchedule.isEmpty) return [];
+      final exercisesJson = activeUserProgram!['exercises_json'] as List<dynamic>? ?? [];
+      print('🔍 exercises_json 길이: ${exercisesJson.length}');
+      if (exercisesJson.isEmpty) {
+        print('🔍 exercises_json이 비어있습니다');
+        return [];
+      }
 
       // Determine week and day
       int weekIdx = (week != null) ? week - 1 : 0;
-      if (weekIdx < 0 || weekIdx >= weeklySchedule.length) weekIdx = 0;
-      final days = weeklySchedule[weekIdx]['days'] as List<dynamic>? ?? [];
+      if (weekIdx < 0 || weekIdx >= exercisesJson.length) weekIdx = 0;
+      print('🔍 weekIdx: $weekIdx (week: $week)');
+      
+      final weekData = exercisesJson[weekIdx] as Map<String, dynamic>? ?? {};
+      print('🔍 weekData keys: ${weekData.keys.toList()}');
+      final days = weekData['days'] as List<dynamic>? ?? [];
+      print('🔍 days 길이: ${days.length}');
+      
       int dayIdx = dayIndex ?? 0;
       if (dayIdx < 0 || dayIdx >= days.length) dayIdx = 0;
-      final day = days[dayIdx];
-            final dayExercises = day['exercises'] as List<dynamic>? ?? [];
+      print('🔍 dayIdx: $dayIdx (dayIndex: $dayIndex)');
+      
+      final day = days[dayIdx] as Map<String, dynamic>? ?? {};
+      print('🔍 day keys: ${day.keys.toList()}');
+      final dayExercises = day['exercises'] as List<dynamic>? ?? [];
+      print('🔍 dayExercises 길이: ${dayExercises.length}');
             
-            return dayExercises.map<Map<String, dynamic>>((exercise) {
-        final exerciseName = exercise['exercise_name'] as String? ?? exercise['name'] as String? ?? '운동';
-              final sets = exercise['sets'] as int? ?? 3;
-              final reps = exercise['reps'] as String? ?? '10';
+              return dayExercises.map<Map<String, dynamic>>((exercise) {
+        final exerciseName = exercise['name'] as String? ?? exercise['exercise_name'] as String? ?? '운동';
+        final sets = exercise['sets'] as int? ?? 3;
+        final reps = exercise['reps'];
+        print('🔍 운동 매핑: $exerciseName, sets: $sets, reps: $reps');
               
-              // 각 운동에 대해 지정된 세트 수만큼 세트 생성
-              final exerciseSets = List.generate(sets, (index) => {
-                'weight': 0,
-                'reps': 0,
-                'completed': false,
-                'target_reps': reps,
+        // 각 운동에 대해 지정된 세트 수만큼 세트 생성
+        final exerciseSets = List.generate(sets, (index) => {
+          'weight': 0,
+          'reps': 0,
+          'completed': false,
+          'target_reps': reps.toString(),
           'target_weight': 0,
-              });
+        });
 
-              return {
-                'exercise_name': exerciseName,
-                'sets': exerciseSets,
-                'program_sets': sets,
-                'program_reps': reps,
-                'notes': exercise['notes'] as String? ?? '',
-              };
-            }).toList();
+        return {
+          'exercise_name': exerciseName,
+          'sets': exerciseSets,
+          'program_sets': sets,
+          'program_reps': reps.toString(),
+          'notes': exercise['notes'] as String? ?? '',
+        };
+      }).toList();
     } catch (e) {
-      // 프로그램 운동 로드 중 오류: $e
+      print('프로그램 운동 로드 중 오류: $e');
     }
 
     return [];
@@ -269,6 +307,41 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       // 저장 실패 처리 (선택적)
       print('Failed to save exercises to session: $e');
     }
+  }
+
+  void _addExercise(String exerciseName) async {
+    final userId = _currentUserId;
+    if (userId == null) return;
+    
+    // 이전 기록을 찾아 타겟 설정
+    final exerciseId = await _recordRepository.getExerciseIdByName(exerciseName);
+    Map<String, dynamic>? lastLog;
+    if (exerciseId != null) {
+      lastLog = await _recordRepository.getLastWorkoutLogByExercise(exerciseId, userId);
+    }
+    double? targetWeight;
+    int? targetReps;
+    if (lastLog != null) {
+      targetWeight = (lastLog['weight'] is num) ? (lastLog['weight'] as num).toDouble() : null;
+      targetReps = lastLog['reps'] is int ? lastLog['reps'] as int : null;
+    }
+    
+    setState(() {
+      exercises.add({
+        'exercise_name': exerciseName,
+        'sets': [
+          {
+            'weight': 0,
+            'reps': 0,
+            'completed': false,
+            'target_weight': targetWeight ?? 0,
+            'target_reps': targetReps?.toString() ?? '(기록 없음)',
+          }
+        ],
+      });
+    });
+    
+    _saveExercisesToSession();
   }
 
   void _removeExercise(int exerciseIndex) {
@@ -365,7 +438,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       final updated = Map<String, dynamic>.from(session!);
       updated['is_completed'] = true;
       updated['ended_at'] = DateTime.now().toIso8601String();
-      updated['total_duration_minutes'] = workoutTime ~/ 60;
+      // total_duration_minutes 컬럼이 존재하지 않으므로 제거
+      // 운동 시간은 started_at과 ended_at의 차이로 계산 가능
       await _recordRepository.upsertWorkoutSession(updated);
     }
 
@@ -373,46 +447,47 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
 
     // 사용자 프로그램 진행도 업데이트
     if (activeUserProgram != null) {
-      int w = activeUserProgram!['current_week'];
-      int d = activeUserProgram!['current_day'];
+      int currentWeek = activeUserProgram!['current_week'];
+      int currentDay = activeUserProgram!['current_day'];
+
+      try {
+        // 현재 day 완료 처리
+        await _recordRepository.completeUserProgramDay(
+          activeUserProgram!['id'],
+          currentWeek,
+          currentDay,
+        );
 
       // 프로그램 스케줄
-      final schedule = program?['weekly_schedule'] as List<dynamic>? ?? [];
-      final totalWeeks = schedule.length;
+      final exercisesJson = activeUserProgram!['exercises_json'] as List<dynamic>? ?? [];
+      final totalWeeks = exercisesJson.length;
 
       // 현재 주차의 총 day 개수 계산
       int totalDaysInWeek = 0;
-      if (schedule.isNotEmpty && w - 1 < schedule.length) {
-        totalDaysInWeek = (schedule[w - 1]['days'] as List<dynamic>? ?? []).length;
+        if (exercisesJson.isNotEmpty && currentWeek - 1 < exercisesJson.length) {
+          final weekData = exercisesJson[currentWeek - 1] as Map<String, dynamic>? ?? {};
+        totalDaysInWeek = (weekData['days'] as List<dynamic>? ?? []).length;
       }
 
       // 다음 day 계산
-      d += 1;
-      if (d > totalDaysInWeek) {
-        d = 1;
-        w += 1;
+        int nextDay = currentDay + 1;
+        int nextWeek = currentWeek;
+        if (nextDay > totalDaysInWeek) {
+          nextDay = 1;
+          nextWeek += 1;
       }
 
       // 프로그램 완료 여부 판단
-      if (w > totalWeeks) {
+        if (nextWeek > totalWeeks) {
         programCompleted = true;
-      }
-
-      try {
-        if (programCompleted) {
-          // 프로그램 완료 처리
-          await _recordRepository.updateUserProgramProgress(
-            activeUserProgram!['id'],
-            w,
-            d,
-          );
-          // 프로그램 비활성화는 별도 메서드가 필요할 수 있음
+          // 프로그램 완료 시 비활성화
+          await _recordRepository.deleteUserProgram(activeUserProgram!['id']);
         } else {
           // 진행도 업데이트
           await _recordRepository.updateUserProgramProgress(
             activeUserProgram!['id'],
-            w,
-            d,
+            nextWeek,
+            nextDay,
           );
         }
       } catch (e) {
@@ -509,6 +584,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
     
     
     if (loading) {
+      print('🔍 로딩 스피너 표시 중');
     
       Widget page = Scaffold(
         backgroundColor: context.colors.background,
@@ -520,7 +596,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       // 네비게이션 포함 옵션
       if (widget.showNavigation) {
         return ResponsiveScaffold(
-          currentIndex: 2,
+          currentIndex: 3, // "내 운동" 탭 인덱스 수정
           onNavTap: (index) {
             // 다른 탭을 누르면 메인 네비게이션으로 이동
             Navigator.of(context).pushAndRemoveUntil(
@@ -679,21 +755,21 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
           
           return FloatingActionButton(
             onPressed: () async {
-              // final result = await showDialog(
-              //   context: context,
-              //   barrierColor: Colors.black.withOpacity(0.5),
-              //   builder: (context) {
-              //     return AddExerciseModal(
-              //       onAdd: (exerciseName) {
-              //         _addExercise(exerciseName);
-              //         Navigator.of(context).pop();
-              //       },
-              //       onCancel: () {
-              //         Navigator.of(context).pop();
-              //       },
-              //     );
-              //   },
-              // );
+              final result = await showDialog(
+                context: context,
+                barrierColor: Colors.black.withOpacity(0.5),
+                builder: (context) {
+                  return AddExerciseModal(
+                    onAdd: (exerciseName) {
+                      _addExercise(exerciseName);
+                      Navigator.of(context).pop();
+                    },
+                    onCancel: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+                },
+              );
             },
             backgroundColor: context.colors.primary,
             child: const Icon(Icons.add, color: Colors.white),
@@ -704,7 +780,7 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
 
     if (widget.showNavigation) {
       return ResponsiveScaffold(
-        currentIndex: 2,
+        currentIndex: 3, // "내 운동" 탭 인덱스 수정
         onNavTap: (index) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (_) => MainNavigationPage(initialIndex: index)),
@@ -830,21 +906,21 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       height: 120,
       child: ElevatedButton(
         onPressed: () async {
-          // final result = await showDialog(
-          //   context: context,
-          //   barrierColor: Colors.black.withOpacity(0.5),
-          //   builder: (context) {
-          //     return AddExerciseModal(
-          //       onAdd: (exerciseName) {
-          //         _addExercise(exerciseName);
-          //         Navigator.of(context).pop();
-          //       },
-          //       onCancel: () {
-          //         Navigator.of(context).pop();
-          //       },
-          //     );
-          //   },
-          // );
+          final result = await showDialog(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.5),
+            builder: (context) {
+              return AddExerciseModal(
+                onAdd: (exerciseName) {
+                  _addExercise(exerciseName);
+                  Navigator.of(context).pop();
+                },
+                onCancel: () {
+                  Navigator.of(context).pop();
+                },
+              );
+            },
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTheme.secondaryBackground2,

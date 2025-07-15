@@ -134,13 +134,27 @@ class RecordRepository {
   /// 사용자 프로그램 일차 완료 처리
   Future<void> completeUserProgramDay(String userProgramId, int week, int day, {String? note}) async {
     try {
-      await _supabaseClient.from('user_program_days').upsert({
+      // user_id를 가져오기 위해 user_program을 먼저 조회
+      final userProgram = await _supabaseClient
+          .from('user_programs')
+          .select('user_id')
+          .eq('id', userProgramId)
+          .single();
+      
+      // upsert를 사용하여 기존 레코드 업데이트 또는 새 레코드 생성
+      await _supabaseClient
+          .from('user_program_days')
+          .upsert({
         'user_program_id': userProgramId,
+            'user_id': userProgram['user_id'],
         'week': week,
         'day': day,
         'completed_at': DateTime.now().toIso8601String(),
         'note': note,
-      });
+            'updated_at': DateTime.now().toIso8601String(),
+          }, 
+          onConflict: 'user_program_id,week,day' // unique constraint 기반
+          );
     } catch (e) {
       throw Exception('Failed to complete program day: $e');
     }
