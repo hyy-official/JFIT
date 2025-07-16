@@ -14,6 +14,7 @@ import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
 import 'package:jfit/core/widgets/theme_toggle_button.dart';
 import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/core/models/navigation_item.dart';
+import 'package:jfit/core/constants/navigation_constants.dart';
 
 /// 앱 하단 내비게이션(ResponsiveScaffold)을 담당하는 메인 페이지.
 ///
@@ -33,32 +34,18 @@ class MainNavigationPage extends StatefulWidget {
 }
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
-  // 상수 정의
-  static const int _homeIndex = 0;
-  static const int _workoutIndex = 1;
-  static const int _programsIndex = 2;
-  
   int _currentIndex = 0;
   late List<Widget> _pages;
-  late List<NavigationItem> _navigationItems;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
-    
-    // 네비게이션 아이템 정의
-    _navigationItems = [
-      const NavigationItem(icon: Icons.restaurant, label: '홈', index: _homeIndex),
-      const NavigationItem(icon: Icons.timer, label: '내 운동', index: _workoutIndex),
-      const NavigationItem(icon: Icons.extension, label: '루틴', index: _programsIndex),
-    ];
-    
     _pages = _buildPages();
     
     // 초기 로드 시 RecordPage 데이터 로드
-    if (_currentIndex == _homeIndex) {
+    if (_currentIndex == NavigationConstants.homeIndex) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _loadRecordData();
       });
@@ -87,14 +74,14 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     return BlocBuilder<RecordBloc, RecordState>(
       builder: (context, state) {
         UserDailySummary? dailySummary;
-        if (state is DailySummaryLoaded && _currentIndex == _homeIndex) {
+        if (state is DailySummaryLoaded && _currentIndex == NavigationConstants.homeIndex) {
           dailySummary = state.dailySummary;
         }
         
         return ResponsiveScaffold(
           appBar: _buildAppBar(context),
           currentIndex: _currentIndex,
-          navigationItems: _navigationItems,
+          navigationItems: NavigationConstants.defaultNavigationItems,
           onNavTap: (index) {
             // 중앙 Navigator 스택 초기화 후, 새 탭 페이지로 대체
             _navigatorKey.currentState?.popUntil((route) => route.isFirst);
@@ -105,7 +92,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             setState(() => _currentIndex = index);
 
             // RecordPage(홈)로 이동할 때 데이터 로드
-            if (index == _homeIndex) {
+            if (index == NavigationConstants.homeIndex) {
               _loadRecordData();
             }
           },
@@ -136,7 +123,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           // 데스크톱에서 항상 우측 패널 표시를 위해 selectedDate는 항상 제공
           selectedDate: DateTime.now(),
           // RecordPage일 때만 실제 데이터 제공, 다른 페이지에서는 null
-          dailySummary: _currentIndex == _homeIndex ? dailySummary : null,
+          dailySummary: _currentIndex == NavigationConstants.homeIndex ? dailySummary : null,
         );
       },
     );
@@ -153,8 +140,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
 
   /// AppBar 생성 (테마 전환 버튼 포함)
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    // navigationItems에서 동적으로 탭 이름 가져오기
-    final currentTabName = _navigationItems[_currentIndex].label;
+    // navigationItems에서 동적으로 탭 이름 가져오기 (안전한 인덱스 접근)
+    final safeIndex = _currentIndex.clamp(0, NavigationConstants.defaultNavigationItems.length - 1);
+    final currentTabName = NavigationConstants.defaultNavigationItems[safeIndex].label;
     
     return AppBar(
       title: Text(

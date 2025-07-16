@@ -61,4 +61,4 @@ class NutritionInfo {
   }
 
   bool get isValid => foodName.isNotEmpty && calories > 0;
-} 
+}

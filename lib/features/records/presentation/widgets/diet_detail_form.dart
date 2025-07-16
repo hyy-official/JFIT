@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
-import 'package:jfit/models/nutrition_info.dart';
+import 'package:jfit/core/models/nutrition_info.dart';
 import 'package:jfit/features/records/presentation/pages/nutrition_manual_input_screen.dart';
 import 'package:jfit/features/records/presentation/pages/food_search_screen.dart';
 

@@ -86,4 +86,4 @@ class FoodSearchItem {
   double get proteinStandard => _proteinStd;
   double get carbsStandard => _carbStd;
   double get fatStandard => _fatStd;
-} 
+}

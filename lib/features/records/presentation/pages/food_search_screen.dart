@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:jfit/models/food_search_item.dart';
-import 'package:jfit/services/food_api_service.dart';
-import 'package:jfit/core/theme/theme_system.dart';
-import 'nutrition_manual_input_screen.dart';
-import 'food_nutrition_calculator_screen.dart';
 import 'package:get_it/get_it.dart';
+import 'package:jfit/core/models/food_search_item.dart';
+import 'package:jfit/core/models/nutrition_info.dart';
+import 'package:jfit/core/services/food_api_service.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
-import 'package:jfit/models/nutrition_info.dart';
+import 'nutrition_manual_input_screen.dart';
+import 'food_nutrition_calculator_screen.dart';
 
 class FoodSearchScreen extends StatefulWidget {
   const FoodSearchScreen({super.key});

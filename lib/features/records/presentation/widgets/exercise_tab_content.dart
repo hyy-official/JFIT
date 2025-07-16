@@ -24,13 +24,21 @@ class _ExerciseTabContentState extends State<ExerciseTabContent>
   @override
   void initState() {
     super.initState();
-    // 로딩 로직 제거 - RecordPage에서 이미 처리함
+    _loadCurrentWorkoutInfo(); // 현재 운동 정보 로드 추가
   }
 
   void _refreshUserPrograms() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       context.read<RecordBloc>().add(LoadUserPrograms(userId: authState.user.id));
+    }
+  }
+  
+  void _loadCurrentWorkoutInfo() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      print('🎯 [ExerciseTab] Loading current workout info for user: ${authState.user.id}');
+      context.read<RecordBloc>().add(LoadCurrentWorkoutInfo(userId: authState.user.id));
     }
   }
 

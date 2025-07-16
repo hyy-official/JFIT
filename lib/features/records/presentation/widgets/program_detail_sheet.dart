@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:get_it/get_it.dart';
 
 // BLoC imports
 import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_event.dart' as programs_events;
 import 'package:jfit/features/programs/presentation/bloc/programs_state.dart';
+import 'package:jfit/features/programs/domain/repositories/program_repository.dart';
 import 'package:jfit/features/records/bloc/record_bloc.dart';
 import 'package:jfit/features/records/bloc/record_event.dart';
 import 'package:jfit/features/records/bloc/record_state.dart';
@@ -48,11 +50,16 @@ class ProgramDetailSheet extends StatefulWidget {
 
 class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
   late ProgramDetailController _controller;
+  late ProgramsBloc _programsBloc;
 
   @override
   void initState() {
     super.initState();
     _controller = ProgramDetailController();
+    // 내부에서 ProgramsBloc 생성
+    _programsBloc = ProgramsBloc(
+      repository: GetIt.instance<ProgramRepository>(),
+    );
     print('ProgramDetailSheet initState - userProgramId: ${widget.userProgramId}');
     _loadInitialData();
   }
@@ -60,20 +67,20 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
   @override
   void dispose() {
     _controller.dispose();
+    _programsBloc.close();
     super.dispose();
   }
 
   /// 초기 데이터 로드
   Future<void> _loadInitialData() async {
-    final bloc = BlocProvider.of<ProgramsBloc>(context, listen: false);
     final recordBloc = BlocProvider.of<RecordBloc>(context, listen: false);
     
     // 사용자 프로그램 상세 정보 로드
     recordBloc.add(LoadUserProgramDetails(userProgramId: widget.userProgramId));
     
     // Day별 상태와 세션 정보 로드
-    bloc.add(programs_events.LoadUserProgramDays(widget.userProgramId));
-    bloc.add(programs_events.LoadWorkoutSessionsByUserProgram(widget.userProgramId));
+    _programsBloc.add(programs_events.LoadUserProgramDays(widget.userProgramId));
+    _programsBloc.add(programs_events.LoadWorkoutSessionsByUserProgram(widget.userProgramId));
   }
 
   /// 운동 세션 시작
@@ -100,7 +107,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => MainNavigationPage(
-              initialIndex: 3,
+              initialIndex: 1, // "내 운동" 탭 (0: 홈, 1: 내 운동, 2: 루틴)
               workoutSessionArgs: {
                 'sessionId': null,
                 'programId': workoutProgram['id'] as String,
@@ -126,12 +133,15 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: _controller,
-      child: Consumer<ProgramDetailController>(
-        builder: (context, controller, child) {
-          return _buildSheet(context, controller);
-        },
+    return BlocProvider<ProgramsBloc>.value(
+      value: _programsBloc,
+      child: ChangeNotifierProvider.value(
+        value: _controller,
+        child: Consumer<ProgramDetailController>(
+          builder: (context, controller, child) {
+            return _buildSheet(context, controller);
+          },
+        ),
       ),
     );
   }

@@ -186,3 +186,49 @@ class WorkoutSetLogged extends RecordState {
   @override
   List<Object?> get props => [message];
 }
+
+// 현재 진행 중인 운동 정보
+class CurrentWorkoutInfo extends Equatable {
+  final String? programName;
+  final int? currentWeek;
+  final int? currentDay;
+  final int? totalWeeks;
+  final int? completedDays;
+  final int? totalDays;
+  final String? userProgramId;
+  final bool hasActiveSession;
+
+  const CurrentWorkoutInfo({
+    this.programName,
+    this.currentWeek,
+    this.currentDay,
+    this.totalWeeks,
+    this.completedDays,
+    this.totalDays,
+    this.userProgramId,
+    this.hasActiveSession = false,
+  });
+
+  bool get hasProgram => programName != null && userProgramId != null;
+  
+  String get progressText {
+    if (!hasProgram) return '운동 시작하기';
+    if (hasActiveSession) return '$programName\nWeek $currentWeek, Day $currentDay 진행 중';
+    return '$programName\nWeek $currentWeek, Day $currentDay ($completedDays/$totalDays 완료)';
+  }
+
+  @override
+  List<Object?> get props => [
+    programName, currentWeek, currentDay, totalWeeks, 
+    completedDays, totalDays, userProgramId, hasActiveSession
+  ];
+}
+
+class CurrentWorkoutInfoLoaded extends RecordState {
+  final CurrentWorkoutInfo workoutInfo;
+
+  const CurrentWorkoutInfoLoaded({required this.workoutInfo});
+
+  @override
+  List<Object?> get props => [workoutInfo];
+}

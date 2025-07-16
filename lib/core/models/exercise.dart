@@ -142,4 +142,4 @@ class Exercise {
   String toString() {
     return 'Exercise{id: $id, titleKo: $titleKo, equipmentKo: $equipmentKo, difficultyKo: $difficultyKo}';
   }
-} 
+}

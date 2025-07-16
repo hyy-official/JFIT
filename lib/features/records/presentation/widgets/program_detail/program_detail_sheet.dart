@@ -100,7 +100,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => MainNavigationPage(
-              initialIndex: 3,
+              initialIndex: 1, // "내 운동" 탭 (0: 홈, 1: 내 운동, 2: 루틴)
               workoutSessionArgs: {
                 'sessionId': null,
                 'programId': workoutProgram['id'] as String,

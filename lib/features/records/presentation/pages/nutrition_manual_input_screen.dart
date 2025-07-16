@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:jfit/core/theme/theme_system.dart';
-import 'package:jfit/models/nutrition_info.dart';
+import 'package:jfit/core/models/nutrition_info.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 
 /// 영양성분 수동 입력 전용 페이지

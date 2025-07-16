@@ -205,3 +205,13 @@ class LogWorkoutSet extends RecordEvent {
   @override
   List<Object?> get props => [exerciseId, sessionId, setNumber, reps, weight];
 }
+
+// 현재 진행 중인 운동 정보 로드
+class LoadCurrentWorkoutInfo extends RecordEvent {
+  final String userId;
+
+  const LoadCurrentWorkoutInfo({required this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}

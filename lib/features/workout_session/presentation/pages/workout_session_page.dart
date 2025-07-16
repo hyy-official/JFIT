@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import 'package:jfit/core/navigation/main_navigation_page.dart';
 import 'package:jfit/core/widgets/responsive_scaffold.dart';
 import 'package:jfit/core/theme/theme_system.dart';
+import 'package:jfit/core/constants/navigation_constants.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
 import 'package:jfit/features/workout_session/presentation/widgets/workout_summary.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
@@ -596,7 +597,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
       // 네비게이션 포함 옵션
       if (widget.showNavigation) {
         return ResponsiveScaffold(
-          currentIndex: 3, // "내 운동" 탭 인덱스 수정
+          currentIndex: 1, // "내 운동" 탭 인덱스 (0: 홈, 1: 내 운동, 2: 루틴)
+          navigationItems: NavigationConstants.defaultNavigationItems,
           onNavTap: (index) {
             // 다른 탭을 누르면 메인 네비게이션으로 이동
             Navigator.of(context).pushAndRemoveUntil(
@@ -780,7 +782,8 @@ class _WorkoutSessionPageState extends State<WorkoutSessionPage> {
 
     if (widget.showNavigation) {
       return ResponsiveScaffold(
-        currentIndex: 3, // "내 운동" 탭 인덱스 수정
+        currentIndex: 1, // "내 운동" 탭 인덱스 (0: 홈, 1: 내 운동, 2: 루틴)
+        navigationItems: NavigationConstants.defaultNavigationItems,
         onNavTap: (index) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (_) => MainNavigationPage(initialIndex: index)),

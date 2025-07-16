@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:jfit/core/theme/theme_system.dart';
-import 'package:jfit/models/nutrition_info.dart';
+import 'package:jfit/core/models/nutrition_info.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';

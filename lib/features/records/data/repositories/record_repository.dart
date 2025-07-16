@@ -433,4 +433,20 @@ class RecordRepository {
       return null;
     }
   }
+
+  /// 현재 진행 중인 워크아웃 세션 조회 (완료되지 않은 세션)
+  Future<List<Map<String, dynamic>>> getActiveWorkoutSessions(String userId) async {
+    try {
+      final response = await _supabaseClient
+          .from('workout_sessions')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('is_completed', false)
+          .order('started_at', ascending: false);
+      
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      return [];
+    }
+  }
 }

@@ -33,6 +33,7 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
     on<LoadWorkoutSession>(_onLoadWorkoutSession);
     on<UpdateWorkoutSession>(_onUpdateWorkoutSession);
     on<LogWorkoutSet>(_onLogWorkoutSet);
+    on<LoadCurrentWorkoutInfo>(_onLoadCurrentWorkoutInfo);
   }
 
   Future<void> _onLoadMealRecords(LoadMealRecords event, Emitter<RecordState> emit) async {
@@ -255,6 +256,78 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
         weight: event.weight,
       );
       emit(WorkoutSetLogged(message: '세트가 기록되었습니다.'));
+    } catch (e) {
+      emit(RecordError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onLoadCurrentWorkoutInfo(
+    LoadCurrentWorkoutInfo event,
+    Emitter<RecordState> emit,
+  ) async {
+    try {
+      print('🔍 [RecordBloc] Loading current workout info for user: ${event.userId}');
+      
+      // 현재 진행 중인 사용자 프로그램 조회
+      final userPrograms = await _recordRepository.getUserPrograms(event.userId);
+      print('📊 [RecordBloc] Found ${userPrograms.length} user programs');
+      
+      if (userPrograms.isEmpty) {
+        print('❌ [RecordBloc] No user programs found');
+        emit(CurrentWorkoutInfoLoaded(workoutInfo: const CurrentWorkoutInfo()));
+        return;
+      }
+
+      // 가장 최근에 시작한 프로그램 또는 진행 중인 프로그램 찾기
+      Map<String, dynamic>? currentProgram;
+      for (final program in userPrograms) {
+        final programName = program['workout_programs']?['name'] ?? 'Unknown Program';
+        print('🔍 [RecordBloc] Checking program: $programName - Week: ${program['current_week']}, Day: ${program['current_day']}');
+        if (program['current_week'] != null && program['current_day'] != null) {
+          currentProgram = program;
+          break;
+        }
+      }
+
+      if (currentProgram == null) {
+        print('❌ [RecordBloc] No current program found');
+        emit(CurrentWorkoutInfoLoaded(workoutInfo: const CurrentWorkoutInfo()));
+        return;
+      }
+
+      final programName = currentProgram['workout_programs']?['name'] ?? 'Unknown Program';
+      print('✅ [RecordBloc] Found current program: $programName');
+
+      // 프로그램 상세 정보 조회
+      final programDetails = await _recordRepository.getUserProgramDetails(currentProgram['id']);
+      final programDays = await _recordRepository.getUserProgramDays(currentProgram['id']);
+
+      // 활성 세션 확인 (진행 중인 운동이 있는지)
+      final activeSessions = await _recordRepository.getActiveWorkoutSessions(event.userId);
+      final hasActiveSession = activeSessions.isNotEmpty;
+
+      // 완료된 일차 계산
+      int completedDays = 0;
+      for (final day in programDays) {
+        if (day['completed_at'] != null) {
+          completedDays++;
+        }
+      }
+
+      final workoutInfo = CurrentWorkoutInfo(
+        programName: programName, // 이미 위에서 올바르게 가져온 프로그램 이름 사용
+        currentWeek: currentProgram['current_week'],
+        currentDay: currentProgram['current_day'],
+        totalWeeks: programDetails?['duration_weeks'] ?? currentProgram['workout_programs']?['duration_weeks'],
+        completedDays: completedDays,
+        totalDays: programDays.length,
+        userProgramId: currentProgram['id'],
+        hasActiveSession: hasActiveSession,
+      );
+
+      print('🎉 [RecordBloc] Created workout info: ${workoutInfo.programName} - ${workoutInfo.progressText}');
+
+      emit(CurrentWorkoutInfoLoaded(workoutInfo: workoutInfo));
     } catch (e) {
       emit(RecordError(message: e.toString()));
     }
