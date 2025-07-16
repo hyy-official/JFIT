@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/presentation/pages/program_detail_page.dart';
 import 'package:jfit/features/records/presentation/widgets/program_detail_sheet.dart';
 import '../../domain/entities/workout_program.dart';
@@ -45,7 +45,7 @@ class ProgramCardVertical extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppTheme.programCardBackground,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -55,17 +55,17 @@ class ProgramCardVertical extends StatelessWidget {
               child: Container(
                 width: 60,
                 height: 60,
-                color: Colors.grey[800],
+                color: context.colors.surfaceVariant,
                 child: program.imageUrl != null
                     ? Image.network(
                         program.imageUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Center(
-                          child: Icon(Icons.image, color: Colors.white24, size: 24),
+                        errorBuilder: (context, error, stackTrace) => Center(
+                          child: Icon(Icons.image, color: context.colors.textMuted, size: 24),
                         ),
                       )
-                    : const Center(
-                        child: Icon(Icons.image, color: Colors.white24, size: 24),
+                    : Center(
+                        child: Icon(Icons.image, color: context.colors.textMuted, size: 24),
                       ),
               ),
             ),
@@ -80,17 +80,17 @@ class ProgramCardVertical extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: AppTheme.accent1,
+                            color: context.colors.primary,
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: const Text('인기', style: TextStyle(color: Colors.white, fontSize: 10)),
+                          child: Text('인기', style: TextStyle(color: context.colors.onPrimary, fontSize: 10)),
                         ),
                         const SizedBox(width: 6),
                       ],
                       Expanded(
                         child: Text(
                           program.name,
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                          style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold, fontSize: 14),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -100,16 +100,16 @@ class ProgramCardVertical extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     program.creator,
-                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                    style: TextStyle(color: context.colors.textSecondary, fontSize: 12),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Text(program.difficultyLevel, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                      Text(program.difficultyLevel, style: TextStyle(color: context.colors.textMuted, fontSize: 11)),
                       const SizedBox(width: 8),
-                      Text('주 ${program.workoutsPerWeek ?? 0}일', style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                      Text('주 ${program.workoutsPerWeek ?? 0}일', style: TextStyle(color: context.colors.textMuted, fontSize: 11)),
                     ],
                   ),
                 ],

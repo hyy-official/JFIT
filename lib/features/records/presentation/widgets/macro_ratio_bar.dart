@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 /// 탄단지 비율 바 – FoodNutritionCalculatorScreen 과 동일한 디자인
 class MacroRatioBar extends StatelessWidget {
@@ -25,7 +26,7 @@ class MacroRatioBar extends StatelessWidget {
         children: [
           Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: 4),
-          Text('$label ${(ratio * 100).toInt()}%', style: const TextStyle(color: Colors.white, fontSize: 12)),
+          Text('$label ${(ratio * 100).toInt()}%', style: TextStyle(color: context.colors.textPrimary, fontSize: 12)),
         ],
       );
     }
@@ -35,9 +36,9 @@ class MacroRatioBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ratioText('탄수화물', carbsRatio, const Color(0xFF6B73FF)),
-            ratioText('단백질', proteinRatio, const Color(0xFFB794F6)),
-            ratioText('지방', fatRatio, const Color(0xFFF687B3)),
+            ratioText('탄수화물', carbsRatio, JFitChartColors.nutrition[0]),
+            ratioText('단백질', proteinRatio, JFitChartColors.nutrition[1]),
+            ratioText('지방', fatRatio, JFitChartColors.nutrition[2]),
           ],
         ),
         const SizedBox(height: 8),
@@ -49,24 +50,24 @@ class MacroRatioBar extends StatelessWidget {
               Expanded(
                 flex: (carbsRatio * 1000).toInt(),
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF6B73FF),
-                    borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
+                  decoration: BoxDecoration(
+                    color: JFitChartColors.nutrition[0],
+                    borderRadius: const BorderRadius.horizontal(left: Radius.circular(4)),
                   ),
                 ),
               ),
             if (proteinRatio > 0)
               Expanded(
                 flex: (proteinRatio * 1000).toInt(),
-                child: Container(color: const Color(0xFFB794F6)),
+                child: Container(color: JFitChartColors.nutrition[1]),
               ),
             if (fatRatio > 0)
               Expanded(
                 flex: (fatRatio * 1000).toInt(),
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF687B3),
-                    borderRadius: BorderRadius.horizontal(right: Radius.circular(4)),
+                  decoration: BoxDecoration(
+                    color: JFitChartColors.nutrition[2],
+                    borderRadius: const BorderRadius.horizontal(right: Radius.circular(4)),
                   ),
                 ),
               ),

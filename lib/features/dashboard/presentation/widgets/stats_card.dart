@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 class StatsCard extends StatelessWidget {
   final String title;
@@ -33,11 +32,11 @@ class StatsCard extends StatelessWidget {
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                  Text(title, style: context.texts.bodyMedium?.copyWith(color: AppTheme.textSub, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis),
+                  Text(title, style: context.textTheme.bodyMedium?.copyWith(color: context.colors.textSecondary, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis),
                 SizedBox(height: 6),
-                  Text(value, style: context.texts.headlineLarge?.copyWith(fontSize: 32), overflow: TextOverflow.ellipsis),
+                  Text(value, style: context.textTheme.headlineLarge?.copyWith(fontSize: 32, color: context.colors.textPrimary), overflow: TextOverflow.ellipsis),
                 SizedBox(height: 2),
-                  Text(subtitle, style: context.texts.bodyMedium?.copyWith(color: AppTheme.textMuted), overflow: TextOverflow.ellipsis),
+                  Text(subtitle, style: context.textTheme.bodyMedium?.copyWith(color: context.colors.textTertiary), overflow: TextOverflow.ellipsis),
               ],
               ),
             ),
@@ -49,7 +48,7 @@ class StatsCard extends StatelessWidget {
                 boxShadow: [BoxShadow(color: gradientColors.last.withAlpha((255 * 0.2).round()), blurRadius: 8, offset: Offset(0, 4))],
               ),
               padding: const EdgeInsets.all(14),
-              child: Icon(icon, color: Colors.white, size: 28),
+              child: Icon(icon, color: context.colors.textPrimary, size: 28),
             ),
           ],
         ),

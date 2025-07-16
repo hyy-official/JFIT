@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/l10n/app_localizations.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/exercise/data/models/exercise_record.dart';
 
 class WorkoutHistory extends StatelessWidget {
@@ -24,10 +24,10 @@ class WorkoutHistory extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppTheme.cardBackgroundColor,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.grey[700]!.withAlpha((255 * 0.3).round()),
+          color: context.colors.border.withAlpha((255 * 0.3).round()),
           width: 1,
         ),
       ),
@@ -39,22 +39,21 @@ class WorkoutHistory extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppTheme.workoutIconColor.withAlpha((255 * 0.15).round()),
+                  color: context.colors.primary.withAlpha((255 * 0.15).round()),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.history,
-                  color: AppTheme.workoutIconColor,
+                  color: context.colors.primary,
                   size: 20,
                 ),
               ),
               const SizedBox(width: 12),
               Text(
                 l10n?.workoutHistory ?? 'Workout History',
-                style: const TextStyle(
-                  fontSize: 20,
+                style: context.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.colors.textPrimary,
                 ),
               ),
             ],
@@ -70,7 +69,7 @@ class WorkoutHistory extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final exercise = sortedExercises[index];
-              return _buildWorkoutCard(l10n, exercise);
+              return _buildWorkoutCard(context, l10n, exercise);
             },
           ),
         ],
@@ -78,7 +77,7 @@ class WorkoutHistory extends StatelessWidget {
     );
   }
 
-  Widget _buildWorkoutCard(AppLocalizations? l10n, ExerciseRecord exercise) {
+  Widget _buildWorkoutCard(BuildContext context, AppLocalizations? l10n, ExerciseRecord exercise) {
     final exerciseName = _getExerciseName(l10n, exercise.exerciseName);
     final exerciseType = _getExerciseType(l10n, exercise.exerciseType);
     final date = exercise.exerciseDate;
@@ -88,10 +87,10 @@ class WorkoutHistory extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.cardBackgroundColor,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.grey[600]!.withAlpha((255 * 0.5).round()),
+          color: context.colors.border.withAlpha((255 * 0.5).round()),
           width: 1,
         ),
       ),
@@ -104,10 +103,9 @@ class WorkoutHistory extends StatelessWidget {
               Expanded(
                 child: Text(
                   exerciseName,
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: context.colors.textPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -120,9 +118,9 @@ class WorkoutHistory extends StatelessWidget {
                 ),
                 child: Text(
                   exerciseType,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white,
+                    color: context.colors.textPrimary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -134,9 +132,8 @@ class WorkoutHistory extends StatelessWidget {
           
           Text(
             '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 14,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.textSecondary,
             ),
           ),
           
@@ -146,6 +143,7 @@ class WorkoutHistory extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildMetric(
+                  context,
                   '${duration}m',
                   '${calories} cal',
                 ),
@@ -154,6 +152,7 @@ class WorkoutHistory extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildMetric(
+                    context,
                     '${exercise.weightKg}kg',
                     '${exercise.sets} sets × ${exercise.reps} reps',
                   ),
@@ -163,6 +162,7 @@ class WorkoutHistory extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildMetric(
+                    context,
                     '${exercise.distanceKm}km',
                     '',
                   ),
@@ -175,24 +175,22 @@ class WorkoutHistory extends StatelessWidget {
     );
   }
 
-  Widget _buildMetric(String primary, String secondary) {
+  Widget _buildMetric(BuildContext context, String primary, String secondary) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           primary,
-          style: const TextStyle(
-            fontSize: 16,
+          style: context.textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: context.colors.textPrimary,
           ),
         ),
         if (secondary.isNotEmpty)
           Text(
             secondary,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[400],
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.textSecondary,
             ),
           ),
       ],
@@ -242,13 +240,13 @@ class WorkoutHistory extends StatelessWidget {
   Color _getTypeColor(String type) {
     switch (type) {
       case 'strength':
-        return AppTheme.proteinGraphColor;
+        return JFitChartColors.strengthColor;
       case 'cardio':
-        return AppTheme.nutritionIconColor;
+        return JFitChartColors.cardioColor;
       case 'flexibility':
-        return AppTheme.carbsGraphColor;
+        return JFitChartColors.flexibilityColor;
       default:
-        return const Color(0xFF6B7280);
+        return JFitChartColors.defaultExerciseColor;
     }
   }
 } 

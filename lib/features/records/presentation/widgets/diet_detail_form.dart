@@ -2,8 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jfit/core/theme/diet_detail_theme.dart';
-import 'package:jfit/core/theme/nutrition_input_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/data/models/diet_entry.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -89,7 +88,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
         height: 5,
         margin: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: DietDetailTheme.handlebarColor,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(4),
         ),
       );
@@ -98,7 +97,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
     final formattedDate = DateFormat('yyyy년 MM월 dd일').format(widget.selectedDate);
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
-      child: Text('$formattedDate 식단', style: DietDetailTheme.headerStyle, textAlign: TextAlign.center),
+      child: Text('$formattedDate 식단', style: TextStyle(color: context.colors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
     );
   }
 
@@ -110,7 +109,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
           alignment: Alignment.center,
           children: [
             DottedBorder(
-              color: Color(0xFF757575),
+              color: context.colors.border,
               strokeWidth: 2,
               borderType: BorderType.Circle,
               dashPattern: const [6, 4],
@@ -119,16 +118,16 @@ class _DietDetailFormState extends State<DietDetailForm> {
                 height: 128,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0x803A3A40),
+                  color: context.colors.surfaceVariant.withOpacity(0.5),
                 ),
                 child: _dietEntry.imagePath != null
                     ? ClipOval(child: Image.file(File(_dietEntry.imagePath!), fit: BoxFit.cover))
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.camera_alt_outlined, size: 32, color: DietDetailTheme.secondaryTextColor),
+                          Icon(Icons.camera_alt_outlined, size: 32, color: context.colors.textSecondary),
                           const SizedBox(height: 8),
-                          Text('음식명 업로드', style: TextStyle(color: DietDetailTheme.placeholderTextColor, fontSize: 14)),
+                          Text('음식명 업로드', style: TextStyle(color: context.colors.textMuted, fontSize: 14)),
                         ],
                       ),
               ),
@@ -139,11 +138,11 @@ class _DietDetailFormState extends State<DietDetailForm> {
               child: Container(
                 width: 32,
                 height: 32,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white,
+                  color: context.colors.textPrimary,
                 ),
-                child: const Icon(Icons.add, size: 20, color: Colors.black),
+                child: Icon(Icons.add, size: 20, color: context.colors.onSurface),
               ),
             ),
           ],
@@ -198,16 +197,16 @@ class _DietDetailFormState extends State<DietDetailForm> {
           child: TextField(
             controller: _foodNameController,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: DietDetailTheme.primaryTextColor,
+            style: TextStyle(
+              color: context.colors.textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               hintText: '음식명 입력',
-              hintStyle: const TextStyle(color: DietDetailTheme.placeholderTextColor, fontSize: 18),
+              hintStyle: TextStyle(color: context.colors.textMuted, fontSize: 18),
               filled: true,
-              fillColor: DietDetailTheme.inputBackground,
+              fillColor: context.colors.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             ),
@@ -238,7 +237,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text(title, style: DietDetailTheme.selectionGroupTitleStyle)),
+        Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text(title, style: TextStyle(color: context.colors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600))),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -249,14 +248,15 @@ class _DietDetailFormState extends State<DietDetailForm> {
               return FilterChip(
                 label: Text(
                   o,
-                  style: DietDetailTheme.buttonTextStyle.copyWith(
-                    color: isSel ? DietDetailTheme.buttonActiveText : DietDetailTheme.buttonInactiveText,
+                  style: TextStyle(
+                    color: isSel ? context.colors.textPrimary : context.colors.textSecondary,
                     fontWeight: isSel ? FontWeight.bold : FontWeight.w500,
+                    fontSize: 14,
                   ),
                 ),
                 selected: isSel,
-                selectedColor: DietDetailTheme.buttonActiveBackground,
-                backgroundColor: DietDetailTheme.buttonInactiveBackground,
+                selectedColor: context.colors.primary,
+                backgroundColor: context.colors.surface,
                 onSelected: (_) => onTap(o),
                 shape: const StadiumBorder(),
                 side: BorderSide.none,
@@ -265,14 +265,15 @@ class _DietDetailFormState extends State<DietDetailForm> {
               return ChoiceChip(
                 label: Text(
                   o,
-                  style: DietDetailTheme.buttonTextStyle.copyWith(
-                    color: isSel ? DietDetailTheme.buttonActiveText : DietDetailTheme.buttonInactiveText,
+                  style: TextStyle(
+                    color: isSel ? context.colors.textPrimary : context.colors.textSecondary,
                     fontWeight: isSel ? FontWeight.bold : FontWeight.w500,
+                    fontSize: 14,
                   ),
                 ),
                 selected: isSel,
-                selectedColor: DietDetailTheme.buttonActiveBackground,
-                backgroundColor: DietDetailTheme.buttonInactiveBackground,
+                selectedColor: context.colors.primary,
+                backgroundColor: context.colors.surface,
                 onSelected: (_) => onTap(o),
                 shape: const StadiumBorder(),
                 side: BorderSide.none,
@@ -288,7 +289,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text('점수', style: DietDetailTheme.selectionGroupTitleStyle)),
+        Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text('점수', style: TextStyle(color: context.colors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600))),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(5, (i) {
@@ -301,14 +302,15 @@ class _DietDetailFormState extends State<DietDetailForm> {
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: sel ? DietDetailTheme.buttonActiveBackground : DietDetailTheme.buttonInactiveBackground,
+                  color: sel ? context.colors.primary : context.colors.surface,
                 ),
                 child: Center(
                   child: Text(
                     score.toString(),
-                    style: DietDetailTheme.buttonTextStyle.copyWith(
-                      color: sel ? DietDetailTheme.buttonActiveText : DietDetailTheme.buttonInactiveText,
+                    style: TextStyle(
+                      color: sel ? context.colors.textPrimary : context.colors.textSecondary,
                       fontWeight: sel ? FontWeight.bold : FontWeight.w500,
+                      fontSize: 14,
                     ),
                   ),
                 ),
@@ -327,7 +329,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Text('시간', style: DietDetailTheme.sectionTitleStyle),
+          child: Text('시간', style: TextStyle(color: context.colors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600)),
         ),
         SizedBox(
           height: 48,
@@ -335,10 +337,10 @@ class _DietDetailFormState extends State<DietDetailForm> {
             controller: _timeController,
             readOnly: !isDesktop,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: DietDetailTheme.primaryTextColor, fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold),
             decoration: InputDecoration(
               filled: true,
-              fillColor: DietDetailTheme.inputBackground,
+              fillColor: context.colors.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             ),
@@ -372,7 +374,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
             padding: const EdgeInsets.only(top: 6),
             child: Text(
               _timeError!,
-              style: const TextStyle(color: Colors.redAccent, fontSize: 12),
+              style: TextStyle(color: context.colors.error, fontSize: 12),
             ),
           ),
       ],
@@ -383,14 +385,14 @@ class _DietDetailFormState extends State<DietDetailForm> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text('이 식단 북마크에 추가', style: DietDetailTheme.sectionTitleStyle),
+        Text('이 식단 북마크에 추가', style: TextStyle(color: context.colors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600)),
         Switch(
           value: _dietEntry.isBookmarked,
           onChanged: (v) => setState(() => _dietEntry.isBookmarked = v),
-          activeColor: DietDetailTheme.buttonActiveBackground,
-          activeTrackColor: DietDetailTheme.buttonActiveBackground.withOpacity(0.5),
-          inactiveThumbColor: DietDetailTheme.secondaryTextColor,
-          inactiveTrackColor: DietDetailTheme.inputBackground,
+          activeColor: context.colors.primary,
+          activeTrackColor: context.colors.primary.withOpacity(0.5),
+          inactiveThumbColor: context.colors.textSecondary,
+          inactiveTrackColor: context.colors.surface,
         ),
       ],
     );
@@ -404,11 +406,11 @@ class _DietDetailFormState extends State<DietDetailForm> {
           child: ElevatedButton(
             onPressed: _isValidForSave ? _save : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: _isValidForSave ? DietDetailTheme.buttonActiveBackground : DietDetailTheme.buttonInactiveBackground,
+              backgroundColor: _isValidForSave ? context.colors.primary : context.colors.surface,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: Text('저장하기', style: DietDetailTheme.saveButtonStyle),
+            child: Text('저장하기', style: TextStyle(color: _isValidForSave ? context.colors.textPrimary : context.colors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600)),
           ),
         ),
       );
@@ -459,7 +461,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${_nutritionItems.length}개 항목이 저장되었습니다'),
-          backgroundColor: Colors.green,
+          backgroundColor: context.colors.success,
         ),
       );
     } catch (e) {
@@ -490,10 +492,12 @@ class _DietDetailFormState extends State<DietDetailForm> {
     }
   }
 
+
+
   // 섹션 구분선
   Widget _buildSectionDivider() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 24.0),
-        child: Divider(color: DietDetailTheme.inputBackground, thickness: 2, height: 1),
+        child: Divider(color: context.colors.surface, thickness: 2, height: 1),
       );
 
   // 메모 입력
@@ -502,18 +506,18 @@ class _DietDetailFormState extends State<DietDetailForm> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: Text('추가 입력', style: DietDetailTheme.sectionTitleStyle),
+            child: Text('추가 입력', style: TextStyle(color: context.colors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600)),
           ),
           TextField(
             minLines: 3,
             controller: _memoController,
             maxLines: 3,
-            style: DietDetailTheme.inputTextStyle,
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 16),
             decoration: InputDecoration(
               hintText: '간단한 메모를 남겨주세요... (선택)',
-              hintStyle: const TextStyle(color: DietDetailTheme.placeholderTextColor),
+              hintStyle: TextStyle(color: context.colors.textMuted),
               filled: true,
-              fillColor: DietDetailTheme.inputBackground,
+              fillColor: context.colors.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               contentPadding: const EdgeInsets.all(16),
             ),
@@ -536,7 +540,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: Text('곁들임', style: DietDetailTheme.selectionGroupTitleStyle),
+            child: Text('곁들임', style: TextStyle(color: context.colors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600)),
           ),
           Row(
             children: items.map((item) {
@@ -557,20 +561,20 @@ class _DietDetailFormState extends State<DietDetailForm> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: selected ? DietDetailTheme.buttonActiveBackground : DietDetailTheme.buttonInactiveBackground,
+                      color: selected ? context.colors.primary : context.colors.surface,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: selected ? DietDetailTheme.buttonActiveBackground : DietDetailTheme.secondaryTextColor,
+                        color: selected ? context.colors.primary : context.colors.textSecondary,
                         width: 1.5,
                       ),
                     ),
                     child: Row(
                       children: [
-                        Icon(item['icon'] as IconData, size: 18, color: selected ? Colors.white : DietDetailTheme.secondaryTextColor),
+                        Icon(item['icon'] as IconData, size: 18, color: selected ? context.colors.textPrimary : context.colors.textSecondary),
                         const SizedBox(width: 8),
                         Text(
                           item['label'] as String,
-                          style: DietDetailTheme.buttonTextStyle.copyWith(color: selected ? Colors.white : DietDetailTheme.secondaryTextColor),
+                          style: TextStyle(color: selected ? context.colors.textPrimary : context.colors.textSecondary, fontSize: 14, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -590,7 +594,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: Text('영양성분', style: DietDetailTheme.sectionTitleStyle),
+            child: Text('영양성분', style: TextStyle(color: context.colors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600)),
           ),
           // 추가된 영양성분 목록
           if (_nutritionItems.isNotEmpty) ...[
@@ -610,11 +614,11 @@ class _DietDetailFormState extends State<DietDetailForm> {
                   child: ElevatedButton(
                     onPressed: () => _openNutritionInputScreen(),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: DietDetailTheme.inputBackground,
+                      backgroundColor: context.colors.surface,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: Text('직접 추가', style: DietDetailTheme.buttonTextStyle.copyWith(color: DietDetailTheme.primaryTextColor)),
+                    child: Text('직접 추가', style: TextStyle(color: context.colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
                   ),
                 ),
               ),
@@ -625,11 +629,11 @@ class _DietDetailFormState extends State<DietDetailForm> {
                   child: ElevatedButton(
                     onPressed: _openFoodSearch,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: DietDetailTheme.inputBackground,
+                      backgroundColor: context.colors.surface,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: Text('음식 검색으로 추가', style: DietDetailTheme.buttonTextStyle.copyWith(color: DietDetailTheme.primaryTextColor)),
+                    child: Text('음식 검색으로 추가', style: TextStyle(color: context.colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
                   ),
                 ),
               ),
@@ -644,9 +648,9 @@ class _DietDetailFormState extends State<DietDetailForm> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: DietDetailTheme.inputBackground,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: DietDetailTheme.secondaryTextColor.withOpacity(0.2)),
+        border: Border.all(color: context.colors.border.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -657,8 +661,8 @@ class _DietDetailFormState extends State<DietDetailForm> {
               Expanded(
                 child: Text(
                   item.foodName,
-                  style: const TextStyle(
-                    color: DietDetailTheme.primaryTextColor,
+                  style: TextStyle(
+                    color: context.colors.textPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -667,7 +671,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
               IconButton(
                 onPressed: () => _removeNutritionItem(index),
                 icon: const Icon(Icons.close, size: 20),
-                color: DietDetailTheme.secondaryTextColor,
+                color: context.colors.textSecondary,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
               ),
@@ -679,8 +683,8 @@ class _DietDetailFormState extends State<DietDetailForm> {
               Expanded(
                 child: Text(
                   '칼로리: ${item.calories.toStringAsFixed(1)}kcal',
-                  style: const TextStyle(
-                    color: DietDetailTheme.secondaryTextColor,
+                  style: TextStyle(
+                    color: context.colors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -688,8 +692,8 @@ class _DietDetailFormState extends State<DietDetailForm> {
               Expanded(
                 child: Text(
                   '단백질: ${item.protein.toStringAsFixed(1)}g',
-                  style: const TextStyle(
-                    color: DietDetailTheme.secondaryTextColor,
+                  style: TextStyle(
+                    color: context.colors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -702,8 +706,8 @@ class _DietDetailFormState extends State<DietDetailForm> {
               Expanded(
                 child: Text(
                   '탄수화물: ${item.carbs.toStringAsFixed(1)}g',
-                  style: const TextStyle(
-                    color: DietDetailTheme.secondaryTextColor,
+                  style: TextStyle(
+                    color: context.colors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -711,8 +715,8 @@ class _DietDetailFormState extends State<DietDetailForm> {
               Expanded(
                 child: Text(
                   '지방: ${item.fat.toStringAsFixed(1)}g',
-                  style: const TextStyle(
-                    color: DietDetailTheme.secondaryTextColor,
+                  style: TextStyle(
+                    color: context.colors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -723,8 +727,8 @@ class _DietDetailFormState extends State<DietDetailForm> {
             const SizedBox(height: 4),
             Text(
               '중량: ${item.weight!.toStringAsFixed(0)}g',
-              style: const TextStyle(
-                color: DietDetailTheme.secondaryTextColor,
+              style: TextStyle(
+                color: context.colors.textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -744,7 +748,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
   void _showWheelTimePicker() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: DietDetailTheme.sheetBackground,
+      backgroundColor: context.colors.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -777,9 +781,9 @@ class _DietDetailFormState extends State<DietDetailForm> {
                   onPressed: () {
                     Navigator.pop(ctx);
                   },
-                  child: const Text('완료', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  child: Text('완료', style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
+                    foregroundColor: context.colors.textPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                 ),
@@ -804,7 +808,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
           backgroundColor: Colors.transparent,
           child: Container(
             decoration: BoxDecoration(
-              color: NutritionInputTheme.screenBackground,
+              color: context.colors.background,
               borderRadius: BorderRadius.circular(24),
             ),
             child: ConstrainedBox(
@@ -822,9 +826,9 @@ class _DietDetailFormState extends State<DietDetailForm> {
         builder: (ctx) => FractionallySizedBox(
           heightFactor: 0.95,
           child: Container(
-            decoration: const BoxDecoration(
-              color: NutritionInputTheme.screenBackground,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            decoration: BoxDecoration(
+              color: context.colors.background,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             ),
             child: NutritionManualInputScreen(initial: initial),
           ),
@@ -852,7 +856,7 @@ class _DietDetailFormState extends State<DietDetailForm> {
           backgroundColor: Colors.transparent,
           child: Container(
             decoration: BoxDecoration(
-              color: DietDetailTheme.sheetBackground,
+              color: context.colors.background,
               borderRadius: BorderRadius.circular(24),
             ),
             child: ConstrainedBox(
@@ -870,9 +874,9 @@ class _DietDetailFormState extends State<DietDetailForm> {
         builder: (ctx) => FractionallySizedBox(
           heightFactor: 0.95,
           child: Container(
-            decoration: const BoxDecoration(
-              color: DietDetailTheme.sheetBackground,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            decoration: BoxDecoration(
+              color: context.colors.background,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             ),
             child: const FoodSearchScreen(),
           ),
@@ -914,7 +918,7 @@ void showDietDetailForm(BuildContext context, DateTime selectedDate) {
         backgroundColor: Colors.transparent,
         child: Container(
           decoration: BoxDecoration(
-            color: DietDetailTheme.sheetBackground,
+            color: context.colors.background,
             borderRadius: BorderRadius.circular(24),
           ),
           child: ConstrainedBox(
@@ -933,9 +937,9 @@ void showDietDetailForm(BuildContext context, DateTime selectedDate) {
       builder: (ctx) => FractionallySizedBox(
         heightFactor: 0.95,
         child: Container(
-          decoration: const BoxDecoration(
-            color: DietDetailTheme.sheetBackground,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          decoration: BoxDecoration(
+            color: context.colors.background,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: DietDetailForm(selectedDate: selectedDate),
         ),

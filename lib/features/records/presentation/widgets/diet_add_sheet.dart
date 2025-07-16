@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jfit/core/theme/diet_sheet_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'diet_detail_form.dart';
 
 class DietAddSheetContent extends StatefulWidget {
@@ -18,9 +18,9 @@ class _DietAddSheetContentState extends State<DietAddSheetContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: DietSheetTheme.sheetBackground,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: context.colors.background,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       constraints: const BoxConstraints(maxWidth: 480),
       child: SafeArea(
@@ -54,7 +54,7 @@ class _DietAddSheetContentState extends State<DietAddSheetContent> {
       height: 5,
       margin: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: DietSheetTheme.handlebarColor,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(4),
       ),
     );
@@ -64,7 +64,7 @@ class _DietAddSheetContentState extends State<DietAddSheetContent> {
     final formattedDate = DateFormat('yyyy년 MM월 dd일').format(widget.selectedDate);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(formattedDate, style: DietSheetTheme.dateHeaderStyle, textAlign: TextAlign.center),
+      child: Text(formattedDate, style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
     );
   }
 
@@ -72,7 +72,7 @@ class _DietAddSheetContentState extends State<DietAddSheetContent> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 24),
       decoration: BoxDecoration(
-        color: DietSheetTheme.tabContainerBackground,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -93,14 +93,16 @@ class _DietAddSheetContentState extends State<DietAddSheetContent> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: isActive ? DietSheetTheme.activeTabBackground : DietSheetTheme.inactiveTabBackground,
+            color: isActive ? context.colors.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: DietSheetTheme.tabTextStyle.copyWith(
-              color: isActive ? DietSheetTheme.activeTabColor : DietSheetTheme.inactiveTabColor,
+            style: TextStyle(
+              color: isActive ? context.colors.textPrimary : context.colors.textSecondary,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
@@ -130,11 +132,11 @@ class _DietAddSheetContentState extends State<DietAddSheetContent> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 48, color: DietSheetTheme.secondaryTextColor),
+        Icon(icon, size: 48, color: context.colors.textSecondary),
         const SizedBox(height: 16),
-        Text(title, style: DietSheetTheme.emptyMessageStyle),
+        Text(title, style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
-        Text(subtitle, style: DietSheetTheme.subMessageStyle, textAlign: TextAlign.center),
+        Text(subtitle, style: TextStyle(color: context.colors.textSecondary, fontSize: 14), textAlign: TextAlign.center),
       ],
     );
   }
@@ -173,7 +175,7 @@ class _DietAddSheetContentState extends State<DietAddSheetContent> {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: DietSheetTheme.buttonGridBackground,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -181,11 +183,11 @@ class _DietAddSheetContentState extends State<DietAddSheetContent> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 16),
-              child: Text(text, style: DietSheetTheme.buttonTextStyle),
+              child: Text(text, style: TextStyle(color: context.colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Icon(icon, color: Colors.white, size: 24),
+              child: Icon(icon, color: context.colors.textPrimary, size: 24),
             ),
           ],
         ),

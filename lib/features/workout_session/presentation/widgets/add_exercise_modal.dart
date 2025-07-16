@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/l10n/app_localizations.dart';
 
 class AddExerciseModal extends StatefulWidget {
@@ -44,11 +45,11 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
             maxHeight: 300,
           ),
           decoration: BoxDecoration(
-            color: const Color(0xFF0a0a0a),
+            color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: context.colors.background.withOpacity(0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -79,20 +80,20 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFF6366f1),
+            color: context.colors.primary,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.fitness_center,
-            color: Colors.white,
+            color: context.colors.textPrimary,
             size: 20,
           ),
         ),
         const SizedBox(width: 12),
                  Text(
             AppLocalizations.of(context)?.exerciseAdd ?? 'Add Exercise',
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: context.colors.textPrimary,
             fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -102,7 +103,7 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
                   onPressed: () {
                     widget.onCancel?.call();
                   },
-          icon: const Icon(Icons.close, color: Color(0xFFa3a3a3), size: 24),
+          icon: Icon(Icons.close, color: context.colors.textMuted, size: 24),
                 ),
               ],
     );
@@ -114,8 +115,8 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
       children: [
         Text(
           AppLocalizations.of(context)?.exerciseEnterName ?? 'Exercise Name',
-          style: const TextStyle(
-            color: Color(0xFFa3a3a3),
+          style: TextStyle(
+            color: context.colors.textSecondary,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
@@ -123,16 +124,16 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
         const SizedBox(height: 12),
         Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF161616),
+        color: context.colors.surfaceVariant,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF232323)),
+        border: Border.all(color: context.colors.border),
       ),
           child: TextField(
             controller: _exerciseController,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 16),
             decoration: InputDecoration(
               hintText: '예: 벤치 프레스, 스쿼트, 데드리프트...',
-              hintStyle: const TextStyle(color: Color(0xFF737373), fontSize: 16),
+              hintStyle: TextStyle(color: context.colors.textMuted, fontSize: 16),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
@@ -153,15 +154,15 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
             },
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              side: const BorderSide(color: Color(0xFF232323)),
+              side: BorderSide(color: context.colors.border),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text(
+            child: Text(
               '취소',
                         style: TextStyle(
-                          color: Color(0xFF737373),
+                          color: context.colors.textMuted,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -173,16 +174,16 @@ class _AddExerciseModalState extends State<AddExerciseModal> {
           child: ElevatedButton(
             onPressed: _addExercise,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6366f1),
+              backgroundColor: context.colors.primary,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text(
+            child: Text(
               '추가',
               style: TextStyle(
-                color: Colors.white,
+                color: context.colors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),

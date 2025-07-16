@@ -13,6 +13,8 @@ import 'package:jfit/features/records/data/models/user_daily_summary_model.dart'
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
+import 'package:jfit/core/widgets/theme_toggle_button.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 /// 앱 하단 내비게이션(ResponsiveScaffold)을 담당하는 메인 페이지.
 ///
@@ -80,6 +82,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         }
         
         return ResponsiveScaffold(
+          appBar: _buildAppBar(context),
           currentIndex: _currentIndex,
           onNavTap: (index) {
             // 중앙 Navigator 스택 초기화 후, 새 탭 페이지로 대체
@@ -135,5 +138,39 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       final today = DateTime.now();
       context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: today));
     }
+  }
+
+  /// AppBar 생성 (테마 전환 버튼 포함)
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final tabNames = ['기록', '대시보드', '운동', '내 운동', '루틴'];
+    
+    return AppBar(
+      title: Text(
+        tabNames[_currentIndex],
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: context.colors.textPrimary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      backgroundColor: context.colors.background,
+      elevation: 0,
+      centerTitle: true,
+      actions: [
+        // 테마 전환 버튼
+        const ThemeToggleButton(
+          showLabel: false,
+          iconSize: 20,
+        ),
+        const SizedBox(width: 16),
+      ],
+      // 하단 경계선
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(
+          height: 1,
+          color: context.colors.border,
+        ),
+      ),
+    );
   }
 } 

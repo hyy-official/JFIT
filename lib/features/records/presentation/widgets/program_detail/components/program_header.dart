@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/theme/second_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 /// 프로그램 헤더 위젯 (제목, 진행률 등)
 class ProgramHeader extends StatefulWidget {
@@ -72,7 +71,7 @@ class _ProgramHeaderState extends State<ProgramHeader>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    SecondTheme.bgTertiary.withOpacity(0.1),
+                    context.colors.surface.withOpacity(0.1),
                     Colors.transparent,
                   ],
                 ),
@@ -81,10 +80,10 @@ class _ProgramHeaderState extends State<ProgramHeader>
                 children: [
                   Text(
                     widget.programName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: SecondTheme.textPrimary,
+                      color: context.colors.textPrimary,
                       letterSpacing: -0.5,
                     ),
                     textAlign: TextAlign.center,
@@ -100,20 +99,20 @@ class _ProgramHeaderState extends State<ProgramHeader>
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              AppTheme.accent1.withOpacity(0.2),
-                              AppTheme.accent2.withOpacity(0.2),
+                              context.colors.primary.withOpacity(0.2),
+                              context.colors.secondary.withOpacity(0.2),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: AppTheme.accent1.withOpacity(0.3),
+                            color: context.colors.primary.withOpacity(0.3),
                             width: 1,
                           ),
                         ),
                         child: Text(
                           '${animatedProgress.toStringAsFixed(1)}% 진행 중',
                           style: TextStyle(
-                            color: AppTheme.accent1,
+                            color: context.colors.primary,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),

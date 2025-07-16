@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 class ExerciseTodayList extends StatelessWidget {
   final List<Map<String, dynamic>> exercises;
@@ -21,13 +21,13 @@ class ExerciseTodayList extends StatelessWidget {
         
         return Container(
           decoration: BoxDecoration(
-            color: AppTheme.programCardBackground,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             children: [
-              _buildExerciseImage(imageUrl),
+              _buildExerciseImage(context, imageUrl),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -35,16 +35,16 @@ class ExerciseTodayList extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       'x ${sets}세트   ${reps}',
                       style: TextStyle(
-                        color: AppTheme.textSub,
+                        color: context.colors.textSecondary,
                         fontSize: 13,
                       ),
                     ),
@@ -53,7 +53,7 @@ class ExerciseTodayList extends StatelessWidget {
               ),
               Icon(
                 Icons.play_arrow,
-                color: AppTheme.textMuted,
+                color: context.colors.textMuted,
                 size: 24,
               ),
             ],
@@ -63,18 +63,18 @@ class ExerciseTodayList extends StatelessWidget {
     );
   }
 
-  Widget _buildExerciseImage(String imageUrl) {
+  Widget _buildExerciseImage(BuildContext context, String imageUrl) {
     if (imageUrl.isEmpty) {
       return Container(
         width: 48,
         height: 48,
         decoration: BoxDecoration(
-          color: AppTheme.programBackground,
+          color: context.colors.background,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
           Icons.fitness_center,
-          color: AppTheme.textMuted,
+          color: context.colors.textMuted,
           size: 24,
         ),
       );
@@ -92,12 +92,12 @@ class ExerciseTodayList extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppTheme.programBackground,
+              color: context.colors.background,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               Icons.image_not_supported,
-              color: AppTheme.textMuted,
+              color: context.colors.textMuted,
               size: 20,
             ),
           );
@@ -108,7 +108,7 @@ class ExerciseTodayList extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppTheme.programBackground,
+              color: context.colors.background,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
@@ -118,7 +118,7 @@ class ExerciseTodayList extends StatelessWidget {
                         loadingProgress.expectedTotalBytes!
                     : null,
                 strokeWidth: 2,
-                color: AppTheme.textMuted,
+                color: context.colors.textMuted,
               ),
             ),
           );

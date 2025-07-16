@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/bloc/record_bloc.dart';
 import 'package:jfit/features/records/bloc/record_event.dart';
 import 'package:jfit/features/records/bloc/record_state.dart';
@@ -135,14 +135,14 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.programBackground,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.programBackground,
+        backgroundColor: context.colors.background,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: context.colors.textPrimary),
         title: Text(
           widget.routineName,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: context.colors.textPrimary),
         ),
       ),
       body: BlocConsumer<RecordBloc, RecordState>(
@@ -180,16 +180,16 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error, color: Colors.red, size: 48),
+                  Icon(Icons.error, color: context.colors.error, size: 48),
                   const SizedBox(height: 16),
                   Text(
                     '프로그램 정보를 불러올 수 없습니다',
-                    style: const TextStyle(color: Colors.white54),
+                    style: TextStyle(color: context.colors.textSecondary),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     state.message,
-                    style: const TextStyle(color: Colors.white38, fontSize: 12),
+                    style: TextStyle(color: context.colors.textMuted, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
@@ -217,16 +217,16 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                       children: [
                         Text(
                           widget.routineName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           '${(widget.progress * 100).toStringAsFixed(0)}% 진행 중',
-                          style: TextStyle(color: AppTheme.textSub),
+                          style: TextStyle(color: context.colors.textSecondary),
                         ),
                       ],
                     ),
@@ -243,9 +243,9 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                   if (partDesc.isNotEmpty)
                     Text(
                       partDesc,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                   const SizedBox(height: 8),
@@ -257,7 +257,7 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                               children: [
                                 Icon(
                                   Icons.bedtime,
-                                  color: AppTheme.textMuted,
+                                  color: context.colors.textMuted,
                                   size: 64,
                                 ),
                                 const SizedBox(height: 16),
@@ -266,7 +266,7 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
-                                    color: AppTheme.textSub,
+                                    color: context.colors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -274,7 +274,7 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                                   '오늘은 몸을 쉬어주세요',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: AppTheme.textMuted,
+                                    color: context.colors.textMuted,
                                   ),
                                 ),
                               ],
@@ -288,7 +288,7 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                                   children: [
                                     Icon(
                                       Icons.fitness_center,
-                                      color: AppTheme.textMuted,
+                                      color: context.colors.textMuted,
                                       size: 64,
                                     ),
                                     const SizedBox(height: 16),
@@ -296,7 +296,7 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                                       '오늘의 운동 정보가 없습니다',
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: AppTheme.textSub,
+                                        color: context.colors.textSecondary,
                                       ),
                                     ),
                                   ],
@@ -319,8 +319,8 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.programAccentBlue,
-                        foregroundColor: Colors.white,
+                        backgroundColor: context.colors.primary,
+                        foregroundColor: context.colors.onPrimary,
                         minimumSize: const Size(double.infinity, 48),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

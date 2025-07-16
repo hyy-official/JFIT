@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/core/theme/analytics_chart_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/entities/diet_score_data.dart';
 import 'package:jfit/features/analytics/domain/entities/nutrition_data.dart';
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
@@ -55,7 +55,7 @@ class DietTab extends StatelessWidget {
         ),
         if (isLoading)
           Container(
-            color: Colors.black.withAlpha((255 * 0.5).round()),
+            color: context.colors.background.withOpacity(0.8),
             child: const Center(child: CircularProgressIndicator()),
           ),
       ],
@@ -67,18 +67,18 @@ class DietTab extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AnalyticsChartTheme.cardBackground,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: AnalyticsChartTheme.cardBorder),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('식단 점수', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('식단 점수', style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4.0),
-          Text('평균 ${avgScore.toStringAsFixed(1)}점', style: const TextStyle(color: AnalyticsChartTheme.legendText, fontSize: 14)),
+          Text('평균 ${avgScore.toStringAsFixed(1)}점', style: TextStyle(color: context.colors.textSecondary, fontSize: 14)),
           const SizedBox(height: 24.0),
-          _buildDietScoreLegend(),
+          _buildDietScoreLegend(context),
           const SizedBox(height: 16.0),
           SizedBox(
             height: 220,
@@ -93,9 +93,13 @@ class DietTab extends StatelessWidget {
     );
   }
 
-  Widget _buildDietScoreLegend() {
+  Widget _buildDietScoreLegend(BuildContext context) {
     final legends = {
-      '5점': Colors.green, '4점': Colors.blue, '3점': Colors.yellow, '2점': Colors.orange, '1점': Colors.red,
+      '5점': context.colors.success, 
+      '4점': context.colors.primary, 
+      '3점': context.colors.warning, 
+      '2점': JFitChartColors.nutrition[2], // 오렌지 계열
+      '1점': context.colors.error,
     };
 
     return Wrap(
@@ -107,7 +111,7 @@ class DietTab extends StatelessWidget {
           children: [
             Icon(Icons.circle, color: entry.value, size: 10),
             const SizedBox(width: 6.0),
-            Text(entry.key, style: const TextStyle(color: AnalyticsChartTheme.legendText, fontSize: 12)),
+            Text(entry.key, style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
           ],
         );
       }).toList(),
@@ -118,28 +122,28 @@ class DietTab extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AnalyticsChartTheme.cardBackground,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: AnalyticsChartTheme.cardBorder),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('영양성분', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('영양성분', style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 24.0),
           _NutritionFilter(data: data, period: period),
           const SizedBox(height: 16.0),
-          _buildNutritionLegend(),
+          _buildNutritionLegend(context),
         ],
       ),
     );
   }
 
-  Widget _buildNutritionLegend() {
+  Widget _buildNutritionLegend(BuildContext context) {
     final legends = {
-      '탄수화물': AnalyticsChartTheme.nutritionDataColors[0],
-      '단백질': AnalyticsChartTheme.nutritionDataColors[1],
-      '지방': AnalyticsChartTheme.nutritionDataColors[2],
+      '탄수화물': JFitChartColors.nutrition[0],
+      '단백질': JFitChartColors.nutrition[1],
+      '지방': JFitChartColors.nutrition[2],
     };
 
     return Row(
@@ -151,7 +155,7 @@ class DietTab extends StatelessWidget {
             children: [
               Icon(Icons.circle, color: entry.value, size: 10),
               const SizedBox(width: 6.0),
-              Text(entry.key, style: const TextStyle(color: AnalyticsChartTheme.legendText, fontSize: 12)),
+              Text(entry.key, style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
             ],
           ),
         );
@@ -179,9 +183,9 @@ class _PeriodSelector extends StatelessWidget {
         return Container(
           height: 48,
           decoration: BoxDecoration(
-            color: AnalyticsChartTheme.cardBackground.withAlpha((255 * 0.3).round()),
+            color: context.colors.surface.withAlpha((255 * 0.3).round()),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AnalyticsChartTheme.cardBorder.withAlpha((255 * 0.5).round()), width: 1),
+            border: Border.all(color: context.colors.border.withAlpha((255 * 0.5).round()), width: 1),
           ),
           child: Stack(
             children: [
@@ -194,11 +198,15 @@ class _PeriodSelector extends StatelessWidget {
                 width: buttonWidth,
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: AnalyticsChartTheme.scoreBarGradient,
+                    gradient: LinearGradient(
+                      colors: [context.colors.primary, context.colors.primary.withOpacity(0.8)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: AnalyticsChartTheme.primaryAccent.withAlpha((255 * 0.3).round()),
+                        color: context.colors.primary.withAlpha((255 * 0.3).round()),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -220,7 +228,7 @@ class _PeriodSelector extends StatelessWidget {
                         child: Text(
                           periodsText[index],
                           style: TextStyle(
-                            color: isSelected ? Colors.white : AnalyticsChartTheme.unselectedToggleText,
+                            color: isSelected ? context.colors.textPrimary : context.colors.textSecondary,
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                             fontSize: 14,
                           ),
@@ -267,9 +275,9 @@ class _NutritionFilterState extends State<_NutritionFilter> {
             return Container(
               height: 40,
               decoration: BoxDecoration(
-                color: AnalyticsChartTheme.cardBackground.withAlpha((255 * 0.3).round()),
+                color: context.colors.surface.withAlpha((255 * 0.3).round()),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AnalyticsChartTheme.cardBorder.withAlpha((255 * 0.5).round()), width: 1),
+                border: Border.all(color: context.colors.border.withAlpha((255 * 0.5).round()), width: 1),
               ),
               child: Stack(
                 children: [
@@ -282,11 +290,15 @@ class _NutritionFilterState extends State<_NutritionFilter> {
                     width: buttonWidth,
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: AnalyticsChartTheme.scoreBarGradient,
+                        gradient: LinearGradient(
+                          colors: [context.colors.primary, context.colors.primary.withOpacity(0.8)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                         borderRadius: BorderRadius.circular(18),
                         boxShadow: [
                           BoxShadow(
-                            color: AnalyticsChartTheme.primaryAccent.withAlpha((255 * 0.3).round()),
+                            color: context.colors.primary.withAlpha((255 * 0.3).round()),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -310,7 +322,7 @@ class _NutritionFilterState extends State<_NutritionFilter> {
                             child: Text(
                               filters[index],
                               style: TextStyle(
-                                color: isSelected ? Colors.white : AnalyticsChartTheme.unselectedToggleText,
+                                color: isSelected ? context.colors.textPrimary : context.colors.textSecondary,
                                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                                 fontSize: 14,
                               ),

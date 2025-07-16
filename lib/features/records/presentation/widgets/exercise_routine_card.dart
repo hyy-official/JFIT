@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_event.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_state.dart';
@@ -82,7 +82,7 @@ class ExerciseRoutineCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppTheme.programCardBackground,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         padding: const EdgeInsets.all(16),
@@ -95,10 +95,10 @@ class ExerciseRoutineCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -106,7 +106,7 @@ class ExerciseRoutineCard extends StatelessWidget {
                     subtitle,
                     style: TextStyle(
                       fontSize: 14,
-                      color: isRestDay ? AppTheme.textMuted : AppTheme.textSub,
+                      color: isRestDay ? context.colors.textMuted : context.colors.textSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -115,16 +115,16 @@ class ExerciseRoutineCard extends StatelessWidget {
                     desc,
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppTheme.textMuted,
+                      color: context.colors.textMuted,
                     ),
                   ),
                   const SizedBox(height: 8),
                   // 진행률 표시
                   LinearProgressIndicator(
                     value: progress,
-                    backgroundColor: AppTheme.textMuted.withOpacity(0.3),
+                    backgroundColor: context.colors.textMuted.withOpacity(0.3),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      isRestDay ? AppTheme.textMuted : AppTheme.programAccentBlue,
+                      isRestDay ? context.colors.textMuted : context.colors.primary,
                     ),
                     minHeight: 3,
                   ),
@@ -133,7 +133,7 @@ class ExerciseRoutineCard extends StatelessWidget {
                     '${(progress * 100).toStringAsFixed(0)}% 진행',
                     style: TextStyle(
                       fontSize: 11,
-                      color: AppTheme.textMuted,
+                      color: context.colors.textMuted,
                     ),
                   ),
                 ],
@@ -148,39 +148,41 @@ class ExerciseRoutineCard extends StatelessWidget {
                 }
               },
               itemBuilder: (context) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.red),
-                      SizedBox(width: 8),
-                      Text('삭제', style: TextStyle(color: Colors.red)),
-                    ],
+                  child: Builder(
+                    builder: (context) => Row(
+                      children: [
+                        Icon(Icons.delete, color: context.colors.error),
+                        const SizedBox(width: 8),
+                        Text('삭제', style: TextStyle(color: context.colors.error)),
+                      ],
+                    ),
                   ),
                 ),
               ],
               icon: Icon(
                 Icons.more_vert,
-                color: AppTheme.textMuted,
+                color: context.colors.textMuted,
               ),
             ),
             const SizedBox(width: 8),
             // 이미지 또는 아이콘
-            _buildImageWidget(),
+            _buildImageWidget(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildImageWidget() {
+  Widget _buildImageWidget(BuildContext context) {
     if (imageUrl.isEmpty) {
       return CircleAvatar(
         radius: 28,
-        backgroundColor: AppTheme.programBackground,
+        backgroundColor: context.colors.background,
         child: Icon(
           Icons.fitness_center,
-          color: AppTheme.textMuted,
+          color: context.colors.textMuted,
           size: 24,
         ),
       );
@@ -188,7 +190,7 @@ class ExerciseRoutineCard extends StatelessWidget {
 
     return CircleAvatar(
       radius: 28,
-      backgroundColor: AppTheme.programBackground,
+      backgroundColor: context.colors.background,
       child: ClipOval(
         child: Image.network(
           imageUrl,
@@ -199,10 +201,10 @@ class ExerciseRoutineCard extends StatelessWidget {
             return Container(
               width: 56,
               height: 56,
-              color: AppTheme.programBackground,
+              color: context.colors.background,
               child: Icon(
                 Icons.image_not_supported,
-                color: AppTheme.textMuted,
+                color: context.colors.textMuted,
                 size: 24,
               ),
             );
@@ -212,7 +214,7 @@ class ExerciseRoutineCard extends StatelessWidget {
             return Container(
               width: 56,
               height: 56,
-              color: AppTheme.programBackground,
+              color: context.colors.background,
               child: Center(
                 child: CircularProgressIndicator(
                   value: loadingProgress.expectedTotalBytes != null
@@ -220,7 +222,7 @@ class ExerciseRoutineCard extends StatelessWidget {
                           loadingProgress.expectedTotalBytes!
                       : null,
                   strokeWidth: 2,
-                  color: AppTheme.textMuted,
+                  color: context.colors.textMuted,
                 ),
               ),
             );
@@ -250,7 +252,7 @@ class ExerciseRoutineCard extends StatelessWidget {
                 );
               },
               style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
+                foregroundColor: context.colors.error,
               ),
               child: const Text('삭제'),
             ),

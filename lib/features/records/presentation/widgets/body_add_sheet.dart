@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
@@ -54,9 +55,9 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
     final formattedDate = DateFormat('yyyy년 MM월 dd일').format(widget.selectedDate);
 
     return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFF232329),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SafeArea(
         child: Column(
@@ -65,7 +66,7 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: Text('$formattedDate 신체',
-                  style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                  style: TextStyle(color: context.colors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -90,11 +91,11 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
                 height: 56,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: context.colors.primary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                   onPressed: _onSave,
-                  child: const Text('저장하기', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text('저장하기', style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
               ),
             ),
@@ -109,7 +110,7 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
         height: 5,
         margin: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF444444),
+          color: context.colors.borderVariant,
           borderRadius: BorderRadius.circular(4),
         ),
       );
@@ -118,8 +119,8 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('신체 기록',
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+        Text('신체 기록',
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 16),
         _buildInputRow('체중', 'kg', _weightController),
         const SizedBox(height: 12),
@@ -127,8 +128,8 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
         const SizedBox(height: 12),
         _buildInputRow('체지방률', '%', _fatController),
         const SizedBox(height: 24),
-        const Text('눈바디',
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+        Text('눈바디',
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         GestureDetector(
           onTap: () {},
@@ -138,10 +139,10 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.add_a_photo, color: Colors.white54, size: 32),
-                    SizedBox(height: 8),
-                    Text('사진 추가', style: TextStyle(color: Colors.white54)),
+                  children: [
+                    Icon(Icons.add_a_photo, color: context.colors.textMuted, size: 32),
+                    const SizedBox(height: 8),
+                    Text('사진 추가', style: TextStyle(color: context.colors.textMuted)),
                   ],
                 ),
               ),
@@ -157,18 +158,18 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
       children: [
         SizedBox(
           width: 80,
-          child: Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          child: Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 14)),
         ),
         Expanded(
           child: TextField(
             controller: controller,
             keyboardType: TextInputType.numberWithOptions(decimal: true),
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 16),
             decoration: InputDecoration(
               hintText: '입력하기',
-              hintStyle: const TextStyle(color: Colors.white38),
+              hintStyle: TextStyle(color: context.colors.textMuted),
               filled: true,
-              fillColor: const Color(0x803A3A40),
+              fillColor: context.colors.surfaceVariant.withOpacity(0.5),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -178,7 +179,7 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
           ),
         ),
         const SizedBox(width: 8),
-        Text(unit, style: const TextStyle(color: Colors.white70)),
+        Text(unit, style: TextStyle(color: context.colors.textSecondary)),
       ],
     );
   }
@@ -192,9 +193,9 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('생활 기록',
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
-              Icon(_lifestyleExpanded ? Icons.remove : Icons.add, color: Colors.white54),
+              Text('생활 기록',
+                  style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+              Icon(_lifestyleExpanded ? Icons.remove : Icons.add, color: context.colors.textMuted),
             ],
           ),
         ),
@@ -223,7 +224,7 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
         return ChoiceChip(
           label: Text(labels[i]),
           selected: selected,
-          selectedColor: Colors.blueAccent,
+          selectedColor: context.colors.primary,
           onSelected: (_) => setState(() => _conditionIndex = i),
         );
       }),
@@ -237,19 +238,19 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
       children: [
         SizedBox(
           width: 80,
-          child: Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          child: Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 14)),
         ),
         Expanded(
           child: TextField(
             controller: controller,
             readOnly: !isDesktop,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
             decoration: InputDecoration(
               hintText: '입력하기',
-              hintStyle: const TextStyle(color: Colors.white38),
+              hintStyle: TextStyle(color: context.colors.textMuted),
               filled: true,
-              fillColor: const Color(0x803A3A40),
+              fillColor: context.colors.surfaceVariant.withOpacity(0.5),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -283,17 +284,17 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
   Widget _buildBowelRow() {
     return Row(
       children: [
-        const SizedBox(
+        SizedBox(
           width: 80,
-          child: Text('배변', style: TextStyle(color: Colors.white70, fontSize: 14)),
+          child: Text('배변', style: TextStyle(color: context.colors.textSecondary, fontSize: 14)),
         ),
         IconButton(
-          icon: const Icon(Icons.remove, color: Colors.white54),
+          icon: Icon(Icons.remove, color: context.colors.textMuted),
           onPressed: _bowelCount > 0 ? () => setState(() => _bowelCount--) : null,
         ),
-        Text('$_bowelCount회', style: const TextStyle(color: Colors.white)),
+        Text('$_bowelCount회', style: TextStyle(color: context.colors.textPrimary)),
         IconButton(
-          icon: const Icon(Icons.add, color: Colors.white54),
+          icon: Icon(Icons.add, color: context.colors.textMuted),
           onPressed: () => setState(() => _bowelCount++),
         ),
       ],
@@ -303,16 +304,16 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
   Widget _buildMenstruationRow() {
     return Row(
       children: [
-        const SizedBox(
+        SizedBox(
           width: 80,
-          child: Text('월경', style: TextStyle(color: Colors.white70, fontSize: 14)),
+          child: Text('월경', style: TextStyle(color: context.colors.textSecondary, fontSize: 14)),
         ),
         Switch(
           value: _menstruation,
           onChanged: (val) => setState(() => _menstruation = val),
         ),
         const SizedBox(width: 8),
-        Text(_menstruation ? '진행 중' : '없음', style: const TextStyle(color: Colors.white)),
+        Text(_menstruation ? '진행 중' : '없음', style: TextStyle(color: context.colors.textPrimary)),
       ],
     );
   }
@@ -321,17 +322,17 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('메모',
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+        Text('메모',
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         TextField(
           controller: _memoController,
           maxLines: 4,
           decoration: InputDecoration(
             hintText: '기분, 컨디션, 몸 상태 등을 자유롭게 입력해 주세요',
-            hintStyle: const TextStyle(color: Colors.white38),
+            hintStyle: TextStyle(color: context.colors.textMuted),
             filled: true,
-            fillColor: const Color(0x803A3A40),
+            fillColor: context.colors.surfaceVariant.withOpacity(0.5),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -373,7 +374,7 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
         Navigator.of(context)
           ..pop() // loading
           ..pop(); // sheet
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('신체 정보가 저장되었습니다'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('신체 정보가 저장되었습니다'), backgroundColor: context.colors.success));
       });
     } catch (e) {
       Navigator.pop(context);
@@ -391,7 +392,7 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
   void _showWheelTimePicker(TextEditingController controller) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF232329),
+      backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -428,9 +429,9 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('완료', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  child: Text('완료', style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
+                    foregroundColor: context.colors.textPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                 ),
@@ -453,7 +454,7 @@ class DottedBorderWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white38, width: 1, style: BorderStyle.solid),
+        border: Border.all(color: context.colors.border, width: 1, style: BorderStyle.solid),
       ),
       child: child,
     );

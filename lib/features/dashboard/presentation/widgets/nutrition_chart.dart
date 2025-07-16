@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:jfit/l10n/app_localizations.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 class NutritionChart extends StatelessWidget {
   final List<Map<String, dynamic>> data;
@@ -25,14 +24,14 @@ class NutritionChart extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [AppTheme.nutritionIconColor.withAlpha((255 * 0.8).round()), AppTheme.nutritionIconColor]),
+                    gradient: LinearGradient(colors: [context.colors.secondary.withAlpha((255 * 0.8).round()), context.colors.secondary]),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(8),
-                  child: Icon(Icons.restaurant, color: Colors.white, size: 20),
+                  child: Icon(Icons.restaurant, color: context.colors.textPrimary, size: 20),
                 ),
                 SizedBox(width: 10),
-                Text(l10n?.weeklyNutritionIntake ?? 'Weekly Nutrition Intake', style: context.texts.titleMedium?.copyWith(color: Colors.white)),
+                Text(l10n?.weeklyNutritionIntake ?? 'Weekly Nutrition Intake', style: context.textTheme.titleMedium?.copyWith(color: context.colors.textPrimary)),
               ],
             ),
             SizedBox(height: 16),
@@ -41,12 +40,12 @@ class NutritionChart extends StatelessWidget {
               child: LineChart(
                 LineChartData(
                   borderData: FlBorderData(show: false),
-                  gridData: FlGridData(show: true, drawVerticalLine: false, getDrawingHorizontalLine: (v) => FlLine(color: AppTheme.surface2, strokeWidth: 1)),
+                  gridData: FlGridData(show: true, drawVerticalLine: false, getDrawingHorizontalLine: (v) => FlLine(color: context.colors.border, strokeWidth: 1)),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        getTitlesWidget: (v, meta) => Text(v.toInt().toString(), style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub)),
+                        getTitlesWidget: (v, meta) => Text(v.toInt().toString(), style: context.textTheme.bodySmall?.copyWith(color: context.colors.textSecondary)),
                         reservedSize: 40,
                       ),
                     ),
@@ -55,7 +54,7 @@ class NutritionChart extends StatelessWidget {
                         showTitles: true,
                         getTitlesWidget: (v, meta) {
                           if (v.toInt() >= 0 && v.toInt() < data.length) {
-                            return Text(data[v.toInt()]['date'], style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub));
+                            return Text(data[v.toInt()]['date'], style: context.textTheme.bodySmall?.copyWith(color: context.colors.textSecondary));
                           }
                           return SizedBox.shrink();
                         },
@@ -70,7 +69,7 @@ class NutritionChart extends StatelessWidget {
                     LineChartBarData(
                       spots: data.asMap().entries.map((e) => FlSpot(e.key.toDouble(), (e.value['protein'] as num).toDouble())).toList(),
                       isCurved: true,
-                      color: AppTheme.proteinGraphColor,
+                      color: context.colors.success,
                       barWidth: 3,
                       dotData: FlDotData(show: true),
                       belowBarData: BarAreaData(show: false),
@@ -78,7 +77,7 @@ class NutritionChart extends StatelessWidget {
                     LineChartBarData(
                       spots: data.asMap().entries.map((e) => FlSpot(e.key.toDouble(), (e.value['carbs'] as num).toDouble())).toList(),
                       isCurved: true,
-                      color: AppTheme.carbsGraphColor,
+                      color: context.colors.warning,
                       barWidth: 3,
                       dotData: FlDotData(show: true),
                       belowBarData: BarAreaData(show: false),
@@ -86,7 +85,7 @@ class NutritionChart extends StatelessWidget {
                     LineChartBarData(
                       spots: data.asMap().entries.map((e) => FlSpot(e.key.toDouble(), (e.value['fat'] as num).toDouble())).toList(),
                       isCurved: true,
-                      color: AppTheme.fatGraphColor,
+                      color: context.colors.accent,
                       barWidth: 3,
                       dotData: FlDotData(show: true),
                       belowBarData: BarAreaData(show: false),
@@ -99,11 +98,11 @@ class NutritionChart extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _LegendDot(color: AppTheme.proteinGraphColor, label: l10n?.protein ?? 'Protein (g)'),
+                _LegendDot(color: context.colors.success, label: l10n?.protein ?? 'Protein (g)'),
                 SizedBox(width: 12),
-                _LegendDot(color: AppTheme.carbsGraphColor, label: l10n?.carbs ?? 'Carbs (g)'),
+                _LegendDot(color: context.colors.warning, label: l10n?.carbs ?? 'Carbs (g)'),
                 SizedBox(width: 12),
-                _LegendDot(color: AppTheme.fatGraphColor, label: l10n?.fat ?? 'Fat (g)'),
+                _LegendDot(color: context.colors.accent, label: l10n?.fat ?? 'Fat (g)'),
               ],
             ),
           ],
@@ -123,7 +122,7 @@ class _LegendDot extends StatelessWidget {
       children: [
         Container(width: 12, height: 12, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         SizedBox(width: 4),
-        Text(label, style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub)),
+        Text(label, style: context.textTheme.bodySmall?.copyWith(color: context.colors.textSecondary)),
       ],
     );
   }

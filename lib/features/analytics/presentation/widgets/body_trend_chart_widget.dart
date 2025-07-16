@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/analytics_chart_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/entities/body_data.dart';
 import 'package:jfit/features/analytics/presentation/widgets/body_tab.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +53,7 @@ class BodyTrendChartWidget extends StatelessWidget {
                   return SideTitleWidget(
                     axisSide: meta.axisSide,
                     space: 4.0,
-                    child: Text(label, style: AnalyticsChartTheme.axisLabelStyle),
+                    child: Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
                   );
                 }
                 return const SizedBox.shrink();
@@ -68,7 +68,7 @@ class BodyTrendChartWidget extends StatelessWidget {
                 if (value == 0 || value > maxY) return Container();
                 // Show labels at intervals of maxY / 3
                 if (value % (maxY / 3).round() == 0 || value == maxY) {
-                  return Text('${value.toInt()}', style: AnalyticsChartTheme.axisLabelStyle);
+                  return Text('${value.toInt()}', style: TextStyle(color: context.colors.textSecondary, fontSize: 12));
                 }
                 return Container();
               },
@@ -82,20 +82,20 @@ class BodyTrendChartWidget extends StatelessWidget {
           verticalInterval: 1,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: AnalyticsChartTheme.gridLineColor,
+              color: context.colors.border,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: AnalyticsChartTheme.gridLineColor,
+              color: context.colors.border,
               strokeWidth: 1,
             );
           },
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(color: AnalyticsChartTheme.borderColor, width: 1),
+          border: Border.all(color: context.colors.border, width: 1),
         ),
         lineBarsData: [
           LineChartBarData(
@@ -117,24 +117,25 @@ class BodyTrendChartWidget extends StatelessWidget {
               return FlSpot(index.toDouble(), yValue);
             }).toList(),
             isCurved: true,
-            gradient: AnalyticsChartTheme.scoreBarGradient, // Use a gradient for the line
+            color: context.colors.primary, // Use a gradient for the line
             barWidth: 3,
             isStrokeCapRound: true,
             dotData: FlDotData(
               show: true,
               getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(
                 radius: 4,
-                color: AnalyticsChartTheme.primaryAccent,
-                strokeColor: Colors.white,
+                color: context.colors.primary,
+                strokeColor: context.colors.textPrimary,
                 strokeWidth: 1,
               ),
             ),
             belowBarData: BarAreaData(
               show: true,
               gradient: LinearGradient(
-                colors: AnalyticsChartTheme.scoreBarGradient.colors
-                    .map((color) => color.withAlpha((255 * 0.3).round()))
-                    .toList(),
+                colors: [
+                  context.colors.primary.withAlpha((255 * 0.3).round()),
+                  context.colors.primary.withAlpha((255 * 0.1).round()),
+                ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -167,11 +168,11 @@ class BodyTrendChartWidget extends StatelessWidget {
 
                 return LineTooltipItem(
                   '${item.dateLabel}\n$valueText$unit',
-                  AnalyticsChartTheme.tooltipTextStyle,
+                  TextStyle(color: context.colors.textPrimary, fontSize: 12),
                 );
               }).toList();
             },
-            getTooltipColor: (_) => AnalyticsChartTheme.tooltipBackground,
+            getTooltipColor: (_) => context.colors.surface,
           ),
         ),
       ),

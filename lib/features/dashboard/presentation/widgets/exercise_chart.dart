@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:jfit/l10n/app_localizations.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 class ExerciseChart extends StatelessWidget {
   final List<Map<String, dynamic>> data;
@@ -25,14 +24,14 @@ class ExerciseChart extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withAlpha((255 * 0.8).round()), AppTheme.workoutIconColor]),
+                    gradient: LinearGradient(colors: [context.colors.primary.withAlpha((255 * 0.8).round()), context.colors.primary]),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(8),
-                  child: Icon(Icons.show_chart, color: Colors.white, size: 20),
+                  child: Icon(Icons.show_chart, color: context.colors.textPrimary, size: 20),
                 ),
                 SizedBox(width: 10),
-                Text(l10n?.weeklyWorkoutDuration ?? 'Weekly Workout Duration', style: context.texts.titleMedium?.copyWith(color: Colors.white)),
+                Text(l10n?.weeklyWorkoutDuration ?? 'Weekly Workout Duration', style: context.textTheme.titleMedium?.copyWith(color: context.colors.textPrimary)),
               ],
             ),
             SizedBox(height: 16),
@@ -41,12 +40,12 @@ class ExerciseChart extends StatelessWidget {
               child: BarChart(
                 BarChartData(
                   borderData: FlBorderData(show: false),
-                  gridData: FlGridData(show: true, drawVerticalLine: false, getDrawingHorizontalLine: (v) => FlLine(color: AppTheme.surface2, strokeWidth: 1)),
+                  gridData: FlGridData(show: true, drawVerticalLine: false, getDrawingHorizontalLine: (v) => FlLine(color: context.colors.border, strokeWidth: 1)),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        getTitlesWidget: (v, meta) => Text(v.toInt().toString(), style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub)),
+                        getTitlesWidget: (v, meta) => Text(v.toInt().toString(), style: context.textTheme.bodySmall?.copyWith(color: context.colors.textSecondary)),
                         reservedSize: 40,
                       ),
                     ),
@@ -55,7 +54,7 @@ class ExerciseChart extends StatelessWidget {
                         showTitles: true,
                         getTitlesWidget: (v, meta) {
                           if (v.toInt() >= 0 && v.toInt() < data.length) {
-                            return Text(data[v.toInt()]['date'], style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub));
+                            return Text(data[v.toInt()]['date'], style: context.textTheme.bodySmall?.copyWith(color: context.colors.textSecondary));
                           }
                           return SizedBox.shrink();
                         },
@@ -66,7 +65,7 @@ class ExerciseChart extends StatelessWidget {
                     rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                     topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   ),
-                  barGroups: data.asMap().entries.map((e) => BarChartGroupData(x: e.key, barRods: [BarChartRodData(toY: e.value['duration'].toDouble(), gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withAlpha((255 * 0.8).round()), AppTheme.workoutIconColor]), width: 18, borderRadius: BorderRadius.circular(6))])).toList(),
+                  barGroups: data.asMap().entries.map((e) => BarChartGroupData(x: e.key, barRods: [BarChartRodData(toY: e.value['duration'].toDouble(), gradient: LinearGradient(colors: [context.colors.primary.withAlpha((255 * 0.8).round()), context.colors.primary]), width: 18, borderRadius: BorderRadius.circular(6))])).toList(),
                 ),
               ),
             ),

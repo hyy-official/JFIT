@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/core/theme/analytics_chart_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/entities/workout_composition_data.dart';
 import 'package:jfit/features/analytics/domain/entities/workout_time_data.dart';
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
@@ -53,7 +53,7 @@ class ExerciseTab extends StatelessWidget {
         ),
         if (isLoading)
           Container(
-            color: Colors.black.withAlpha((255 * 0.5).round()),
+            color: context.colors.background.withOpacity(0.8),
             child: const Center(child: CircularProgressIndicator()),
           ),
       ],
@@ -64,16 +64,16 @@ class ExerciseTab extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AnalyticsChartTheme.cardBackground,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AnalyticsChartTheme.cardBorder),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('운동 시간', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('운동 시간', style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          Text('누적 ${total.round()}분 / 평균 ${avg.round()}분', style: const TextStyle(color: AnalyticsChartTheme.legendText, fontSize: 14)),
+          Text('누적 ${total.round()}분 / 평균 ${avg.round()}분', style: TextStyle(color: context.colors.textSecondary, fontSize: 14)),
           const SizedBox(height: 24),
           SizedBox(
             height: 220,
@@ -88,14 +88,14 @@ class ExerciseTab extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AnalyticsChartTheme.cardBackground,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AnalyticsChartTheme.cardBorder),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('운동 구성', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('운동 구성', style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           Wrap(
             alignment: WrapAlignment.center,
@@ -109,7 +109,7 @@ class ExerciseTab extends StatelessWidget {
                 children: [
                   Icon(Icons.square, color: WorkoutCompositionChart.segmentColors[idx % WorkoutCompositionChart.segmentColors.length], size: 10),
                   const SizedBox(width: 4),
-                  Text(label, style: const TextStyle(color: AnalyticsChartTheme.legendText, fontSize: 12)),
+                  Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
                 ],
               );
             }).toList(),
@@ -144,9 +144,9 @@ class _PeriodSelector extends StatelessWidget {
         return Container(
           height: 48,
           decoration: BoxDecoration(
-            color: AnalyticsChartTheme.cardBackground.withAlpha((255 * 0.3).round()),
+            color: context.colors.surface.withAlpha((255 * 0.3).round()),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AnalyticsChartTheme.cardBorder.withAlpha((255 * 0.5).round()), width: 1),
+            border: Border.all(color: context.colors.border.withAlpha((255 * 0.5).round()), width: 1),
           ),
           child: Stack(
             children: [
@@ -159,11 +159,15 @@ class _PeriodSelector extends StatelessWidget {
                 width: buttonWidth,
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: AnalyticsChartTheme.scoreBarGradient,
+                    gradient: LinearGradient(
+                  colors: [context.colors.primary, context.colors.primary.withOpacity(0.7)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: AnalyticsChartTheme.primaryAccent.withAlpha((255 * 0.3).round()),
+                        color: context.colors.primary.withAlpha((255 * 0.3).round()),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -185,7 +189,7 @@ class _PeriodSelector extends StatelessWidget {
                         child: Text(
                           periodsText[index],
                           style: TextStyle(
-                            color: isSelected ? Colors.white : AnalyticsChartTheme.unselectedToggleText,
+                            color: isSelected ? context.colors.textPrimary : context.colors.textSecondary,
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                             fontSize: 14,
                           ),

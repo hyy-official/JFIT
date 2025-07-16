@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/theme/second_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/data/models/user_program_day_model.dart';
 import 'package:jfit/features/programs/data/models/workout_session_model.dart';
 
@@ -49,13 +48,13 @@ class StartWorkoutButton extends StatelessWidget {
       width: double.infinity,
       height: 52,
       decoration: BoxDecoration(
-        gradient: isEnabled ? AppTheme.accentGradient : null,
-        color: isEnabled ? null : SecondTheme.bgSecondary,
+        gradient: isEnabled ? context.colors.gradient : null,
+        color: isEnabled ? null : context.colors.surfaceVariant,
         borderRadius: BorderRadius.circular(16),
         border: isEnabled
             ? null
             : Border.all(
-                color: SecondTheme.border,
+                color: context.colors.border,
                 width: 1,
               ),
       ),
@@ -63,7 +62,7 @@ class StartWorkoutButton extends StatelessWidget {
         onPressed: isEnabled ? onPressed : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
-          foregroundColor: isEnabled ? Colors.white : SecondTheme.textMuted,
+          foregroundColor: isEnabled ? context.colors.textPrimary : context.colors.textMuted,
           shadowColor: Colors.transparent,
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -75,7 +74,7 @@ class StartWorkoutButton extends StatelessWidget {
           children: [
             Icon(
               isCompleted ? Icons.check_circle : Icons.play_arrow,
-              color: isEnabled ? Colors.white : SecondTheme.textMuted,
+              color: isEnabled ? context.colors.textPrimary : context.colors.textMuted,
             ),
             const SizedBox(width: 8),
             Text(

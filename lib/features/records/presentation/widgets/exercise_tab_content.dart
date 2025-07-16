@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/records/bloc/record_bloc.dart';
@@ -80,17 +80,17 @@ class _ExerciseTabContentState extends State<ExerciseTabContent>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error, color: Colors.red, size: 48),
+                Icon(Icons.error, color: context.colors.error, size: 48),
                 const SizedBox(height: 16),
                 Text(
                   '운동 프로그램을 불러오는 중 오류가 발생했습니다',
-                  style: const TextStyle(color: Colors.white54),
+                  style: TextStyle(color: context.colors.textSecondary),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   state.message,
-                  style: const TextStyle(color: Colors.white38, fontSize: 12),
+                  style: TextStyle(color: context.colors.textMuted, fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),

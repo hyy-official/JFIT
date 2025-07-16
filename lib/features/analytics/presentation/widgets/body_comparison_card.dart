@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/analytics_chart_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/entities/body_data.dart';
 import 'package:intl/intl.dart';
 
@@ -18,16 +18,16 @@ class BodyComparisonCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AnalyticsChartTheme.cardBackground,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: AnalyticsChartTheme.cardBorder),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
+          Text(
             '변화 비교',
-            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20.0),
           _buildComparisonPhotos(context),
@@ -60,25 +60,25 @@ class BodyComparisonCard extends StatelessWidget {
         Container(
           height: MediaQuery.of(context).size.width * 0.4,
           decoration: BoxDecoration(
-            color: const Color(0xFF2D2D2D),
+            color: context.colors.surfaceVariant,
             borderRadius: BorderRadius.circular(12.0),
-            border: Border.all(color: const Color(0xFF404040), width: 1),
+            border: Border.all(color: context.colors.borderVariant, width: 1),
           ),
           child: data == null
-              ? const Center(
+              ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.camera_alt_outlined,
-                        color: Color(0xFF666666),
+                        color: context.colors.textMuted,
                         size: 48,
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Text(
                         '사진 없음',
                         style: TextStyle(
-                          color: Color(0xFF999999),
+                          color: context.colors.textMuted,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -86,10 +86,10 @@ class BodyComparisonCard extends StatelessWidget {
                     ],
                   ),
                 )
-              : const Center(
+              : Center(
                   child: Icon(
                     Icons.camera_alt_outlined,
-                    color: Color(0xFF666666),
+                    color: context.colors.textMuted,
                     size: 48,
                   ),
                 ), // TODO: Replace with actual image widget
@@ -97,8 +97,8 @@ class BodyComparisonCard extends StatelessWidget {
         const SizedBox(height: 12.0),
         Text(
           '$dateText 업로드',
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: context.colors.textPrimary,
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -114,12 +114,14 @@ class BodyComparisonCard extends StatelessWidget {
   }
 
   Widget _buildMeasurementText(String label, double? value, String unit) {
-    return Text(
+    return Builder(
+      builder: (context) => Text(
         '$label: ${value != null ? '${value.toStringAsFixed(1)}$unit' : '-'}',
-      style: const TextStyle(
-        color: Color(0xFFCCCCCC),
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
+        style: TextStyle(
+          color: context.colors.textSecondary,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -131,34 +133,36 @@ class BodyComparisonCard extends StatelessWidget {
 
     final int daysDiff = currentData!.date.difference(previousData!.date).inDays;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: const Color(0xFF333333), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${daysDiff}일간 변화',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+    return Builder(
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.colors.surfaceVariant,
+          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: context.colors.borderVariant, width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${daysDiff}일간 변화',
+              style: TextStyle(
+                color: context.colors.textPrimary,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 12.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildChangeColumn('체중', currentData!.weight - previousData!.weight, 'kg', ChangeType.weight),
-              _buildChangeColumn('근육량', currentData!.skeletalMuscleMass - previousData!.skeletalMuscleMass, 'kg', ChangeType.skeletalMuscleMass),
-              _buildChangeColumn('체지방률', currentData!.bodyFatPercentage - previousData!.bodyFatPercentage, '%', ChangeType.bodyFatPercentage),
-            ],
-          ),
-        ],
+            const SizedBox(height: 12.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildChangeColumn('체중', currentData!.weight - previousData!.weight, 'kg', ChangeType.weight),
+                _buildChangeColumn('근육량', currentData!.skeletalMuscleMass - previousData!.skeletalMuscleMass, 'kg', ChangeType.skeletalMuscleMass),
+                _buildChangeColumn('체지방률', currentData!.bodyFatPercentage - previousData!.bodyFatPercentage, '%', ChangeType.bodyFatPercentage),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -170,28 +174,30 @@ class BodyComparisonCard extends StatelessWidget {
     if (change > 0) {
       sign = '+';
       if (type == ChangeType.weight || type == ChangeType.bodyFatPercentage) {
-        color = const Color(0xFFFF6B6B); // 체중, 체지방률 증가는 빨간색
+        color = JFitChartColors.negativeChange; // 체중, 체지방률 증가는 부정적
       } else {
-        color = const Color(0xFF4ECDC4); // 근육량 증가는 청록색
+        color = JFitChartColors.positiveChange; // 근육량 증가는 긍정적
       }
     } else if (change < 0) {
       if (type == ChangeType.weight || type == ChangeType.bodyFatPercentage) {
-        color = const Color(0xFF4ECDC4); // 체중, 체지방률 감소는 청록색
+        color = JFitChartColors.positiveChange; // 체중, 체지방률 감소는 긍정적
       } else {
-        color = const Color(0xFFFF6B6B); // 근육량 감소는 빨간색
+        color = JFitChartColors.negativeChange; // 근육량 감소는 부정적
       }
     } else {
-      color = const Color(0xFF999999); // 변화 없음
+      color = JFitChartColors.neutralChange; // 변화 없음
     }
 
     return Column(
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Color(0xFFCCCCCC),
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
+        Builder(
+          builder: (context) => Text(
+            label,
+            style: TextStyle(
+              color: context.colors.textSecondary,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         const SizedBox(height: 4),
@@ -202,7 +208,7 @@ class BodyComparisonCard extends StatelessWidget {
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
-      ),
+        ),
       ],
     );
   }

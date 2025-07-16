@@ -15,8 +15,10 @@ import 'package:jfit/features/dashboard/data/repositories/dashboard_repository.d
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:jfit/features/analytics/domain/repositories/analytics_repository.dart';
 import 'package:jfit/features/analytics/data/repositories/supabase_analytics_repository.dart';
-import 'core/theme/app_theme.dart';
+import 'core/theme/theme_system.dart';
+import 'core/theme/theme_manager.dart';
 import 'core/utils/locale_manager.dart';
+import 'package:provider/provider.dart';
 // import 'core/services/auth_service.dart'; // 주석 처리: 나중에 사용할 예정
 // import 'features/auth/presentation/pages/login_page.dart'; // 주석 처리: 나중에 사용할 예정
 import 'l10n/app_localizations.dart'; // 추가
@@ -37,8 +39,24 @@ Future<void> main() async {
   // 의존성 주입 초기화
   setupDependencies();
   
+  // 테마 매니저 초기화
+  final themeManager = ThemeManager();
+  await themeManager.initialize();
+  
   runApp(
-    MultiRepositoryProvider(
+    ChangeNotifierProvider.value(
+      value: themeManager,
+      child: const JFitApp(),
+    ),
+  );
+}
+
+class JFitApp extends StatelessWidget {
+  const JFitApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>(
           create: (context) => AuthRepository(),
@@ -86,8 +104,8 @@ Future<void> main() async {
         ],
         child: const MyApp(),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -114,27 +132,30 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'JFiT',
-      theme: AppTheme.darkTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      locale: _localeManager.currentLocale,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'), // English
-        Locale('ko'), // Korean
-      ],
-      navigatorObservers: [StackLoggingObserver()],
-      home: const AuthGate(child: MainNavigationPage()),
+    return Consumer<ThemeManager>(
+      builder: (context, themeManager, child) {
+        return MaterialApp(
+          title: 'JFiT',
+          theme: JFitTheme.lightTheme,
+          darkTheme: JFitTheme.darkTheme,
+          themeMode: themeManager.themeMode,
+          locale: _localeManager.currentLocale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'), // English
+            Locale('ko'), // Korean
+          ],
+          navigatorObservers: [StackLoggingObserver()],
+          home: const AuthGate(child: MainNavigationPage()),
+        );
+      },
     );
   }
 }

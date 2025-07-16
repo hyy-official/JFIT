@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 class WorkoutSummary extends StatelessWidget {
   final Map<String, dynamic> session;
@@ -17,7 +18,7 @@ class WorkoutSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFF161616),
+      color: context.colors.surfaceVariant,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.all(24),
       child: Padding(

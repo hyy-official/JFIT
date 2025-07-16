@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/theme/second_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/data/models/user_program_day_model.dart';
 
 /// 주차 네비게이션 위젯
@@ -124,19 +123,19 @@ class _WeekTabState extends State<WeekTab> with SingleTickerProviderStateMixin {
           curve: Curves.easeInOut,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            gradient: widget.isSelected ? AppTheme.accentGradient : null,
-            color: widget.isSelected ? null : SecondTheme.bgSecondary,
+            gradient: widget.isSelected ? context.colors.gradient : null,
+            color: widget.isSelected ? null : context.colors.surfaceVariant,
             borderRadius: BorderRadius.circular(16),
             border: widget.isSelected
                 ? null
                 : Border.all(
-                    color: SecondTheme.border,
+                    color: context.colors.border,
                     width: 1,
                   ),
             boxShadow: widget.isSelected
                 ? [
                     BoxShadow(
-                      color: AppTheme.accent1.withOpacity(0.3),
+                      color: context.colors.primary.withOpacity(0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -146,7 +145,7 @@ class _WeekTabState extends State<WeekTab> with SingleTickerProviderStateMixin {
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 300),
             style: TextStyle(
-              color: widget.isSelected ? Colors.white : SecondTheme.textSecondary,
+              color: widget.isSelected ? context.colors.textPrimary : context.colors.textSecondary,
               fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.normal,
             ),
             child: Text('${widget.week}주차'),

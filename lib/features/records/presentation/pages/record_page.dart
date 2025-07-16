@@ -6,9 +6,9 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/bloc/record_bloc.dart';
 import 'package:jfit/features/records/bloc/record_event.dart';
-import 'package:jfit/features/records/bloc/record_state.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/records/presentation/widgets/dashboard_header.dart';
@@ -143,9 +143,14 @@ class _RecordTabContentState extends State<RecordTabContent> with AutomaticKeepA
             key: PageStorageKey('exercise_tab'),
           ),
           // 계획 탭 컨텐츠
-          const Center(
-            key: PageStorageKey('plan_tab'),
-            child: Text('계획 컨텐츠', style: TextStyle(color: Colors.white54)),
+          Center(
+            key: const PageStorageKey('plan_tab'),
+            child: Builder(
+              builder: (context) => Text(
+                '계획 컨텐츠', 
+                style: TextStyle(color: context.colors.textSecondary)
+              ),
+            ),
           ),
         ],
       ),

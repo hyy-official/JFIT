@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 class ExerciseEmptyState extends StatelessWidget {
   const ExerciseEmptyState({super.key});
@@ -10,18 +10,18 @@ class ExerciseEmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('내 루틴', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text('내 루틴', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: context.colors.textPrimary)),
           const SizedBox(height: 16),
-          Text('+ 새 루틴', style: TextStyle(fontSize: 16, color: AppTheme.textSub)),
+          Text('+ 새 루틴', style: TextStyle(fontSize: 16, color: context.colors.textSecondary)),
           const SizedBox(height: 48),
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.programAccentBlue,
+              backgroundColor: context.colors.primary,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
-            child: const Text('자유운동 시작', style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('자유운동 시작', style: TextStyle(fontSize: 16, color: context.colors.onPrimary, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

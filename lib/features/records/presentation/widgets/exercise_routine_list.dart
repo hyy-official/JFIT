@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'exercise_routine_card.dart';
 
 class ExerciseRoutineList extends StatelessWidget {

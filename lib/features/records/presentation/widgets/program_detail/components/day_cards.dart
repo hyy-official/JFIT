@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/theme/second_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/data/models/user_program_day_model.dart';
 
 /// Day 카드들을 담는 위젯
@@ -65,40 +64,40 @@ class DayCard extends StatelessWidget {
 
     if (isDone) {
       // 완료된 일차 - 초록색 체크 표시
-      icon = const Icon(Icons.check_circle, color: Colors.white, size: 20);
-      gradient = const LinearGradient(
-        colors: [Color(0xFF22C55E), Color(0xFF16A34A)],
+      icon = Icon(Icons.check_circle, color: context.colors.textPrimary, size: 20);
+      gradient = LinearGradient(
+        colors: [context.colors.success, context.colors.success.withOpacity(0.8)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
-      textColor = Colors.white;
+      textColor = context.colors.textPrimary;
       fontWeight = FontWeight.bold;
       boxShadow = [
         BoxShadow(
-          color: const Color(0xFF22C55E).withOpacity(0.3),
+          color: context.colors.success.withOpacity(0.3),
           blurRadius: 8,
           offset: const Offset(0, 2),
         ),
       ];
     } else if (isSelected) {
       // 선택된 일차 - 액센트 색상
-      icon = const Icon(Icons.fitness_center, color: Colors.white, size: 20);
-      gradient = AppTheme.accentGradient;
-      textColor = Colors.white;
+      icon = Icon(Icons.fitness_center, color: context.colors.textPrimary, size: 20);
+      gradient = context.colors.gradient;
+      textColor = context.colors.textPrimary;
       fontWeight = FontWeight.bold;
       boxShadow = [
         BoxShadow(
-          color: AppTheme.accent1.withOpacity(0.3),
+          color: context.colors.primary.withOpacity(0.3),
           blurRadius: 8,
           offset: const Offset(0, 2),
         ),
       ];
     } else {
       // 미완료 일차 - 기본 상태
-      icon = Icon(Icons.circle_outlined, color: SecondTheme.textMuted, size: 20);
-      bgColor = SecondTheme.bgSecondary;
-      textColor = SecondTheme.textSecondary;
-      border = Border.all(color: SecondTheme.border, width: 1);
+      icon = Icon(Icons.circle_outlined, color: context.colors.textMuted, size: 20);
+      bgColor = context.colors.surfaceVariant;
+      textColor = context.colors.textSecondary;
+      border = Border.all(color: context.colors.border, width: 1);
     }
 
     return GestureDetector(

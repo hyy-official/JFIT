@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/workout_session/presentation/widgets/exercise_set.dart';
 
 class ExerciseCard extends StatelessWidget {
@@ -27,9 +28,9 @@ class ExerciseCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111111), // --bg-secondary
+        color: context.colors.surfaceVariant,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF232323)),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,14 +46,14 @@ class ExerciseCard extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF6366f1).withOpacity(0.2),
+                      color: context.colors.primary.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
                       child: Text(
                         '${exerciseIndex + 1}',
-                        style: const TextStyle(
-                          color: Color(0xFF6366f1),
+                        style: TextStyle(
+                          color: context.colors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -63,8 +64,8 @@ class ExerciseCard extends StatelessWidget {
                   // 운동명
                   Text(
                     exerciseName,
-                    style: const TextStyle(
-                      color: Color(0xFF6366f1), // --text-accent
+                    style: TextStyle(
+                      color: context.colors.primary,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
@@ -73,23 +74,23 @@ class ExerciseCard extends StatelessWidget {
               ),
               // 더보기 버튼
               PopupMenuButton<String>(
-                icon: const Icon(Icons.more_horiz, color: Color(0xFFa3a3a3)),
-                color: const Color(0xFF161616),
+                icon: Icon(Icons.more_horiz, color: context.colors.textMuted),
+                color: context.colors.surfaceVariant,
                 onSelected: (value) {
                   if (value == 'delete') {
                     onRemove();
                   }
                 },
                 itemBuilder: (BuildContext context) => [
-                  const PopupMenuItem<String>(
+                  PopupMenuItem<String>(
                     value: 'delete',
                     child: Row(
                       children: [
-                        Icon(Icons.delete, color: Colors.redAccent, size: 18),
-                        SizedBox(width: 8),
+                        Icon(Icons.delete, color: context.colors.error, size: 18),
+                        const SizedBox(width: 8),
                         Text(
                           '운동 삭제',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: context.colors.textPrimary),
                         ),
                       ],
                     ),
@@ -106,13 +107,13 @@ class ExerciseCard extends StatelessWidget {
             child: Row(
               children: [
                 // 30px: 세트 번호
-                const SizedBox(
+                SizedBox(
                   width: 30,
                   child: Center(
                     child: Text(
                       'Set',
                       style: TextStyle(
-                        color: Color(0xFFa3a3a3), // --text-secondary
+                        color: context.colors.textSecondary,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -121,13 +122,13 @@ class ExerciseCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 // 1fr: 타겟 정보
-                const Expanded(
+                Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Text(
                       'Target',
                       style: TextStyle(
-                        color: Color(0xFFa3a3a3),
+                        color: context.colors.textSecondary,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -135,13 +136,13 @@ class ExerciseCard extends StatelessWidget {
                   ),
                 ),
                 // 75px: 무게
-                const SizedBox(
+                SizedBox(
                   width: 75,
                   child: Center(
                     child: Text(
                       'kg',
                       style: TextStyle(
-                        color: Color(0xFFa3a3a3),
+                        color: context.colors.textSecondary,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -149,13 +150,13 @@ class ExerciseCard extends StatelessWidget {
                   ),
                 ),
                 // 75px: 횟수
-                const SizedBox(
+                SizedBox(
                   width: 75,
                   child: Center(
                     child: Text(
                       'Reps',
                       style: TextStyle(
-                        color: Color(0xFFa3a3a3),
+                        color: context.colors.textSecondary,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -195,11 +196,11 @@ class ExerciseCard extends StatelessWidget {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: onAddSet,
-              icon: const Icon(Icons.add, color: Color(0xFF6366f1), size: 18),
-              label: const Text(
+              icon: Icon(Icons.add, color: context.colors.primary, size: 18),
+              label: Text(
                 'ADD SET',
                 style: TextStyle(
-                  color: Color(0xFF6366f1),
+                  color: context.colors.primary,
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
                   letterSpacing: 0.5,
@@ -208,13 +209,13 @@ class ExerciseCard extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 side: BorderSide(
-                  color: const Color(0xFF6366f1).withOpacity(0.3),
+                  color: context.colors.primary.withOpacity(0.3),
                   width: 1.5,
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                backgroundColor: const Color(0xFF6366f1).withOpacity(0.05),
+                backgroundColor: context.colors.primary.withOpacity(0.05),
               ),
             ),
           ),

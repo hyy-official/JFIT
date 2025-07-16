@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:jfit/models/food_search_item.dart';
 import 'package:jfit/services/food_api_service.dart';
-import 'package:jfit/core/theme/nutrition_input_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'nutrition_manual_input_screen.dart';
 import 'food_nutrition_calculator_screen.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 import 'package:jfit/models/nutrition_info.dart';
 
@@ -80,9 +80,9 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
     return ClipRRect(
       borderRadius: radius,
       child: Scaffold(
-        backgroundColor: NutritionInputTheme.screenBackground,
+        backgroundColor: context.colors.background,
         appBar: AppBar(
-          backgroundColor: NutritionInputTheme.screenBackground,
+          backgroundColor: context.colors.background,
           elevation: 0,
           automaticallyImplyLeading: false,
           centerTitle: true,
@@ -90,14 +90,14 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
             width: 48,
             height: 5,
             decoration: BoxDecoration(
-              color: NutritionInputTheme.inputBackground,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
           leading: const SizedBox.shrink(),
           actions: [
             IconButton(
-              icon: const Icon(Icons.close, color: NutritionInputTheme.primaryTextColor),
+              icon: Icon(Icons.close, color: context.colors.textPrimary),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -110,13 +110,13 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   controller: _ctrl,
-                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                  style: TextStyle(color: context.colors.textPrimary, fontSize: 18),
                   decoration: InputDecoration(
                     hintText: '음식 또는 브랜드 이름',
-                    hintStyle: const TextStyle(color: NutritionInputTheme.secondaryTextColor),
-                    prefixIcon: const Icon(LucideIcons.search, color: NutritionInputTheme.secondaryTextColor),
+                    hintStyle: TextStyle(color: context.colors.textSecondary),
+                    prefixIcon: Icon(LucideIcons.search, color: context.colors.textSecondary),
                     filled: true,
-                    fillColor: NutritionInputTheme.inputBackground,
+                    fillColor: context.colors.surface,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                   ),
                   onChanged: _onTextChanged,
@@ -133,11 +133,11 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
                       final info = await _openNutritionManualInput(context);
                       if (info != null) Navigator.pop(context, info);
                     },
-                    icon: const Icon(LucideIcons.plusCircle, size: 18, color: NutritionInputTheme.secondaryTextColor),
-                    label: const Text('직접 추가', style: TextStyle(color: NutritionInputTheme.secondaryTextColor)),
+                    icon: Icon(LucideIcons.plusCircle, size: 18, color: context.colors.textSecondary),
+                    label: Text('직접 추가', style: TextStyle(color: context.colors.textSecondary)),
                     style: OutlinedButton.styleFrom(
-                      backgroundColor: NutritionInputTheme.inputBackground,
-                      side: const BorderSide(color: NutritionInputTheme.inputBackground),
+                      backgroundColor: context.colors.surface,
+                      side: BorderSide(color: context.colors.surface),
                     ),
                   ),
                 ),
@@ -168,19 +168,19 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
     );
   }
 
-  Widget _buildEmpty() => const Center(
-        child: Text('검색 결과가 없습니다', style: TextStyle(color: NutritionInputTheme.secondaryTextColor)),
+  Widget _buildEmpty() => Center(
+        child: Text('검색 결과가 없습니다', style: TextStyle(color: context.colors.textSecondary)),
       );
 
   Widget _buildList() => ListView.separated(
         itemCount: _results.length,
-        separatorBuilder: (_, __) => const Divider(color: NutritionInputTheme.inputBackground),
+        separatorBuilder: (_, __) => Divider(color: context.colors.surface),
         itemBuilder: (_, i) {
           final item = _results[i];
           return ListTile(
-            title: Text(item.foodName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            subtitle: Text(_buildSubtitle(context, item), style: const TextStyle(color: NutritionInputTheme.secondaryTextColor)),
-            trailing: const Icon(LucideIcons.chevronRight, color: NutritionInputTheme.secondaryTextColor),
+            title: Text(item.foodName, style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold)),
+            subtitle: Text(_buildSubtitle(context, item), style: TextStyle(color: context.colors.textSecondary)),
+            trailing: Icon(LucideIcons.chevronRight, color: context.colors.textSecondary),
             onTap: () async {
               final info = item.toNutritionInfo();
               final res = await _openNutritionCalculator(context, info, item.id);
@@ -215,8 +215,8 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
         onTap: () => setState(() => _activeTab = key),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: active ? const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white,width: 2))) : null,
-          child: Center(child: Text(label, style: TextStyle(color: active ? Colors.white : NutritionInputTheme.secondaryTextColor, fontWeight: FontWeight.w600))),
+          decoration: active ? BoxDecoration(border: Border(bottom: BorderSide(color: context.colors.primary, width: 2))) : null,
+          child: Center(child: Text(label, style: TextStyle(color: active ? context.colors.primary : context.colors.textSecondary, fontWeight: FontWeight.w600))),
         ),
       ),
     );
@@ -232,7 +232,7 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
 
   Widget _buildFoodList(List<FoodSearchItem> items) => ListView.separated(
     itemCount: items.length + 1,
-    separatorBuilder: (_, __) => const Divider(color: NutritionInputTheme.inputBackground),
+    separatorBuilder: (_, __) => Divider(color: context.colors.surface),
     itemBuilder: (ctx,index){
       if(index==0){
         return const Padding(
@@ -242,9 +242,9 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
       }
       final item = items[index-1];
       return ListTile(
-        title: Text(item.foodName, style: const TextStyle(color: Colors.white)),
-        subtitle: Text(_buildSubtitle(context, item), style: const TextStyle(color: NutritionInputTheme.secondaryTextColor)),
-        trailing: const Icon(LucideIcons.chevronRight, color: NutritionInputTheme.secondaryTextColor),
+        title: Text(item.foodName, style: TextStyle(color: context.colors.textPrimary)),
+        subtitle: Text(_buildSubtitle(context, item), style: TextStyle(color: context.colors.textSecondary)),
+        trailing: Icon(LucideIcons.chevronRight, color: context.colors.textSecondary),
         onTap: () async {
           final info = item.toNutritionInfo();
           final res = await _openNutritionCalculator(context, info, item.id);
@@ -260,11 +260,11 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon,size:48,color: NutritionInputTheme.secondaryTextColor),
+          Icon(icon,size:48,color: context.colors.textSecondary),
           const SizedBox(height:16),
-          Text(title, style: const TextStyle(color: Colors.white,fontSize:18,fontWeight: FontWeight.bold)),
+          Text(title, style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height:8),
-          Text(subtitle, style: const TextStyle(color: NutritionInputTheme.secondaryTextColor)),
+          Text(subtitle, style: TextStyle(color: context.colors.textSecondary)),
         ],
       ),
     ),
@@ -281,7 +281,7 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
           backgroundColor: Colors.transparent,
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFF1A1B23),
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(24),
             ),
             child: ConstrainedBox(
@@ -299,9 +299,9 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
         builder: (ctx) => FractionallySizedBox(
           heightFactor: 0.95,
           child: Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFF1A1B23),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            decoration: BoxDecoration(
+              color: context.colors.surface,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             ),
             child: FoodNutritionCalculatorScreen(foodData: foodData, foodItemId: foodItemId),
           ),
@@ -321,7 +321,7 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
           backgroundColor: Colors.transparent,
           child: Container(
             decoration: BoxDecoration(
-              color: NutritionInputTheme.screenBackground,
+              color: context.colors.background,
               borderRadius: BorderRadius.circular(24),
             ),
             child: ConstrainedBox(
@@ -339,9 +339,9 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
         builder: (ctx) => FractionallySizedBox(
           heightFactor: 0.95,
           child: Container(
-            decoration: const BoxDecoration(
-              color: NutritionInputTheme.screenBackground,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            decoration: BoxDecoration(
+              color: context.colors.background,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             ),
             child: const NutritionManualInputScreen(),
           ),
@@ -359,19 +359,19 @@ class _AdvertisementBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 60,
-      decoration: const BoxDecoration(
-        gradient: AppTheme.accentGradient,
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [context.colors.primary, context.colors.secondary]),
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        children: const [
-          Icon(Icons.local_fire_department, color: Colors.white),
-          SizedBox(width: 12),
+        children: [
+          Icon(Icons.local_fire_department, color: context.colors.textPrimary),
+          const SizedBox(width: 12),
           Expanded(
-            child: Text('프리미엄 운동 프로그램', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('프리미엄 운동 프로그램', style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold)),
           ),
-          Icon(Icons.open_in_new, color: Colors.white),
+          Icon(Icons.open_in_new, color: context.colors.textPrimary),
         ],
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/analytics_chart_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/entities/nutrition_data.dart';
 import 'dart:math';
 
@@ -23,7 +23,7 @@ class NutritionStatsChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
-      return const Center(child: Text('데이터가 없습니다.'));
+      return Center(child: Text('데이터가 없습니다.', style: TextStyle(color: context.colors.textSecondary)));
     }
 
     final double maxY = _getMaxY();
@@ -50,7 +50,7 @@ class NutritionStatsChartWidget extends StatelessWidget {
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
                   space: 4.0,
-                  child: Text(data[index].dateLabel, style: AnalyticsChartTheme.axisLabelStyle),
+                  child: Text(data[index].dateLabel, style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
                 );
               },
             ),
@@ -63,7 +63,7 @@ class NutritionStatsChartWidget extends StatelessWidget {
                 if (value == 0 || value > maxY) return Container();
                 // Show labels at intervals of maxY / 3
                 if (value % (maxY / 3).round() == 0 || value == maxY) {
-                     return Text('${value.toInt()}', style: AnalyticsChartTheme.axisLabelStyle);
+                     return Text('${value.toInt()}', style: TextStyle(color: context.colors.textSecondary, fontSize: 12));
                 }
                 return Container();
               },
@@ -72,8 +72,8 @@ class NutritionStatsChartWidget extends StatelessWidget {
         ),
         borderData: FlBorderData(show: false),
         gridData: const FlGridData(show: false),
-        barGroups: _getBarGroups(),
-        barTouchData: _getBarTouchData(),
+        barGroups: _getBarGroups(context),
+        barTouchData: _getBarTouchData(context),
       ),
     );
   }
@@ -99,20 +99,21 @@ class NutritionStatsChartWidget extends StatelessWidget {
     return (maxVal * 1.2).ceilToDouble();
   }
 
-  List<BarChartGroupData> _getBarGroups() {
+  List<BarChartGroupData> _getBarGroups(BuildContext context) {
     return data.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
       
       final totalY = item.carbs + item.protein + item.fat;
+      final nutritionColors = [context.colors.primary, context.colors.secondary, context.colors.accent];
       
       final rodStackItems = <BarChartRodStackItem>[
         if (filter == NutritionFilter.all || filter == NutritionFilter.carbs)
-          BarChartRodStackItem(0, item.carbs, AnalyticsChartTheme.nutritionDataColors[0]),
+          BarChartRodStackItem(0, item.carbs, nutritionColors[0]),
         if (filter == NutritionFilter.all || filter == NutritionFilter.protein)
-          BarChartRodStackItem(item.carbs, item.carbs + item.protein, AnalyticsChartTheme.nutritionDataColors[1]),
+          BarChartRodStackItem(item.carbs, item.carbs + item.protein, nutritionColors[1]),
         if (filter == NutritionFilter.all || filter == NutritionFilter.fat)
-          BarChartRodStackItem(item.carbs + item.protein, totalY, AnalyticsChartTheme.nutritionDataColors[2]),
+          BarChartRodStackItem(item.carbs + item.protein, totalY, nutritionColors[2]),
       ];
       
       // Adjust stack for filtered view
@@ -121,13 +122,13 @@ class NutritionStatsChartWidget extends StatelessWidget {
       if (filter != NutritionFilter.all) {
           if (filter == NutritionFilter.carbs) {
               rodY = item.carbs;
-              displayStack.add(BarChartRodStackItem(0, rodY, AnalyticsChartTheme.nutritionDataColors[0]));
+              displayStack.add(BarChartRodStackItem(0, rodY, nutritionColors[0]));
           } else if (filter == NutritionFilter.protein) {
               rodY = item.protein;
-              displayStack.add(BarChartRodStackItem(0, rodY, AnalyticsChartTheme.nutritionDataColors[1]));
+              displayStack.add(BarChartRodStackItem(0, rodY, nutritionColors[1]));
           } else if (filter == NutritionFilter.fat) {
               rodY = item.fat;
-              displayStack.add(BarChartRodStackItem(0, rodY, AnalyticsChartTheme.nutritionDataColors[2]));
+              displayStack.add(BarChartRodStackItem(0, rodY, nutritionColors[2]));
           }
       } else {
         rodY = totalY;
@@ -152,13 +153,14 @@ class NutritionStatsChartWidget extends StatelessWidget {
     }).toList();
   }
 
-  BarTouchData _getBarTouchData() {
+  BarTouchData _getBarTouchData(BuildContext context) {
     return BarTouchData(
       touchTooltipData: BarTouchTooltipData(
-        getTooltipColor: (_) => AnalyticsChartTheme.tooltipBackground,
+        getTooltipColor: (_) => context.colors.surface,
         getTooltipItem: (group, groupIndex, rod, rodIndex) {
           final item = data[group.x.toInt()];
           final total = item.carbs + item.protein + item.fat;
+          final nutritionColors = [context.colors.primary, context.colors.secondary, context.colors.accent];
           
           String tooltipText;
           final dateLabel = item.dateLabel;
@@ -182,13 +184,12 @@ class NutritionStatsChartWidget extends StatelessWidget {
 
           return BarTooltipItem(
             '$dateLabel\n$tooltipText',
-            AnalyticsChartTheme.tooltipTextStyle.copyWith(
+            TextStyle(
               fontSize: 12, 
               height: 1.5,
-              // Use a single color for filtered tooltip
               color: filter == NutritionFilter.all 
-                ? Colors.white 
-                : AnalyticsChartTheme.nutritionDataColors[filter.index -1],
+                ? context.colors.textPrimary 
+                : nutritionColors[filter.index - 1],
             ),
           );
         },

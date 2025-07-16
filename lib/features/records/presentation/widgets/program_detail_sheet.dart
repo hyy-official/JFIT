@@ -16,8 +16,8 @@ import 'package:jfit/features/programs/data/models/user_program_day_model.dart';
 import 'package:jfit/features/programs/data/models/workout_session_model.dart';
 
 // Theme imports
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/theme/second_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 // Navigation imports
 import 'package:jfit/core/navigation/main_navigation_page.dart';
@@ -118,7 +118,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('프로그램 정보를 불러올 수 없습니다: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: context.colors.error,
         ),
       );
     }
@@ -167,20 +167,20 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
             height: sheetHeight,
             margin: (isDesktop || isTablet) ? EdgeInsets.all(horizontalPadding) : null,
             decoration: BoxDecoration(
-              color: SecondTheme.bgTertiary.withOpacity(0.95),
+              color: context.colors.surfaceVariant.withOpacity(0.95),
               borderRadius: borderRadius,
               border: Border.all(
-                color: SecondTheme.border.withOpacity(0.5),
+                color: context.colors.border.withOpacity(0.5),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
+                  color: context.colors.primary.withOpacity(0.4),
                   blurRadius: 40,
                   offset: const Offset(0, 20),
                 ),
                 BoxShadow(
-                  color: AppTheme.accent1.withOpacity(0.1),
+                  color: context.colors.primary.withOpacity(0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -205,7 +205,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
                 builder: (context, state) {
                   if (state is! ProgramDetailData) {
                     return Center(
-                      child: CircularProgressIndicator(color: AppTheme.accent1),
+                      child: CircularProgressIndicator(color: context.colors.primary),
                     );
                   }
 
@@ -289,7 +289,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
           },
         ),
         
-        Divider(height: 24, thickness: 1, color: SecondTheme.border),
+        Divider(height: 24, thickness: 1, color: context.colors.border),
         
         // 운동 루틴 영역
         Expanded(
@@ -306,7 +306,7 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
         width: 48,
         height: 5,
         decoration: BoxDecoration(
-          color: SecondTheme.textMuted,
+          color: context.colors.textMuted,
           borderRadius: BorderRadius.circular(4),
         ),
       ),
@@ -318,11 +318,11 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error, color: Colors.red[400], size: 48),
+          Icon(Icons.error, color: context.colors.error, size: 48),
           const SizedBox(height: 16),
           Text(
             '데이터를 불러오는 중 오류가 발생했습니다',
-            style: TextStyle(color: SecondTheme.textSecondary),
+            style: TextStyle(color: context.colors.textSecondary),
           ),
         ],
       ),
@@ -338,14 +338,14 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
           if (session != null) ...[
             Row(
               children: [
-                Icon(Icons.fitness_center, color: AppTheme.accent1, size: 20),
+                Icon(Icons.fitness_center, color: context.colors.primary, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   '운동 루틴 (Day ${selectedDayObj?.day ?? controller.selectedDay + 1})',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: SecondTheme.textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ),
               ],
@@ -366,11 +366,11 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 48, color: SecondTheme.textMuted),
+                    Icon(Icons.error_outline, size: 48, color: context.colors.textMuted),
                     const SizedBox(height: 16),
                     Text(
                       '운동 세션 정보 없음',
-                      style: TextStyle(color: SecondTheme.textSecondary, fontSize: 16),
+                      style: TextStyle(color: context.colors.textSecondary, fontSize: 16),
                     ),
                   ],
                 ),

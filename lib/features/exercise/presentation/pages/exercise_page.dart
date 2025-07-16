@@ -4,8 +4,7 @@ import 'package:jfit/l10n/app_localizations.dart';
 import 'package:jfit/features/exercise/presentation/widgets/exercise_stats.dart';
 import 'package:jfit/features/exercise/presentation/widgets/exercise_progress_chart.dart';
 import 'package:jfit/features/exercise/presentation/widgets/workout_history.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/exercise/bloc/exercise_bloc.dart';
 import 'package:jfit/features/exercise/bloc/exercise_event.dart';
 import 'package:jfit/features/exercise/bloc/exercise_state.dart';
@@ -46,13 +45,13 @@ class _ExercisePageState extends State<ExercisePage> {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: AppTheme.accent1,
-                        child: const Icon(Icons.fitness_center, color: Colors.white),
+                        backgroundColor: context.colors.primary,
+                        child: Icon(Icons.fitness_center, color: context.colors.textPrimary),
                       ),
                       const SizedBox(width: 12),
                       Text(
                         l10n?.appTitle ?? 'JFIT', 
-                        style: context.texts.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                        style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 20, color: context.colors.textPrimary),
                       ),
                     ],
                   ),
@@ -63,12 +62,12 @@ class _ExercisePageState extends State<ExercisePage> {
                     children: [
                       Text(
                         l10n?.workoutManager ?? 'Workout Manager',
-                        style: context.texts.headlineLarge?.copyWith(fontSize: 36, color: Colors.white),
+                        style: context.textTheme.headlineLarge?.copyWith(fontSize: 36, color: context.colors.textPrimary),
                       ),
                       const SizedBox(height: 6),
                       Text(
                         l10n?.trackFitnessJourney ?? 'Track your fitness journey and build consistency',
-                        style: context.texts.bodyMedium?.copyWith(fontSize: 18, color: AppTheme.textSub),
+                        style: context.textTheme.bodyMedium?.copyWith(fontSize: 18, color: context.colors.textSecondary),
                       ),
                     ],
                   ),
@@ -92,9 +91,9 @@ class _ExercisePageState extends State<ExercisePage> {
             ),
           );
         } else if (state is ExerciseError) {
-          return Center(child: Text('Error: ${state.message}', style: const TextStyle(color: Colors.white)));
+          return Center(child: Text('Error: ${state.message}', style: TextStyle(color: context.colors.error)));
         }
-        return const Center(child: Text('Unknown state', style: const TextStyle(color: Colors.white)));
+        return Center(child: Text('Unknown state', style: TextStyle(color: context.colors.textPrimary)));
       },
     );
   }

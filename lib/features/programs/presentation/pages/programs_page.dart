@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/presentation/widgets/popular_programs_section.dart';
 import 'package:jfit/features/programs/presentation/widgets/matching_programs_section.dart';
 import 'package:jfit/features/programs/presentation/widgets/daily_routines_section.dart';
@@ -37,7 +37,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
         ..add(LoadPopularPrograms())
         ..add(const LoadPrograms()),
       child: Scaffold(
-              backgroundColor: AppTheme.programBackground,
+              backgroundColor: context.colors.background,
       body: SafeArea(
           child: BlocConsumer<ProgramsBloc, ProgramsState>(
             listener: (context, state) {
@@ -89,7 +89,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
                 );
               }
               
-              return const Center(child: Text('프로그램을 불러오는 중...'));
+              return Center(child: Text('프로그램을 불러오는 중...', style: TextStyle(color: context.colors.textPrimary)));
             },
           ),
         ),

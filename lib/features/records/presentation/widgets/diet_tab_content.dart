@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 import 'package:jfit/features/records/presentation/widgets/meal_type_summary_card.dart';
 import 'package:jfit/features/records/presentation/widgets/macro_ratio_bar.dart';
@@ -84,7 +85,7 @@ class _DietTabContentState extends State<DietTabContent>
         const SizedBox(height: 16),
         Expanded(
           child: summaries.isEmpty
-              ? const Center(child: Text('오늘 기록된 식단이 없습니다', style: TextStyle(color: Colors.white54)))
+              ? Center(child: Text('오늘 기록된 식단이 없습니다', style: TextStyle(color: context.colors.textSecondary)))
               : ListView.separated(
                   itemCount: summaries.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),

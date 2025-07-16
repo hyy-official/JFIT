@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 /// 광고/프로그램 배너 (간단한 그래디언트 카드)
 class AdvertisementBanner extends StatelessWidget {
@@ -9,21 +9,23 @@ class AdvertisementBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        gradient: AppTheme.accentGradient,
+      decoration: BoxDecoration(
+        gradient: context.colors.gradient,
       ),
-      child: const Row(
-        children: [
-          Icon(Icons.track_changes, color: Colors.white),
-          SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              '프리미엄 운동 프로그램',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      child: Builder(
+        builder: (context) => Row(
+          children: [
+            Icon(Icons.track_changes, color: context.colors.textPrimary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                '프리미엄 운동 프로그램',
+                style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Icon(Icons.open_in_new, color: Colors.white),
-        ],
+            Icon(Icons.open_in_new, color: context.colors.textPrimary),
+          ],
+        ),
       ),
     );
   }

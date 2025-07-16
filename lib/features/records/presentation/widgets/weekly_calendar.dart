@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/presentation/widgets/swipeable_week_view.dart';
 
 /// 주간 캘린더 – 요일 고정, 무한 스와이프 지원
@@ -56,12 +56,12 @@ class WeeklyCalendar extends StatelessWidget {
                   height: 32,
                   decoration: BoxDecoration(
                     color: isSelected ? null : Colors.transparent,
-                    gradient: isSelected ? AppTheme.accentGradient : null,
+                    gradient: isSelected ? context.colors.gradient : null,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: AppTheme.accent1.withAlpha((255 * 0.4).round()),
+                              color: context.colors.primary.withAlpha((255 * 0.4).round()),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -73,10 +73,10 @@ class WeeklyCalendar extends StatelessWidget {
                       '${day.day}',
                       style: TextStyle(
                         color: isSelected
-                            ? Colors.white
+                            ? context.colors.textPrimary
                             : isToday
-                                ? AppTheme.accent1
-                                : Colors.white,
+                                ? context.colors.primary
+                                : context.colors.textPrimary,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -106,7 +106,7 @@ class WeeklyCalendar extends StatelessWidget {
                             child: Text(
                               dayName,
                               style: TextStyle(
-                                color: Colors.white60,
+                                color: context.colors.textSecondary,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -123,7 +123,7 @@ class WeeklyCalendar extends StatelessWidget {
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.chevron_left, color: Colors.white70, size: 20),
+                      icon: Icon(Icons.chevron_left, color: context.colors.textSecondary, size: 20),
                       splashRadius: 16,
                       onPressed: onPrevWeek,
                     ),
@@ -136,7 +136,7 @@ class WeeklyCalendar extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.chevron_right, color: Colors.white70, size: 20),
+                      icon: Icon(Icons.chevron_right, color: context.colors.textSecondary, size: 20),
                       splashRadius: 16,
                       onPressed: onNextWeek,
                     ),
@@ -159,7 +159,7 @@ class WeeklyCalendar extends StatelessWidget {
                       child: Text(
                         dayName,
                         style: TextStyle(
-                          color: Colors.white60,
+                          color: context.colors.textSecondary,
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),

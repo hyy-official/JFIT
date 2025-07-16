@@ -4,7 +4,7 @@ import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/auth/bloc/auth_event.dart';
 import 'package:jfit/features/auth/presentation/pages/login_page.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -85,19 +85,19 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Text('Create Account', style: context.texts.headlineLarge?.copyWith(fontSize: 28)),
           ),
           const SizedBox(height: 32),
-          Text('Full Name', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
+          Text('Full Name', style: context.texts.bodyMedium?.copyWith(color: context.colors.textPrimary)),
           const SizedBox(height: 8),
           _buildTextField(_nameController, hint: 'John Doe'),
           const SizedBox(height: 20),
-          Text('Email', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
+          Text('Email', style: context.texts.bodyMedium?.copyWith(color: context.colors.textPrimary)),
           const SizedBox(height: 8),
           _buildTextField(_emailController, keyboard: TextInputType.emailAddress, hint: 'example@mail.com', errorText: _emailErrorText, onChanged: (_) => setState(() => _emailErrorText = null)),
           const SizedBox(height: 20),
-          Text('Password', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
+          Text('Password', style: context.texts.bodyMedium?.copyWith(color: context.colors.textPrimary)),
           const SizedBox(height: 8),
           _buildPasswordField(_passwordController),
           const SizedBox(height: 20),
-          Text('Confirm Password', style: context.texts.bodyMedium?.copyWith(color: Colors.white)),
+          Text('Confirm Password', style: context.texts.bodyMedium?.copyWith(color: context.colors.textPrimary)),
           const SizedBox(height: 8),
           _buildPasswordField(_confirmController),
           const SizedBox(height: 32),
@@ -119,8 +119,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           username: _nameController.text.trim(), // Full Name을 username으로 사용
                         ));
                   },
-                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accent1, padding: const EdgeInsets.symmetric(vertical: 16)),
-                  child: isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('Sign Up'),
+                  style: ElevatedButton.styleFrom(backgroundColor: context.colors.primary, padding: const EdgeInsets.symmetric(vertical: 16)),
+                  child: isLoading ? CircularProgressIndicator(color: context.colors.textPrimary) : const Text('Sign Up'),
                 );
               },
             ),
@@ -135,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   (route) => false,
                 );
               },
-              child: Text('Already have an account? Sign In', style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub)),
+              child: Text('Already have an account? Sign In', style: context.texts.bodySmall?.copyWith(color: context.colors.textSecondary)),
             ),
           ),
         ],
@@ -147,13 +147,13 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       controller: c,
       keyboardType: keyboard,
-      style: context.texts.bodyMedium?.copyWith(color: Colors.white),
+      style: context.texts.bodyMedium?.copyWith(color: context.colors.textPrimary),
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted),
+        hintStyle: context.texts.bodySmall?.copyWith(color: context.colors.textMuted),
         filled: true,
-        fillColor: AppTheme.surface2,
+        fillColor: context.colors.surfaceVariant,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
         errorText: errorText, // 에러 텍스트 추가
       ),
@@ -168,15 +168,15 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       controller: c,
       obscureText: _obscure,
-      style: context.texts.bodyMedium?.copyWith(color: Colors.white),
+      style: context.texts.bodyMedium?.copyWith(color: context.colors.textPrimary),
       decoration: InputDecoration(
         filled: true,
-        fillColor: AppTheme.surface2,
+        fillColor: context.colors.surfaceVariant,
         hintText: '********',
-        hintStyle: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted),
+        hintStyle: context.texts.bodySmall?.copyWith(color: context.colors.textMuted),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
         suffixIcon: IconButton(
-          icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility, color: AppTheme.textMuted),
+          icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility, color: context.colors.textMuted),
           onPressed: () => setState(() => _obscure = !_obscure),
         ),
       ),

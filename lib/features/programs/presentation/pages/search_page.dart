@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -32,29 +32,29 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.programBackground,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios_new, color: context.colors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Container(
           decoration: BoxDecoration(
-            color: AppTheme.programCardBackground,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextField(
             controller: _searchController,
             autofocus: true,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.search, color: Colors.white38),
+            style: TextStyle(color: context.colors.textPrimary),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search, color: context.colors.textMuted),
               hintText: '루틴 또는 코치 이름을 검색하세요',
-              hintStyle: TextStyle(color: Colors.white38),
+              hintStyle: TextStyle(color: context.colors.textMuted),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 16),
+              contentPadding: const EdgeInsets.symmetric(vertical: 16),
             ),
             onChanged: (v) => setState(() => searchText = v),
           ),
@@ -71,19 +71,19 @@ class _SearchPageState extends State<SearchPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('최근 검색어', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text('최근 검색어', style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
                     TextButton(
                       onPressed: () {},
-                      child: const Text('전체 삭제', style: TextStyle(color: Colors.white54, fontSize: 14)),
+                      child: Text('전체 삭제', style: TextStyle(color: context.colors.textSecondary, fontSize: 14)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 ...recentSearches.map((search) => ListTile(
-                  leading: const Icon(Icons.history, color: Colors.white38),
-                  title: Text(search, style: const TextStyle(color: Colors.white)),
+                  leading: Icon(Icons.history, color: context.colors.textMuted),
+                  title: Text(search, style: TextStyle(color: context.colors.textPrimary)),
                   trailing: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white38),
+                    icon: Icon(Icons.close, color: context.colors.textMuted),
                     onPressed: () {},
                   ),
                   onTap: () {
@@ -94,7 +94,7 @@ class _SearchPageState extends State<SearchPage> {
                 const SizedBox(height: 24),
               ],
               // 추천 검색어
-              const Text('추천 검색어', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+              Text('추천 검색어', style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
@@ -107,17 +107,17 @@ class _SearchPageState extends State<SearchPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppTheme.programCardBackground,
+                      color: context.colors.surface,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white24),
+                      border: Border.all(color: context.colors.outline),
                     ),
-                    child: Text(search, style: const TextStyle(color: Colors.white70)),
+                    child: Text(search, style: TextStyle(color: context.colors.textSecondary)),
                   ),
                 )).toList(),
               ),
             ] else ...[
               // 검색 결과 (더미)
-              const Text('검색 결과', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+              Text('검색 결과', style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView.builder(
@@ -127,13 +127,13 @@ class _SearchPageState extends State<SearchPage> {
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: Colors.grey[800],
+                        color: context.colors.surfaceVariant,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.fitness_center, color: Colors.white24),
+                      child: Icon(Icons.fitness_center, color: context.colors.textMuted),
                     ),
-                    title: Text('검색 결과 ${index + 1}', style: const TextStyle(color: Colors.white)),
-                    subtitle: Text('$searchText 관련 프로그램', style: const TextStyle(color: Colors.white70)),
+                    title: Text('검색 결과 ${index + 1}', style: TextStyle(color: context.colors.textPrimary)),
+                    subtitle: Text('$searchText 관련 프로그램', style: TextStyle(color: context.colors.textSecondary)),
                     onTap: () {},
                   ),
                 ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:jfit/l10n/app_localizations.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/exercise/data/models/exercise_record.dart';
 
 class ExerciseProgressChart extends StatefulWidget {
@@ -39,7 +38,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
         color: context.colors.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppTheme.surface2.withAlpha((255 * 0.3).round()),
+          color: context.colors.border.withAlpha((255 * 0.3).round()),
           width: 1,
         ),
       ),
@@ -51,19 +50,19 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppTheme.workoutIconColor.withAlpha((255 * 0.15).round()),
+                  color: context.colors.primary.withAlpha((255 * 0.15).round()),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.trending_up,
-                  color: AppTheme.workoutIconColor,
+                  color: context.colors.primary,
                   size: 20,
                 ),
               ),
               const SizedBox(width: 12),
               Text(
                 l10n?.exerciseProgress ?? 'Exercise Progress',
-                style: context.texts.titleMedium?.copyWith(color: Colors.white),
+                style: context.textTheme.titleMedium?.copyWith(color: context.colors.textPrimary),
               ),
             ],
           ),
@@ -77,7 +76,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
               color: context.colors.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppTheme.surface2.withAlpha((255 * 0.5).round()),
+                color: context.colors.border.withAlpha((255 * 0.5).round()),
                 width: 1,
               ),
             ),
@@ -85,15 +84,15 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
               child: DropdownButton<String>(
                 value: selectedExercise,
                 dropdownColor: context.colors.surface,
-                style: context.texts.bodyMedium?.copyWith(color: Colors.white),
-                icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                style: context.textTheme.bodyMedium?.copyWith(color: context.colors.textPrimary),
+                icon: Icon(Icons.keyboard_arrow_down, color: context.colors.textPrimary),
                 isExpanded: true,
                 items: exerciseOptions.map((exercise) {
                   return DropdownMenuItem<String>(
                     value: exercise,
                     child: Text(
                       _getExerciseName(l10n, exercise),
-                      style: context.texts.bodyMedium?.copyWith(color: Colors.white),
+                      style: context.textTheme.bodyMedium?.copyWith(color: context.colors.textPrimary),
                     ),
                   );
                 }).toList(),
@@ -113,7 +112,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
           // 차트 제목
           Text(
             l10n?.totalVolume ?? 'Total Volume (kg × sets × reps)',
-            style: context.texts.bodyMedium?.copyWith(fontSize: 16, color: AppTheme.textSub),
+            style: context.textTheme.bodyMedium?.copyWith(fontSize: 16, color: context.colors.textSecondary),
           ),
           
           const SizedBox(height: 20),
@@ -139,7 +138,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
       return Center(
         child: Text(
           l10n?.selectExerciseToViewProgress ?? 'Please select an exercise to view progress',
-          style: context.texts.bodyMedium?.copyWith(color: AppTheme.textSub, fontSize: 16),
+          style: context.textTheme.bodyMedium?.copyWith(color: context.colors.textSecondary, fontSize: 16),
         ),
       );
     }
@@ -164,13 +163,13 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
           verticalInterval: 1,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: AppTheme.surface2,
+              color: context.colors.border,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: AppTheme.surface2,
+              color: context.colors.border,
               strokeWidth: 1,
             );
           },
@@ -197,7 +196,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     '${date.month}/${date.day}',
-                    style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub, fontSize: 12),
+                    style: context.textTheme.bodySmall?.copyWith(color: context.colors.textSecondary, fontSize: 12),
                   ),
                 );
               },
@@ -210,7 +209,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
               getTitlesWidget: (value, meta) {
                 return Text(
                   value.toInt().toString(),
-                  style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub, fontSize: 12),
+                  style: context.textTheme.bodySmall?.copyWith(color: context.colors.textSecondary, fontSize: 12),
                 );
               },
             ),
@@ -218,13 +217,13 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(color: AppTheme.surface2, width: 1),
+          border: Border.all(color: context.colors.border, width: 1),
         ),
         lineBarsData: [
           LineChartBarData(
             spots: spots,
             isCurved: true,
-            color: AppTheme.workoutIconColor,
+            color: context.colors.primary,
             barWidth: 3,
             isStrokeCapRound: true,
             dotData: const FlDotData(
@@ -232,7 +231,7 @@ class _ExerciseProgressChartState extends State<ExerciseProgressChart> {
             ),
             belowBarData: BarAreaData(
               show: true,
-              color: AppTheme.workoutIconColor.withAlpha((255 * 0.1).round()),
+              color: context.colors.primary.withAlpha((255 * 0.1).round()),
             ),
           ),
         ],

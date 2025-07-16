@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:jfit/core/theme/nutrition_input_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/models/nutrition_info.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 
@@ -60,7 +60,7 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
     return ClipRRect(
       borderRadius: radius,
       child: Scaffold(
-        backgroundColor: NutritionInputTheme.screenBackground,
+        backgroundColor: context.colors.background,
         appBar: _buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -71,8 +71,8 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
                 const SizedBox(height: 8),
                 Text(
                   '영양성분 직접 입력',
-                  style: const TextStyle(
-                    color: NutritionInputTheme.primaryTextColor,
+                  style: TextStyle(
+                    color: context.colors.textPrimary,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -128,7 +128,7 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
                       Navigator.pop(context, _info);
                     } : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _info.isValid ? NutritionInputTheme.accentColor : NutritionInputTheme.inputBackground,
+                      backgroundColor: _info.isValid ? context.colors.primary : context.colors.surface,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -136,7 +136,7 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
                     child: Text(
                       '저장',
                       style: TextStyle(
-                        color: _info.isValid ? Colors.white : NutritionInputTheme.secondaryTextColor,
+                        color: _info.isValid ? context.colors.textPrimary : context.colors.textSecondary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -153,7 +153,7 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
 
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: NutritionInputTheme.screenBackground,
+      backgroundColor: context.colors.background,
       elevation: 0,
       automaticallyImplyLeading: false,
       centerTitle: true,
@@ -161,14 +161,14 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
         width: 48,
         height: 5,
         decoration: BoxDecoration(
-          color: NutritionInputTheme.inputBackground,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(4),
         ),
       ),
       leading: const SizedBox.shrink(),
       actions: [
         IconButton(
-          icon: const Icon(Icons.close, color: NutritionInputTheme.primaryTextColor),
+          icon: Icon(Icons.close, color: context.colors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ],
@@ -183,16 +183,17 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: NutritionInputTheme.labelStyle),
+        Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
-          style: NutritionInputTheme.valueStyle.copyWith(
-            color: NutritionInputTheme.primaryTextColor,
+          style: TextStyle(
+            color: context.colors.textPrimary,
+            fontSize: 16,
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: NutritionInputTheme.inputBackground,
+            fillColor: context.colors.surface,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -214,7 +215,7 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: NutritionInputTheme.labelStyle)),
+          Expanded(child: Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 14, fontWeight: FontWeight.w500))),
           const SizedBox(width: 12),
           Expanded(
             child: TextField(
@@ -222,16 +223,19 @@ class _NutritionManualInputScreenState extends State<NutritionManualInputScreen>
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [_numberFormatter],
               textAlign: TextAlign.right,
-              style: NutritionInputTheme.valueStyle.copyWith(
-                color: NutritionInputTheme.primaryTextColor,
+              style: TextStyle(
+                color: context.colors.textPrimary,
+                fontSize: 16,
               ),
               decoration: InputDecoration(
                 suffixText: unit,
-                suffixStyle: NutritionInputTheme.labelStyle.copyWith(
-                  color: NutritionInputTheme.primaryTextColor,
+                suffixStyle: TextStyle(
+                  color: context.colors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
                 filled: true,
-                fillColor: NutritionInputTheme.inputBackground,
+                fillColor: context.colors.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,

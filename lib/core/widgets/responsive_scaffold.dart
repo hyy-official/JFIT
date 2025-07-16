@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/l10n/app_localizations.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
@@ -49,13 +49,13 @@ class ResponsiveScaffold extends StatelessWidget {
               child: _SideNavigation(currentIndex: currentIndex, onTap: onNavTap, onAiTap: onAiTap),
             ),
           if (isWide)
-            VerticalDivider(width: 1, color: AppTheme.surface2),
+            VerticalDivider(width: 1, color: context.colors.surfaceVariant),
           Flexible(
             flex: isWide ? 14 : 1, // 약 70% (모바일에서는 전체)
             child: body,
           ),
           if (showRightPanel)
-            VerticalDivider(width: 1, color: AppTheme.surface2),
+            VerticalDivider(width: 1, color: context.colors.surfaceVariant),
           if (showRightPanel)
             Flexible(
               flex: 3, // 약 15%
@@ -83,15 +83,15 @@ class _DefaultRightPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.secondaryBackground1,
+      color: context.colors.surface,
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               '오늘의 요약',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             _SummaryTile(label: '운동', value: '${dailySummary?.totalWorkoutDurationMinutes ?? 0}분'),
@@ -117,14 +117,14 @@ class _SummaryTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppTheme.surface1,
+        color: context.colors.surfaceVariant,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70)),
+          Text(label, style: TextStyle(color: context.colors.textSecondary)),
           const Spacer(),
-          Text(value, style: const TextStyle(color: Colors.white)),
+          Text(value, style: TextStyle(color: context.colors.textPrimary)),
         ],
       ),
     );
@@ -138,26 +138,26 @@ class _PremiumCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        gradient: AppTheme.accentGradient,
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [context.colors.primary, context.colors.secondary]),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.track_changes, color: Colors.white),
+          Icon(Icons.track_changes, color: context.colors.textPrimary),
           const SizedBox(height: 12),
-          const Text('프리미엄 플랜', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+          Text('프리미엄 플랜', style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 6),
-          const Text('더 많은 기능을 경험해보세요', style: TextStyle(color: Colors.white70)),
+          Text('더 많은 기능을 경험해보세요', style: TextStyle(color: context.colors.textSecondary)),
           const SizedBox(height: 12),
           OutlinedButton(
             style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
-              side: const BorderSide(color: Colors.white),
+              foregroundColor: context.colors.textPrimary,
+              side: BorderSide(color: context.colors.textPrimary),
             ),
             onPressed: () {},
-            child: const Text('업그레이드'),
+            child: Text('업그레이드', style: TextStyle(color: context.colors.textPrimary)),
           ),
         ],
       ),
@@ -175,7 +175,7 @@ class _SideNavigation extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Container(
       width: 280,
-      color: AppTheme.secondaryBackground1,
+      color: context.colors.surface,
       child: Column(
         children: [
           // ----- Header (Logo + App name) -----
@@ -187,36 +187,36 @@ class _SideNavigation extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: context.colors.primary,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.fitness_center, color: Colors.white, size: 28),
+                  child: Icon(Icons.fitness_center, color: context.colors.textPrimary, size: 28),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('JFIT', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
-                      SizedBox(height: 2),
-                      Text('하루의 일기장', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    children: [
+                      Text('JFIT', style: TextStyle(color: context.colors.textPrimary, fontSize: 20, fontWeight: FontWeight.w700)),
+                      const SizedBox(height: 2),
+                      Text('하루의 일기장', style: TextStyle(color: context.colors.textMuted, fontSize: 12)),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          const Divider(height: 1, color: Colors.white12),
+          Divider(height: 1, color: context.colors.border),
           const SizedBox(height: 12),
           _NavIcon(horizontal: true, icon: Icons.restaurant, label: l10n?.diet ?? '식단', selected: currentIndex == 0, onTap: () => onTap?.call(0)),
           _NavIcon(horizontal: true, icon: Icons.show_chart, label: l10n?.dashboard ?? '대시보드', selected: currentIndex == 1, onTap: () => onTap?.call(1)),
           _NavIcon(horizontal: true, icon: Icons.fitness_center, label: l10n?.exercise ?? '운동 기록', selected: currentIndex == 2, onTap: () => onTap?.call(2)),
           _NavIcon(horizontal: true, icon: Icons.timer, label: l10n?.workout ?? '내 운동', selected: currentIndex == 3, onTap: () => onTap?.call(3)),
           _NavIcon(horizontal: true, icon: Icons.extension, label: l10n?.routine ?? '루틴', selected: currentIndex == 4, onTap: () => onTap?.call(4)),
-          Spacer(),
+          const Spacer(),
           // ----- Bottom Profile -----
           const _BottomProfile(),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
         ],
       ),
     );
@@ -245,13 +245,13 @@ class _NavIcon extends StatelessWidget {
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(icon, color: selected ? Colors.deepPurple : Colors.grey[500], size: 20),
+                      Icon(icon, color: selected ? context.colors.primary : context.colors.textMuted, size: 20),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           label,
                           style: TextStyle(
-                            color: selected ? Colors.deepPurple : Colors.grey[500],
+                            color: selected ? context.colors.primary : context.colors.textMuted,
                             fontSize: 12,
                           ),
                           maxLines: 1,
@@ -264,13 +264,13 @@ class _NavIcon extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(icon, color: selected ? Colors.deepPurple : Colors.grey[500], size: 20),
+                      Icon(icon, color: selected ? context.colors.primary : context.colors.textMuted, size: 20),
                       const SizedBox(height: 1),
                       Flexible(
                         child: Text(
                           label,
                           style: TextStyle(
-                            color: selected ? Colors.deepPurple : Colors.grey[500],
+                            color: selected ? context.colors.primary : context.colors.textMuted,
                             fontSize: 9,
                           ),
                           textAlign: TextAlign.center,
@@ -296,7 +296,7 @@ class _BottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return BottomAppBar(
-      color: Colors.black,
+      color: context.colors.surface,
       height: 65,
       child: Row(
         children: [
@@ -308,7 +308,7 @@ class _BottomNavigation extends StatelessWidget {
           if (onAiTap != null)
             Expanded(
               child: IconButton(
-                icon: Icon(Icons.smart_toy, color: Colors.white, size: 20),
+                icon: Icon(Icons.smart_toy, color: context.colors.textPrimary, size: 20),
                 onPressed: onAiTap,
                 tooltip: 'AI',
               ),
@@ -337,26 +337,26 @@ class _BottomProfile extends StatelessWidget {
 
         return Container(
           padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(color: AppTheme.surface1),
+          decoration: BoxDecoration(color: context.colors.surface),
           child: Row(
             children: [
               Container(
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: AppTheme.accent1,
+                  color: context.colors.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Icon(Icons.person, color: Colors.white),
+                child: Icon(Icons.person, color: context.colors.textPrimary),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(displayName, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                    Text(displayName, style: TextStyle(color: context.colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 2),
-                    Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+                    Text(subtitle, style: TextStyle(color: context.colors.textMuted, fontSize: 11)),
                   ],
                 ),
               ),

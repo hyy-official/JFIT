@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/auth/bloc/auth_event.dart';
@@ -65,7 +66,7 @@ class _AuthGateState extends State<AuthGate> {
           // 에러 상태일 때 에러 메시지 표시 또는 로딩 화면
           return Scaffold(
             backgroundColor: Colors.black,
-            body: Center(child: Text('Error: ${state.message}', style: TextStyle(color: Colors.white))),
+            body: Center(child: Text('Error: ${state.message}', style: TextStyle(color: context.colors.error))),
           );
         }
         return const SizedBox.shrink(); // 기본값

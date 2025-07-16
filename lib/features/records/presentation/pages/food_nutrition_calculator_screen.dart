@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:jfit/core/theme/nutrition_input_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/models/nutrition_info.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 import 'package:get_it/get_it.dart';
@@ -106,9 +106,9 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
     return ClipRRect(
       borderRadius: radius,
       child: Scaffold(
-        backgroundColor: const Color(0xFF1A1B23),
+        backgroundColor: context.colors.background,
         appBar: AppBar(
-          backgroundColor: const Color(0xFF1A1B23),
+          backgroundColor: context.colors.background,
           elevation: 0,
           automaticallyImplyLeading: false,
           centerTitle: true,
@@ -116,14 +116,14 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
             width: 48,
             height: 5,
             decoration: BoxDecoration(
-              color: const Color(0xFF2A2B35),
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
           leading: const SizedBox.shrink(),
           actions: [
             IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
+              icon: Icon(Icons.close, color: context.colors.textPrimary),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -158,8 +158,8 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
         Expanded(
       child: Text(
         widget.foodData.foodName,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: context.colors.textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.w600,
         ),
@@ -174,9 +174,9 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
     return Container(
       padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF2A2B35),
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF3A3B45)),
+            border: Border.all(color: context.colors.border),
           ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -190,9 +190,9 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
               }),
               Column(
                 children: [
-                  Text('${_currentWeight.toInt()} g', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600)),
+                  Text('${_currentWeight.toInt()} g', style: TextStyle(color: context.colors.textPrimary, fontSize: 24, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 4),
-                  const Text('섭취량', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                  Text('섭취량', style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
                 ],
               ),
               _roundIconButton(Icons.add, () {
@@ -207,9 +207,9 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
               trackHeight: 4,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
-              activeTrackColor: const Color(0xFF6B73FF),
-              inactiveTrackColor: const Color(0xFF3A3B45),
-              thumbColor: const Color(0xFFB794F6),
+              activeTrackColor: context.colors.primary,
+              inactiveTrackColor: context.colors.border,
+              thumbColor: context.colors.secondary,
             ),
             child: Slider(
               value: _currentWeight.clamp(0, maxWeight),
@@ -221,9 +221,9 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
           const SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text('0g', style: TextStyle(color: Colors.white60, fontSize: 12)),
-              Text('500g', style: TextStyle(color: Colors.white60, fontSize: 12)),
+            children: [
+              Text('0g', style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
+              Text('500g', style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
             ],
           ),
         ],
@@ -236,12 +236,12 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
       width: 40,
       height: 40,
           decoration: BoxDecoration(
-        color: const Color(0xFF3A3B45),
+        color: context.colors.surfaceVariant,
         borderRadius: BorderRadius.circular(8),
           ),
           child: IconButton(
         padding: EdgeInsets.zero,
-        icon: Icon(icon, color: Colors.white),
+        icon: Icon(icon, color: context.colors.textPrimary),
         onPressed: onPressed,
       ),
     );
@@ -265,11 +265,11 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildLegendItem('탄수화물', _result.carbs, const Color(0xFF6B73FF)),
+              _buildLegendItem('탄수화물', _result.carbs, context.colors.primary),
               const SizedBox(height: 1),
-              _buildLegendItem('단백질', _result.protein, const Color(0xFFB794F6)),
+              _buildLegendItem('단백질', _result.protein, context.colors.secondary),
               const SizedBox(height: 1),
-              _buildLegendItem('지방', _result.fat, const Color(0xFFF687B3)),
+              _buildLegendItem('지방', _result.fat, context.colors.accent),
             ],
           ),
         ),
@@ -282,7 +282,7 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
       children: [
         Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         const SizedBox(width: 8),
-        Text('$label ${value.toStringAsFixed(1)}g', style: const TextStyle(color: Colors.white, fontSize: 14)),
+        Text('$label ${value.toStringAsFixed(1)}g', style: TextStyle(color: context.colors.textPrimary, fontSize: 14)),
       ],
     );
   }
@@ -292,17 +292,17 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2B35),
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF3A3B45)),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         children: [
           // 칼로리
           Text(
             '${_result.calories.toStringAsFixed(1)}kcal',
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: context.colors.textPrimary,
               fontSize: 32,
               fontWeight: FontWeight.bold,
             ),
@@ -328,8 +328,8 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Color(0xFF8B8B8B),
+          style: TextStyle(
+            color: context.colors.textSecondary,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -337,8 +337,8 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
         const SizedBox(height: 1),
         Text(
           value,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: context.colors.textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -361,17 +361,17 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF2D2814), // 어두운 옐로우 톤 배경
+              color: context.colors.warning.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
-              children: const [
-                Icon(Icons.warning_amber_rounded, color: Color(0xFFFFC107)),
-                SizedBox(width: 12),
+              children: [
+                Icon(Icons.warning_amber_rounded, color: context.colors.warning),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     '음식 정보가 정확한가요? 제보해 주세요!',
-                    style: TextStyle(color: Color(0xFFFFC107), fontSize: 14, fontWeight: FontWeight.w500),
+                    style: TextStyle(color: context.colors.warning, fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
               ],
@@ -386,17 +386,19 @@ class _FoodNutritionCalculatorScreenState extends State<FoodNutritionCalculatorS
           child: ElevatedButton(
             onPressed: _returnResult,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6B73FF),
+              backgroundColor: context.colors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text(
-              '추가하기',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+            child: Builder(
+              builder: (context) => Text(
+                '추가하기',
+                style: TextStyle(
+                  color: context.colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -452,7 +454,7 @@ class MacroDonutChart extends StatelessWidget {
                       child: Text(
             '${calories.toStringAsFixed(0)}\nkcal',
                         textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
       ),
@@ -478,18 +480,18 @@ class _DonutPainter extends CustomPainter {
 
     double startAngle = -90 * 3.1415926535 / 180; // top
 
-    // Carbs - blue
-    paint.color = const Color(0xFF6B73FF);
+    // Carbs - primary color
+    paint.color = JFitChartColors.nutrition[0]; // 탄수화물
     canvas.drawArc(rect.deflate(thickness / 2), startAngle, carbsSweep * 3.1415926535 / 180, false, paint);
     startAngle += carbsSweep * 3.1415926535 / 180;
 
-    // Protein - purple
-    paint.color = const Color(0xFFB794F6);
+    // Protein - secondary color
+    paint.color = JFitChartColors.nutrition[1]; // 단백질
     canvas.drawArc(rect.deflate(thickness / 2), startAngle, proteinSweep * 3.1415926535 / 180, false, paint);
     startAngle += proteinSweep * 3.1415926535 / 180;
 
-    // Fat - pink
-    paint.color = const Color(0xFFF687B3);
+    // Fat - tertiary color
+    paint.color = JFitChartColors.nutrition[2]; // 지방
     canvas.drawArc(rect.deflate(thickness / 2), startAngle, fatSweep * 3.1415926535 / 180, false, paint);
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/repositories/analytics_repository.dart';
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:jfit/features/analytics/presentation/widgets/diet_tab.dart';
@@ -50,16 +50,16 @@ class _AnalyticsViewState extends State<_AnalyticsView> with SingleTickerProvide
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: context.colors.background,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
+        title: Text(
           '최근 7일 분석',
-          style: TextStyle(color: Colors.white, fontSize: 16),
+          style: TextStyle(color: context.colors.textPrimary, fontSize: 16),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
@@ -98,18 +98,18 @@ class _CustomTabBar extends StatelessWidget {
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: AppTheme.surface1.withAlpha((255 * 0.3).round()),
+        color: context.colors.surface.withOpacity(0.3),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppTheme.surface2.withAlpha((255 * 0.5).round()), width: 1),
+        border: Border.all(color: context.colors.border.withOpacity(0.5), width: 1),
       ),
       child: TabBar(
         controller: controller,
         indicator: BoxDecoration(
-          gradient: AppTheme.accentGradient,
+          color: context.colors.primary,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.accent1.withAlpha((255 * 0.3).round()),
+              color: context.colors.primary.withOpacity(0.3),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -117,8 +117,8 @@ class _CustomTabBar extends StatelessWidget {
         ),
         indicatorPadding: const EdgeInsets.all(4),
         indicatorSize: TabBarIndicatorSize.tab,
-        labelColor: Colors.white,
-        unselectedLabelColor: Colors.white60,
+        labelColor: context.colors.textPrimary,
+        unselectedLabelColor: context.colors.textSecondary,
         labelStyle: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 14,

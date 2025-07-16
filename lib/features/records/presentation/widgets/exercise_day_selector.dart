@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/bloc/record_bloc.dart';
 import 'package:jfit/features/records/bloc/record_event.dart';
 
@@ -52,23 +52,23 @@ class ExerciseDaySelector extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: isCurrentWeek
-                        ? AppTheme.programAccentBlue
+                        ? context.colors.primary
                         : isCompletedWeek
-                            ? AppTheme.programAccentBlue.withOpacity(0.3)
+                            ? context.colors.primary.withOpacity(0.3)
                             : Colors.transparent,
                     borderRadius: BorderRadius.circular(18),
                     border: isCurrentWeek
                         ? null
-                        : Border.all(color: AppTheme.textMuted),
+                        : Border.all(color: context.colors.textMuted),
                   ),
                   child: Text(
                     weeks[idx],
                     style: TextStyle(
                       color: isCurrentWeek
-                          ? Colors.white
+                          ? context.colors.textPrimary
                           : isCompletedWeek
-                              ? AppTheme.textSub
-                              : AppTheme.textMuted,
+                              ? context.colors.textSecondary
+                              : context.colors.textMuted,
                       fontWeight: isCurrentWeek
                           ? FontWeight.bold
                           : FontWeight.normal,
@@ -102,16 +102,16 @@ class ExerciseDaySelector extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: _getDayBackgroundColor(dayType),
+                    color: _getDayBackgroundColor(context, dayType),
                     borderRadius: BorderRadius.circular(20),
                     border: dayType == 'today'
-                        ? Border.all(color: AppTheme.programAccentBlue, width: 2)
+                        ? Border.all(color: context.colors.primary, width: 2)
                         : null,
                   ),
                   child: Text(
                     label,
                     style: TextStyle(
-                      color: _getDayTextColor(dayType),
+                      color: _getDayTextColor(context, dayType),
                       fontWeight: dayType == 'today'
                           ? FontWeight.bold
                           : FontWeight.normal,
@@ -172,16 +172,16 @@ class ExerciseDaySelector extends StatelessWidget {
     return days;
   }
 
-  Color _getDayBackgroundColor(String dayType) {
+  Color _getDayBackgroundColor(BuildContext context, String dayType) {
     switch (dayType) {
       case 'done':
-        return AppTheme.programAccentBlue.withOpacity(0.8);
+        return context.colors.primary.withOpacity(0.8);
       case 'today':
-        return AppTheme.programAccentBlue.withOpacity(0.2);
+        return context.colors.primary.withOpacity(0.2);
       case 'rest':
-        return AppTheme.textMuted.withOpacity(0.2);
+        return context.colors.textMuted.withOpacity(0.2);
       case 'missed':
-        return Colors.red.withOpacity(0.2);
+        return context.colors.error.withOpacity(0.2);
       case 'available':
         return Colors.transparent;
       default:
@@ -189,20 +189,20 @@ class ExerciseDaySelector extends StatelessWidget {
     }
   }
 
-  Color _getDayTextColor(String dayType) {
+  Color _getDayTextColor(BuildContext context, String dayType) {
     switch (dayType) {
       case 'done':
-        return Colors.white;
+        return context.colors.textPrimary;
       case 'today':
-        return AppTheme.programAccentBlue;
+        return context.colors.primary;
       case 'rest':
-        return AppTheme.textMuted;
+        return context.colors.textMuted;
       case 'missed':
-        return Colors.red;
+        return context.colors.error;
       case 'available':
-        return AppTheme.textSub;
+        return context.colors.textSecondary;
       default:
-        return AppTheme.textMuted;
+        return context.colors.textMuted;
     }
   }
 } 

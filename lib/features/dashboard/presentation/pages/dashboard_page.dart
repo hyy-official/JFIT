@@ -1,32 +1,10 @@
-// 더미 데이터 예시
-//
-// final stats = [
-//   {
-//     'title': "Today's Workout",
-//     'value': '0m',
-//     'subtitle': 'Keep the momentum',
-//     'icon': Icons.show_chart,
-//     'gradient': [Colors.indigo, Colors.purple],
-//   }, ...
-// ];
-// final exerciseChartData = [
-//   {'date': '06/18', 'duration': 0}, ...
-// ];
-// final nutritionChartData = [
-//   {'date': '06/18', 'protein': 0, 'carbs': 0, 'fat': 0}, ...
-// ];
-// final recentWorkouts = [
-//   {'name': '스쿼트', 'duration': 40, 'calories': 270, 'type': l10n?.strength ?? 'Strength', 'date': '12/06'}, ...
-// ];
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/dashboard/presentation/widgets/stats_card.dart';
 import 'package:jfit/features/dashboard/presentation/widgets/exercise_chart.dart';
 import 'package:jfit/features/dashboard/presentation/widgets/nutrition_chart.dart';
 import 'package:jfit/features/dashboard/presentation/widgets/recent_workouts.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:jfit/features/dashboard/bloc/dashboard_event.dart';
 import 'package:jfit/features/dashboard/bloc/dashboard_state.dart';
@@ -75,35 +53,35 @@ class _DashboardPageState extends State<DashboardPage> {
               'value': '0m',
               'subtitle': l10n?.keepMomentum ?? 'Keep the momentum',
               'icon': Icons.show_chart,
-              'gradient': [AppTheme.workoutIconColor, AppTheme.workoutIconColor.withAlpha((255 * 0.7).round())],
+              'gradient': [context.colors.primary, context.colors.primary.withAlpha((255 * 0.7).round())],
             },
             {
               'title': l10n?.totalSessions ?? 'Total Sessions',
               'value': '10',
               'subtitle': l10n?.consistencyMatters ?? 'Consistency matters',
               'icon': Icons.bar_chart,
-              'gradient': [AppTheme.nutritionIconColor, AppTheme.nutritionIconColor.withAlpha((255 * 0.7).round())],
+              'gradient': [context.colors.secondary, context.colors.secondary.withAlpha((255 * 0.7).round())],
             },
             {
               'title': l10n?.timeInvested ?? 'Time Invested',
               'value': '7h 10m',
               'subtitle': l10n?.yourDedication ?? 'Your dedication',
               'icon': Icons.calendar_month,
-              'gradient': [AppTheme.workoutIconColor, AppTheme.workoutIconColor.withAlpha((255 * 0.7).round())],
+              'gradient': [context.colors.primary, context.colors.primary.withAlpha((255 * 0.7).round())],
             },
             {
               'title': l10n?.caloriesBurned ?? 'Calories Burned',
               'value': '2.5k',
               'subtitle': l10n?.energyTransformed ?? 'Energy transformed',
               'icon': Icons.local_fire_department,
-              'gradient': [AppTheme.fatGraphColor, AppTheme.fatGraphColor.withAlpha((255 * 0.7).round())],
+              'gradient': [context.colors.accent, context.colors.accent.withAlpha((255 * 0.7).round())],
             },
             {
               'title': l10n?.todaysIntake ?? "Today's Intake",
               'value': '0.0k',
               'subtitle': l10n?.caloriesConsumed ?? 'Calories consumed',
               'icon': Icons.flash_on,
-              'gradient': [AppTheme.nutritionIconColor, AppTheme.nutritionIconColor.withAlpha((255 * 0.7).round())],
+              'gradient': [context.colors.secondary, context.colors.secondary.withAlpha((255 * 0.7).round())],
             },
           ];
           final exerciseChartData = [
@@ -145,24 +123,23 @@ class _DashboardPageState extends State<DashboardPage> {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.deepPurple,
-                        child: const Icon(Icons.fitness_center, color: Colors.white),
+                        backgroundColor: context.colors.primary,
+                        child: Icon(Icons.fitness_center, color: context.colors.textPrimary),
                       ),
                       const SizedBox(width: 12),
                       Text(
                         l10n?.appTitle ?? 'JFIT', 
-                        style: const TextStyle(
+                        style: context.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.white,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
-                  Text(l10n?.workoutDashboard ?? 'Workout Dashboard', style: context.texts.headlineLarge?.copyWith(fontSize: 36, color: Colors.white)),
+                  Text(l10n?.workoutDashboard ?? 'Workout Dashboard', style: context.textTheme.headlineLarge?.copyWith(fontSize: 36, color: context.colors.textPrimary)),
                   SizedBox(height: 6),
-                  Text(l10n?.currentDate ?? 'Tuesday, June 24th, 2025', style: context.texts.bodyMedium?.copyWith(fontSize: 18, color: AppTheme.textSub)),
+                  Text(l10n?.currentDate ?? 'Tuesday, June 24th, 2025', style: context.textTheme.bodyMedium?.copyWith(fontSize: 18, color: context.colors.textSecondary)),
                   SizedBox(height: 24),
                   isWide
                       ? Row(
@@ -207,9 +184,9 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           );
         } else if (state is DashboardError) {
-          return Center(child: Text('Error: ${state.message}', style: const TextStyle(color: Colors.white)));
+          return Center(child: Text('Error: ${state.message}', style: TextStyle(color: context.colors.error)));
         }
-        return const Center(child: Text('Unknown state', style: const TextStyle(color: Colors.white)));
+        return Center(child: Text('Unknown state', style: TextStyle(color: context.colors.textPrimary)));
       },
     );
   }

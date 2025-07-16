@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/analytics_chart_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/entities/diet_score_data.dart';
 
 class DietScoreChartWidget extends StatelessWidget {
@@ -18,7 +18,7 @@ class DietScoreChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
-      return const Center(child: Text('데이터가 없습니다.'));
+      return Center(child: Text('데이터가 없습니다.', style: TextStyle(color: context.colors.textSecondary)));
     }
 
     return BarChart(
@@ -42,7 +42,7 @@ class DietScoreChartWidget extends StatelessWidget {
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
                   space: 4.0,
-                  child: Text(label, style: AnalyticsChartTheme.axisLabelStyle),
+                  child: Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
                 );
               },
             ),
@@ -56,7 +56,7 @@ class DietScoreChartWidget extends StatelessWidget {
                 if (value == 0 || value > 5) return Container();
                 return Text(
                   '${value.toInt()}',
-                  style: AnalyticsChartTheme.axisLabelStyle,
+                  style: TextStyle(color: context.colors.textSecondary, fontSize: 12),
                   textAlign: TextAlign.left,
                 );
               },
@@ -73,7 +73,7 @@ class DietScoreChartWidget extends StatelessWidget {
             barRods: [
               BarChartRodData(
                 toY: item.score,
-                gradient: AnalyticsChartTheme.scoreBarGradient,
+                color: context.colors.primary,
                 width: _getBarWidth(period, isDesktop),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(4),
@@ -85,12 +85,12 @@ class DietScoreChartWidget extends StatelessWidget {
         }).toList(),
         barTouchData: BarTouchData(
           touchTooltipData: BarTouchTooltipData(
-            getTooltipColor: (_) => AnalyticsChartTheme.tooltipBackground,
+            getTooltipColor: (_) => context.colors.surface,
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               final dateLabel = data[group.x.toInt()].dateLabel;
               return BarTooltipItem(
                 '$dateLabel\n' + '${rod.toY.toStringAsFixed(1)}점',
-                AnalyticsChartTheme.tooltipTextStyle,
+                TextStyle(color: context.colors.textPrimary, fontSize: 12),
               );
             },
           ),

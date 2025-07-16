@@ -1,18 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/analytics_chart_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/entities/workout_composition_data.dart';
 
 class WorkoutCompositionChart extends StatefulWidget {
   final List<WorkoutCompositionData> data;
 
-  static const List<Color> segmentColors = [
-    Color(0xFF8A75F5),
-    Color(0xFF6A8BFF),
-    Color(0xFF4EC3E0),
-    Color(0xFFB5E048),
-    Color(0xFFFFA94D),
-  ];
+  // 차트 색상을 테마 시스템으로 통합
+  static const List<Color> segmentColors = JFitChartColors.workoutComposition;
 
   const WorkoutCompositionChart({super.key, required this.data});
 
@@ -63,12 +58,12 @@ class _WorkoutCompositionChartState extends State<WorkoutCompositionChart> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AnalyticsChartTheme.tooltipBackground,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         '${item.category}: ${item.minutes.round()}분',
-        style: AnalyticsChartTheme.tooltipTextStyle,
+        style: TextStyle(color: context.colors.textPrimary, fontSize: 12),
       ),
     );
   }

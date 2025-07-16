@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/analytics_chart_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/analytics/domain/entities/workout_time_data.dart';
 
 class WorkoutTimeChartWidget extends StatelessWidget {
@@ -40,7 +40,7 @@ class WorkoutTimeChartWidget extends StatelessWidget {
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
                   space: 4,
-                  child: Text(data[index].dateLabel, style: AnalyticsChartTheme.axisLabelStyle),
+                  child: Text(data[index].dateLabel, style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
                 );
               },
             ),
@@ -57,7 +57,11 @@ class WorkoutTimeChartWidget extends StatelessWidget {
           return BarChartGroupData(x: idx, barRods: [
             BarChartRodData(
               toY: item.minutes,
-              gradient: AnalyticsChartTheme.scoreBarGradient,
+              gradient: LinearGradient(
+          colors: [context.colors.primary, context.colors.primary.withOpacity(0.7)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
               width: _getBarWidth(period, isDesktop),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(4),
@@ -68,10 +72,10 @@ class WorkoutTimeChartWidget extends StatelessWidget {
         }).toList(),
         barTouchData: BarTouchData(
           touchTooltipData: BarTouchTooltipData(
-            getTooltipColor: (_) => AnalyticsChartTheme.tooltipBackground,
+            getTooltipColor: (_) => context.colors.surface,
             getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
               '${rod.toY.toInt()}분',
-              AnalyticsChartTheme.tooltipTextStyle,
+              TextStyle(color: context.colors.textPrimary, fontSize: 12),
             ),
           ),
         ),

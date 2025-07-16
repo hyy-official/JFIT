@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/presentation/widgets/program_card_vertical.dart';
 import '../../domain/entities/workout_program.dart';
 
@@ -18,11 +19,11 @@ class MatchingProgramsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 맞춤 프로그램 헤더
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             '나에게 맞는 프로그램 찾기',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
         const SizedBox(height: 12),
@@ -41,11 +42,11 @@ class MatchingProgramsSection extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white24),
+                  border: Border.all(color: context.colors.outline),
                 ),
                 child: Text(
                   filter,
-                  style: const TextStyle(color: Colors.white70),
+                  style: TextStyle(color: context.colors.textSecondary),
                 ),
               );
             },

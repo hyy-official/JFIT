@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jfit/core/services/supabase_service.dart';
 
@@ -49,7 +50,7 @@ class _BodyTabContentState extends State<BodyTabContent>
     
     if (_loading) return const Center(child: CircularProgressIndicator());
     if (_data == null) {
-      return const Center(child: Text('오늘 기록된 신체 정보가 없습니다', style: TextStyle(color: Colors.white54)));
+      return Center(child: Text('오늘 기록된 신체 정보가 없습니다', style: TextStyle(color: context.colors.textMuted)));
     }
 
     return BodyMeasurementCard(data: _data!);
@@ -69,9 +70,9 @@ class BodyMeasurementCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2B35),
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF3A3B45)),
+        border: Border.all(color: context.colors.border),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -85,15 +86,17 @@ class BodyMeasurementCard extends StatelessWidget {
   }
 
   Widget _metric(String label, double? value, String unit) {
-    return Column(
-      children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
-        const SizedBox(height: 4),
-        Text(value != null ? value.toStringAsFixed(1) : '-',
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 2),
-        Text(unit, style: const TextStyle(color: Colors.white38, fontSize: 12)),
-      ],
+    return Builder(
+      builder: (context) => Column(
+        children: [
+          Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 14)),
+          const SizedBox(height: 4),
+          Text(value != null ? value.toStringAsFixed(1) : '-',
+              style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 2),
+          Text(unit, style: TextStyle(color: context.colors.textMuted, fontSize: 12)),
+        ],
+      ),
     );
   }
 } 

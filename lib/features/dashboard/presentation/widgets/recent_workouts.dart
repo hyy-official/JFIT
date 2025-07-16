@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/l10n/app_localizations.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/extensions/context_extensions.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 
 class RecentWorkouts extends StatelessWidget {
   final List<Map<String, dynamic>> workouts;
@@ -24,14 +23,14 @@ class RecentWorkouts extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [AppTheme.workoutIconColor.withAlpha((255 * 0.8).round()), AppTheme.workoutIconColor]),
+                    gradient: LinearGradient(colors: [context.colors.primary.withAlpha((255 * 0.8).round()), context.colors.primary]),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(8),
-                  child: Icon(Icons.access_time, color: Colors.white, size: 20),
+                  child: Icon(Icons.access_time, color: context.colors.textPrimary, size: 20),
                 ),
                 SizedBox(width: 10),
-                Text(l10n?.recentWorkouts ?? 'Recent Workouts', style: context.texts.titleMedium?.copyWith(color: Colors.white)),
+                Text(l10n?.recentWorkouts ?? 'Recent Workouts', style: context.textTheme.titleMedium?.copyWith(color: context.colors.textPrimary)),
               ],
             ),
             SizedBox(height: 16),
@@ -54,19 +53,19 @@ class _WorkoutTile extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: AppTheme.surface2,
+              color: context.colors.surfaceVariant,
               borderRadius: BorderRadius.circular(14),
             ),
             padding: const EdgeInsets.all(12),
-            child: Icon(Icons.fitness_center, color: Colors.white, size: 22),
+            child: Icon(Icons.fitness_center, color: context.colors.textPrimary, size: 22),
           ),
           SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(w['name'], style: context.texts.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                Text('${w['duration']}min • ${w['calories']} cal', style: context.texts.bodySmall?.copyWith(color: AppTheme.textSub)),
+                Text(w['name'], style: context.textTheme.bodyMedium?.copyWith(color: context.colors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
+                Text('${w['duration']}min • ${w['calories']} cal', style: context.textTheme.bodySmall?.copyWith(color: context.colors.textSecondary)),
               ],
             ),
           ),
@@ -76,13 +75,13 @@ class _WorkoutTile extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppTheme.workoutIconColor.withAlpha((255 * 0.25).round()),
+                  color: context.colors.primary.withAlpha((255 * 0.25).round()),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(w['type'], style: context.texts.bodySmall?.copyWith(color: AppTheme.workoutIconColor, fontWeight: FontWeight.w600)),
+                child: Text(w['type'], style: context.textTheme.bodySmall?.copyWith(color: context.colors.primary, fontWeight: FontWeight.w600)),
               ),
               SizedBox(height: 4),
-              Text(w['date'], style: context.texts.bodySmall?.copyWith(color: AppTheme.textMuted)),
+              Text(w['date'], style: context.textTheme.bodySmall?.copyWith(color: context.colors.textTertiary)),
             ],
           ),
         ],

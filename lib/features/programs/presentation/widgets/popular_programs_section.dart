@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/presentation/widgets/program_card_horizontal.dart';
 import '../../domain/entities/workout_program.dart';
 
@@ -21,13 +22,13 @@ class PopularProgramsSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 '인기 프로그램',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                style: context.textTheme.titleMedium?.copyWith(color: context.colors.textPrimary, fontWeight: FontWeight.bold),
               ),
               TextButton(
                 onPressed: () {},
-                child: const Text('더보기', style: TextStyle(color: Colors.white54)),
+                child: Text('더보기', style: TextStyle(color: context.colors.textSecondary)),
               ),
             ],
           ),

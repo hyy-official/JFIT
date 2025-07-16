@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/presentation/widgets/diet_tab_content.dart';
 
 /// meal_type 별 요약 카드
@@ -27,9 +28,9 @@ class MealTypeSummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2B35),
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF3A3B45)),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,10 +39,10 @@ class MealTypeSummaryCard extends StatelessWidget {
             children: [
               Text(
                 _mealTypeKorean(summary.mealType),
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.w600),
               ),
               const Spacer(),
-              Text('${summary.totalCalories.toStringAsFixed(1)} kcal', style: const TextStyle(color: Colors.white)),
+              Text('${summary.totalCalories.toStringAsFixed(1)} kcal', style: TextStyle(color: context.colors.textPrimary)),
             ],
           ),
           const SizedBox(height: 8),
@@ -59,6 +60,8 @@ class MealTypeSummaryCard extends StatelessWidget {
   }
 
   Widget _macroText(String label, double value) {
-    return Text('$label ${value.toStringAsFixed(1)}g', style: const TextStyle(color: Colors.white60, fontSize: 12));
+    return Builder(
+      builder: (context) => Text('$label ${value.toStringAsFixed(1)}g', style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
+    );
   }
 } 

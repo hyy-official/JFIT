@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/presentation/widgets/diet_add_sheet.dart';
 import 'package:jfit/features/records/presentation/widgets/body_add_sheet.dart';
 
@@ -30,9 +30,9 @@ class QuickAddSection extends StatelessWidget {
                 SizedBox(height: spacing),
                 Row(
                   children: [
-                    Expanded(child: QuickCard(icon: Icons.restaurant, label: '식단', accent: const Color(0xFF34D399))),
+                    Expanded(child: QuickCard(icon: Icons.restaurant, label: '식단', accent: context.colors.success)),
                     SizedBox(width: spacing),
-                    Expanded(child: QuickCard(icon: Icons.person, label: '신체', accent: const Color(0xFFFBBF24))),
+                    Expanded(child: QuickCard(icon: Icons.person, label: '신체', accent: context.colors.warning)),
                   ],
                 ),
               ],
@@ -54,12 +54,12 @@ class WorkoutCard extends StatelessWidget {
       height: height,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.surface1.withOpacity(0.75),
+        color: context.colors.surface.withOpacity(0.75),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.surface2, width: 1),
+        border: Border.all(color: context.colors.border, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: context.colors.outline.withOpacity(0.15),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -71,23 +71,23 @@ class WorkoutCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [AppTheme.accent1, AppTheme.accent2]),
+              gradient: context.colors.gradient,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.fitness_center, color: Colors.white),
+            child: Icon(Icons.fitness_center, color: context.colors.textPrimary),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('운동', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                Text('운동', style: context.textTheme.titleMedium?.copyWith(color: context.colors.textPrimary, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text('0/1 완료', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textSub)),
+                Text('0/1 완료', style: context.textTheme.bodyMedium?.copyWith(color: context.colors.textSecondary)),
               ],
             ),
           ),
-          const Icon(Icons.add, color: Colors.white),
+          Icon(Icons.add, color: context.colors.textPrimary),
         ],
       ),
     );
@@ -130,12 +130,12 @@ class _QuickCardState extends State<QuickCard> {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppTheme.surface1.withOpacity(0.75),
+              color: context.colors.surface.withOpacity(0.75),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: _hovering ? widget.accent : AppTheme.surface2, width: 1),
+              border: Border.all(color: _hovering ? widget.accent : context.colors.border, width: 1),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(_hovering ? 0.25 : 0.15),
+                  color: context.colors.shadow.withOpacity(_hovering ? 0.25 : 0.15),
                   blurRadius: _hovering ? 16 : 12,
                   offset: const Offset(0, 6),
                 ),
@@ -150,12 +150,12 @@ class _QuickCardState extends State<QuickCard> {
                     gradient: LinearGradient(colors: [widget.accent.withOpacity(0.8), widget.accent]),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(widget.icon, color: Colors.white),
+                  child: Icon(widget.icon, color: context.colors.textPrimary),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   widget.label,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: context.colors.textPrimary),
                 ),
               ],
             ),

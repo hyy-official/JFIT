@@ -4,7 +4,7 @@ import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/auth/bloc/auth_event.dart';
 import 'package:jfit/features/auth/presentation/pages/register_page.dart';
-import 'package:jfit/core/theme/app_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/core/extensions/context_extensions.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
               // 메인 콘텐츠
               Expanded(
                 child: Container(
-                  color: AppTheme.secondaryBackground2,
+                  color: context.colors.secondaryBackground2,
                   child: Center(
                     child: SingleChildScrollView(
                       child: Container(
@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildSidebar() {
     return Container(
       width: 280,
-      color: AppTheme.secondaryBackground1,
+      color: context.colors.secondaryBackground1,
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,20 +99,20 @@ class _LoginPageState extends State<LoginPage> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: AppTheme.accent1,
+                  color: context.colors.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.fitness_center,
-                  color: Colors.white,
+                  color: context.colors.textPrimary,
                   size: 24,
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
+              Text(
                 'Workout Manager',
                 style: TextStyle(
-                  color: AppTheme.textMuted,
+                  color: context.colors.textMuted,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -123,10 +123,10 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 48),
           
           // 네비게이션 메뉴
-          const Text(
+          Text(
             'NAVIGATION',
             style: TextStyle(
-              color: AppTheme.textMuted,
+              color: context.colors.textMuted,
               fontSize: 12,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
@@ -148,17 +148,17 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: AppTheme.accent1,
+              color: context.colors.primary,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.person_outline, color: Colors.white, size: 20),
-                SizedBox(width: 12),
+                Icon(Icons.person_outline, color: context.colors.textPrimary, size: 20),
+                const SizedBox(width: 12),
                 Text(
                   '로그인/회원가입',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colors.textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -170,18 +170,18 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 24),
           
           // 하단 정보
-          const Row(
+          Row(
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundColor: AppTheme.accent1,
-                child: Icon(Icons.person, color: Colors.white, size: 16),
+                backgroundColor: context.colors.primary,
+                child: Icon(Icons.person, color: context.colors.textPrimary, size: 16),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
                 'Keep pushing forward',
                 style: TextStyle(
-                  color: AppTheme.textSub,
+                  color: context.colors.textSecondary,
                   fontSize: 14,
                 ),
               ),
@@ -199,12 +199,12 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            Icon(icon, color: AppTheme.textMuted, size: 20),
+            Icon(icon, color: context.colors.textMuted, size: 20),
             const SizedBox(width: 12),
             Text(
               label,
-              style: const TextStyle(
-                color: AppTheme.textSub,
+              style: TextStyle(
+                color: context.colors.textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -222,22 +222,22 @@ class _LoginPageState extends State<LoginPage> {
           width: 80,
           height: 80,
           decoration: BoxDecoration(
-            color: AppTheme.accent1,
+            color: context.colors.primary,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.fitness_center,
-            color: Colors.white,
+            color: context.colors.textPrimary,
             size: 40,
           ),
         ),
         
         const SizedBox(height: 24),
         
-        const Text(
+        Text(
           'FitTrack',
           style: TextStyle(
-            color: Colors.white,
+            color: context.colors.textPrimary,
             fontSize: 32,
             fontWeight: FontWeight.bold,
           ),
@@ -245,10 +245,10 @@ class _LoginPageState extends State<LoginPage> {
         
         const SizedBox(height: 8),
         
-        const Text(
+        Text(
           'Your Fitness Journey Starts Here',
           style: TextStyle(
-            color: AppTheme.textSub,
+            color: context.colors.textSecondary,
             fontSize: 16,
           ),
         ),
@@ -258,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
         // 탭 버튼
         Container(
           decoration: BoxDecoration(
-            color: AppTheme.surface2,
+            color: context.colors.surfaceVariant,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -269,14 +269,14 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(
-                      color: !_isSignUp ? AppTheme.accent1 : Colors.transparent,
+                      color: !_isSignUp ? context.colors.primary : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       'Sign In',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: !_isSignUp ? Colors.white : AppTheme.textSub,
+                        color: !_isSignUp ? context.colors.textPrimary : context.colors.textSecondary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -289,14 +289,14 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(
-                      color: _isSignUp ? AppTheme.accent1 : Colors.transparent,
+                      color: _isSignUp ? context.colors.primary : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       'Sign Up',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: _isSignUp ? Colors.white : AppTheme.textSub,
+                        color: _isSignUp ? context.colors.textPrimary : context.colors.textSecondary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -317,10 +317,10 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               // 회원가입 시 이름 필드
               if (_isSignUp) ...[
-                const Text(
+                Text(
                   'Full Name',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colors.textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -328,13 +328,13 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _fullNameController,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: context.colors.textPrimary),
                   decoration: InputDecoration(
                     hintText: 'Enter your full name',
-                    hintStyle: TextStyle(color: AppTheme.textMuted),
-                    prefixIcon: Icon(Icons.person_outline, color: AppTheme.textMuted),
+                    hintStyle: TextStyle(color: context.colors.textMuted),
+                    prefixIcon: Icon(Icons.person_outline, color: context.colors.textMuted),
                     filled: true,
-                    fillColor: AppTheme.surface2,
+                    fillColor: context.colors.surfaceVariant,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -351,10 +351,10 @@ class _LoginPageState extends State<LoginPage> {
               ],
               
               // 이메일 필드
-              const Text(
+              Text(
                 'Email Address',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: context.colors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -363,13 +363,13 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: context.colors.textPrimary),
                 decoration: InputDecoration(
                   hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: AppTheme.textMuted),
-                  prefixIcon: Icon(Icons.email_outlined, color: AppTheme.textMuted),
+                  hintStyle: TextStyle(color: context.colors.textMuted),
+                  prefixIcon: Icon(Icons.email_outlined, color: context.colors.textMuted),
                   filled: true,
-                  fillColor: AppTheme.surface2,
+                  fillColor: context.colors.surfaceVariant,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -391,8 +391,8 @@ class _LoginPageState extends State<LoginPage> {
               // 비밀번호 필드
               Text(
                 _isSignUp ? 'Password' : 'Password',
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: context.colors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -401,20 +401,20 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: context.colors.textPrimary),
                 decoration: InputDecoration(
                   hintText: _isSignUp ? 'Create a password' : 'Enter your password',
-                  hintStyle: TextStyle(color: AppTheme.textMuted),
-                  prefixIcon: Icon(Icons.lock_outline, color: AppTheme.textMuted),
+                  hintStyle: TextStyle(color: context.colors.textMuted),
+                  prefixIcon: Icon(Icons.lock_outline, color: context.colors.textMuted),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                      color: AppTheme.textMuted,
+                      color: context.colors.textMuted,
                     ),
                     onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                   ),
                   filled: true,
-                  fillColor: AppTheme.surface2,
+                  fillColor: context.colors.surfaceVariant,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -434,10 +434,10 @@ class _LoginPageState extends State<LoginPage> {
               // 회원가입 시 비밀번호 확인 필드
               if (_isSignUp) ...[
                 const SizedBox(height: 20),
-                const Text(
+                Text(
                   'Confirm Password',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colors.textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -445,13 +445,13 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 8),
                 TextFormField(
                   obscureText: _obscurePassword,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: context.colors.textPrimary),
                   decoration: InputDecoration(
                     hintText: 'Confirm your password',
-                    hintStyle: TextStyle(color: AppTheme.textMuted),
-                    prefixIcon: Icon(Icons.lock_outline, color: AppTheme.textMuted),
+                    hintStyle: TextStyle(color: context.colors.textMuted),
+                    prefixIcon: Icon(Icons.lock_outline, color: context.colors.textMuted),
                     filled: true,
-                    fillColor: AppTheme.surface2,
+                    fillColor: context.colors.surfaceVariant,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -477,14 +477,14 @@ class _LoginPageState extends State<LoginPage> {
                       onChanged: (value) => setState(() => _rememberMe = value ?? false),
                       fillColor: MaterialStateProperty.resolveWith((states) {
                         if (states.contains(MaterialState.selected)) {
-                          return AppTheme.accent1;
+                          return context.colors.primary;
                         }
-                        return AppTheme.surface2;
+                        return context.colors.surfaceVariant;
                       }),
                     ),
-                    const Text(
+                    Text(
                       'Remember me',
-                      style: TextStyle(color: AppTheme.textSub),
+                      style: TextStyle(color: context.colors.textSecondary),
                     ),
                     const Spacer(),
                     TextButton(
@@ -494,9 +494,9 @@ class _LoginPageState extends State<LoginPage> {
                           const SnackBar(content: Text('비밀번호 찾기 기능은 준비 중입니다')),
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         'Forgot password?',
-                        style: TextStyle(color: AppTheme.accent1),
+                        style: TextStyle(color: context.colors.primary),
                       ),
                     ),
                   ],
@@ -512,15 +512,15 @@ class _LoginPageState extends State<LoginPage> {
                       onChanged: (value) => setState(() => _rememberMe = value ?? false),
                       fillColor: MaterialStateProperty.resolveWith((states) {
                         if (states.contains(MaterialState.selected)) {
-                          return AppTheme.accent1;
+                          return context.colors.primary;
                         }
-                        return AppTheme.surface2;
+                        return context.colors.surfaceVariant;
                       }),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'I agree to the Terms of Service and Privacy Policy',
-                        style: TextStyle(color: AppTheme.textSub),
+                        style: TextStyle(color: context.colors.textSecondary),
                       ),
                     ),
                   ],
@@ -539,18 +539,18 @@ class _LoginPageState extends State<LoginPage> {
                     return ElevatedButton(
                       onPressed: isLoading ? null : _handleAuth,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.accent1,
-                        foregroundColor: Colors.white,
+                        backgroundColor: context.colors.primary,
+                        foregroundColor: context.colors.textPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: 0,
                       ),
                       child: isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
+                          ? CircularProgressIndicator(color: context.colors.textPrimary)
                           : Text(
                               _isSignUp ? 'Create Account' : 'Sign In',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -563,17 +563,17 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 24),
               
               // 구분선
-              const Row(
+              Row(
                 children: [
-                  Expanded(child: Divider(color: AppTheme.surface2)),
+                  Expanded(child: Divider(color: context.colors.surfaceVariant)),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Or continue with',
-                      style: TextStyle(color: AppTheme.textSub),
+                      style: TextStyle(color: context.colors.textSecondary),
                     ),
                   ),
-                  Expanded(child: Divider(color: AppTheme.surface2)),
+                  Expanded(child: Divider(color: context.colors.surfaceVariant)),
                 ],
               ),
               
@@ -590,14 +590,14 @@ class _LoginPageState extends State<LoginPage> {
                       const SnackBar(content: Text('Google 로그인 기능은 준비 중입니다')),
                     );
                   },
-                  icon: const Icon(Icons.g_mobiledata, color: Colors.white),
-                  label: const Text(
+                  icon: Icon(Icons.g_mobiledata, color: context.colors.textPrimary),
+                  label: Text(
                     'Continue with Google',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: context.colors.textPrimary),
                   ),
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: AppTheme.surface2,
-                    side: const BorderSide(color: AppTheme.surface2),
+                    backgroundColor: context.colors.surfaceVariant,
+                    side: BorderSide(color: context.colors.surfaceVariant),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -617,14 +617,14 @@ class _LoginPageState extends State<LoginPage> {
                         const SnackBar(content: Text('Facebook 로그인 기능은 준비 중입니다')),
                       );
                     },
-                    icon: const Icon(Icons.facebook, color: Colors.white),
-                    label: const Text(
+                    icon: Icon(Icons.facebook, color: context.colors.textPrimary),
+                    label: Text(
                       'Continue with Facebook',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: context.colors.textPrimary),
                     ),
                     style: OutlinedButton.styleFrom(
-                      backgroundColor: AppTheme.surface2,
-                      side: const BorderSide(color: AppTheme.surface2),
+                      backgroundColor: context.colors.surfaceVariant,
+                      side: BorderSide(color: context.colors.surfaceVariant),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

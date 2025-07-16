@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:flutter/services.dart';
 
 class ExerciseSet extends StatefulWidget {
@@ -133,8 +134,8 @@ class _ExerciseSetState extends State<ExerciseSet> {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
-        color: Colors.redAccent.withOpacity(0.8),
-        child: const Icon(Icons.close, color: Colors.white, size: 18),
+        color: context.colors.error.withOpacity(0.8),
+        child: Icon(Icons.close, color: context.colors.textPrimary, size: 18),
       ),
       child: Container(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -149,10 +150,10 @@ class _ExerciseSetState extends State<ExerciseSet> {
                 height: 24,
                 decoration: BoxDecoration(
                   color: completed
-                      ? const Color(0xFF059669) // --set-completed
+                      ? context.colors.success
                       : widget.isActive
-                          ? const Color(0xFF6366f1) // --set-active
-                          : const Color(0xFF232323),
+                          ? context.colors.primary
+                          : context.colors.border,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Center(
@@ -160,8 +161,8 @@ class _ExerciseSetState extends State<ExerciseSet> {
                     '${widget.setIndex + 1}',
                     style: TextStyle(
                       color: completed || widget.isActive
-                          ? Colors.white
-                          : const Color(0xFFa3a3a3),
+                          ? context.colors.textPrimary
+                          : context.colors.textMuted,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -178,8 +179,8 @@ class _ExerciseSetState extends State<ExerciseSet> {
               padding: const EdgeInsets.only(left: 8),
               child: Text(
                   targetText,
-                style: const TextStyle(
-                  color: Color(0xFF737373), // --text-muted
+                style: TextStyle(
+                  color: context.colors.textMuted,
                   fontSize: 14,
                 ),
               ),
@@ -193,15 +194,15 @@ class _ExerciseSetState extends State<ExerciseSet> {
               height: 36,
               decoration: BoxDecoration(
                 color: completed
-                    ? const Color(0xFF232323).withOpacity(0.5)
-                    : const Color(0xFF232323),
+                    ? context.colors.border.withOpacity(0.5)
+                    : context.colors.border,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
                   color: completed
-                      ? const Color(0xFF059669).withOpacity(0.3)
+                      ? context.colors.success.withOpacity(0.3)
                       : widget.isActive
-                          ? const Color(0xFF6366f1).withOpacity(0.5)
-                          : const Color(0xFF404040),
+                          ? context.colors.primary.withOpacity(0.5)
+                          : context.colors.borderVariant,
                   width: 1,
                 ),
               ),
@@ -213,8 +214,8 @@ class _ExerciseSetState extends State<ExerciseSet> {
                 enabled: !completed,
                 style: TextStyle(
                   color: completed 
-                      ? const Color(0xFF737373)
-                      : Colors.white,
+                      ? context.colors.textMuted
+                      : context.colors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -226,8 +227,8 @@ class _ExerciseSetState extends State<ExerciseSet> {
                             ? targetWeight.toInt().toString()
                             : targetWeight.toStringAsFixed(1))
                         : '0',
-                    hintStyle: const TextStyle(
-                    color: Color(0xFF737373),
+                    hintStyle: TextStyle(
+                    color: context.colors.textMuted,
                     fontSize: 14,
                   ),
                 ),
@@ -250,15 +251,15 @@ class _ExerciseSetState extends State<ExerciseSet> {
               height: 36,
               decoration: BoxDecoration(
                 color: completed
-                    ? const Color(0xFF232323).withOpacity(0.5)
-                    : const Color(0xFF232323),
+                    ? context.colors.border.withOpacity(0.5)
+                    : context.colors.border,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
                   color: completed
-                      ? const Color(0xFF059669).withOpacity(0.3)
+                      ? context.colors.success.withOpacity(0.3)
                       : widget.isActive
-                          ? const Color(0xFF6366f1).withOpacity(0.5)
-                          : const Color(0xFF404040),
+                          ? context.colors.primary.withOpacity(0.5)
+                          : context.colors.borderVariant,
                   width: 1,
                 ),
               ),
@@ -270,8 +271,8 @@ class _ExerciseSetState extends State<ExerciseSet> {
                 enabled: !completed,
                 style: TextStyle(
                   color: completed 
-                      ? const Color(0xFF737373)
-                      : Colors.white,
+                      ? context.colors.textMuted
+                      : context.colors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -279,8 +280,8 @@ class _ExerciseSetState extends State<ExerciseSet> {
                   border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                     hintText: targetReps?.toString() ?? '0',
-                    hintStyle: const TextStyle(
-                    color: Color(0xFF737373),
+                    hintStyle: TextStyle(
+                    color: context.colors.textMuted,
                     fontSize: 14,
                   ),
                 ),
@@ -311,12 +312,12 @@ class _ExerciseSetState extends State<ExerciseSet> {
               child: Container(
                 decoration: BoxDecoration(
                   color: completed
-                      ? const Color(0xFF059669)
+                      ? context.colors.success
                       : Colors.transparent,
                   border: Border.all(
                     color: completed
-                        ? const Color(0xFF059669)
-                        : const Color(0xFF404040),
+                        ? context.colors.success
+                        : context.colors.borderVariant,
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(16),
@@ -325,11 +326,11 @@ class _ExerciseSetState extends State<ExerciseSet> {
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     child: completed
-                        ? const Icon(
+                        ? Icon(
                             Icons.check,
-                            color: Colors.white,
+                            color: context.colors.textPrimary,
                             size: 16,
-                            key: ValueKey('check'),
+                            key: const ValueKey('check'),
                           )
                         : Container(
                             key: const ValueKey('empty'),

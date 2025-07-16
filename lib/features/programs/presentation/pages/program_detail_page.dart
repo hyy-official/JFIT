@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfit/core/theme/app_theme.dart';
-import 'package:jfit/core/theme/design_tokens.dart';
-import 'package:jfit/core/theme/second_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import '../../domain/entities/workout_program.dart';
 import '../bloc/programs_bloc.dart';
 import '../bloc/programs_event.dart';
@@ -34,10 +32,10 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppTheme.programDetailBackground,
-        title: const Text(
+        backgroundColor: context.colors.surface,
+        title: Text(
           '이미 추가된 프로그램입니다',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -45,42 +43,42 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
           children: [
             Text(
               '프로그램: ${state.programName}',
-              style: const TextStyle(color: Colors.white70, fontSize: 16),
+              style: TextStyle(color: context.colors.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 8),
             if (state.isCompleted)
-              const Text(
+              Text(
                 '✅ 이미 완료한 프로그램입니다',
-                style: TextStyle(color: Colors.green, fontSize: 14),
+                style: TextStyle(color: context.colors.success, fontSize: 14),
               )
             else ...[
               Text(
                 '현재 진행 상황: ${state.currentWeek}주차 ${state.currentDay}일차',
-                style: const TextStyle(color: Colors.white70, fontSize: 14),
+                style: TextStyle(color: context.colors.textSecondary, fontSize: 14),
               ),
               const SizedBox(height: 4),
               Text(
                 '진행률: ${state.progressPercent.toStringAsFixed(1)}%',
-                style: const TextStyle(color: Colors.blue, fontSize: 14),
+                style: TextStyle(color: context.colors.info, fontSize: 14),
               ),
             ],
             const SizedBox(height: 16),
             if (state.isCompleted)
-              const Text(
+              Text(
                 '다시 도전하시겠습니까?',
-                style: TextStyle(color: Colors.white, fontSize: 14),
+                style: TextStyle(color: context.colors.textPrimary, fontSize: 14),
               )
             else
-              const Text(
+              Text(
                 '어떻게 진행하시겠습니까?',
-                style: TextStyle(color: Colors.white, fontSize: 14),
+                style: TextStyle(color: context.colors.textPrimary, fontSize: 14),
               ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('취소', style: TextStyle(color: Colors.grey)),
+            child: Text('취소', style: TextStyle(color: context.colors.textMuted)),
           ),
           if (!state.isCompleted)
             ElevatedButton(
@@ -89,8 +87,8 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                 context.read<ProgramsBloc>().add(ContinueProgram(state.programId));
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
+                backgroundColor: context.colors.success,
+                foregroundColor: context.colors.onSuccess,
               ),
               child: const Text('이어서 하기'),
             ),
@@ -100,8 +98,8 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
               context.read<ProgramsBloc>().add(RestartProgram(state.programId));
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.programAccentBlue,
-              foregroundColor: Colors.white,
+              backgroundColor: context.colors.primary,
+              foregroundColor: context.colors.onPrimary,
             ),
             child: Text(state.isCompleted ? '다시 도전하기' : '처음부터 하기'),
           ),
@@ -122,58 +120,58 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
             ),
           );
         } else if (state is ProgramRestarted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.blue,
+              backgroundColor: context.colors.info,
             ),
           );
         } else if (state is ProgramContinued) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
             ),
           );
         } else if (state is RoutineSaved) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
             ),
           );
         } else if (state is RoutineSaveError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.red,
+              backgroundColor: context.colors.error,
             ),
           );
         } else if (state is ProgramAddError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.red,
+              backgroundColor: context.colors.error,
             ),
           );
         }
       },
       child: Scaffold(
-      backgroundColor: AppTheme.programDetailBackground,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
             SliverAppBar(
               pinned: true,
-              backgroundColor: AppTheme.programDetailBackground,
+              backgroundColor: context.colors.background,
         elevation: 0,
-          leading: const BackButton(color: Colors.white),
-          title: Text(program.name, style: const TextStyle(color: Colors.white)),
+          leading: BackButton(color: context.colors.onBackground),
+          title: Text(program.name, style: TextStyle(color: context.colors.onBackground)),
               actions: [],
             ),
             SliverToBoxAdapter(
@@ -185,7 +183,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                         Container(
                       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                           decoration: BoxDecoration(
-                        color: AppTheme.programCardBackground,
+                        color: context.colors.surface,
                         borderRadius: BorderRadius.circular(0),
                       ),
                       child: ClipRRect(
@@ -204,41 +202,41 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(program.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+                        Text(program.name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: context.colors.textPrimary)),
                         const SizedBox(height: 4),
-                        Text(program.creator, style: TextStyle(color: AppTheme.textMuted, fontSize: 15)),
+                        Text(program.creator, style: TextStyle(color: context.colors.textMuted, fontSize: 15)),
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                            Icon(Icons.thumb_up, color: Colors.green[400], size: 18),
+                            Icon(Icons.thumb_up, color: context.colors.success, size: 18),
                             const SizedBox(width: 4),
-                            Text('100% 후기 2개', style: TextStyle(color: Colors.green[400], fontSize: 13)),
+                            Text('100% 후기 2개', style: TextStyle(color: context.colors.success, fontSize: 13)),
                             const SizedBox(width: 16),
-                            Icon(Icons.people, color: AppTheme.textMuted, size: 18),
+                            Icon(Icons.people, color: context.colors.textMuted, size: 18),
                       const SizedBox(width: 4),
-                            Text('136명 도전', style: TextStyle(color: AppTheme.textMuted, fontSize: 13)),
+                            Text('136명 도전', style: TextStyle(color: context.colors.textMuted, fontSize: 13)),
                     ],
                   ),
                         const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppTheme.programCardBackground,
+                      color: context.colors.surface,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
-                              Icon(Icons.calendar_today, size: 18, color: AppTheme.textMuted),
+                              Icon(Icons.calendar_today, size: 18, color: context.colors.textMuted),
                         const SizedBox(width: 6),
-                              Text('주 ${program.workoutsPerWeek ?? '-'}일 · 총 ${program.durationWeeks}주차', style: TextStyle(fontSize: 13, color: AppTheme.textSub)),
+                              Text('주 ${program.workoutsPerWeek ?? '-'}일 · 총 ${program.durationWeeks}주차', style: TextStyle(fontSize: 13, color: context.colors.textSecondary)),
                         const SizedBox(width: 16),
-                              Icon(Icons.bar_chart, size: 18, color: AppTheme.textMuted),
+                              Icon(Icons.bar_chart, size: 18, color: context.colors.textMuted),
                         const SizedBox(width: 6),
-                              Text(program.difficultyLevel, style: TextStyle(fontSize: 13, color: AppTheme.textSub)),
+                              Text(program.difficultyLevel, style: TextStyle(fontSize: 13, color: context.colors.textSecondary)),
                         const SizedBox(width: 16),
-                              Icon(Icons.fitness_center, size: 18, color: AppTheme.textMuted),
+                              Icon(Icons.fitness_center, size: 18, color: context.colors.textMuted),
                         const SizedBox(width: 6),
-                              Text(program.programType, style: TextStyle(fontSize: 13, color: AppTheme.textSub)),
+                              Text(program.programType, style: TextStyle(fontSize: 13, color: context.colors.textSecondary)),
                             ],
                           ),
                         ),
@@ -248,7 +246,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                   const SizedBox(height: 18),
                   // 탭바
                   Container(
-                    color: AppTheme.programDetailBackground,
+                    color: context.colors.background,
                     child: Row(
                       children: [
                         Expanded(
@@ -263,12 +261,12 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                               decoration: BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
-                                    color: _selectedTab == 0 ? AppTheme.programAccentBlue : Colors.transparent,
+                                    color: _selectedTab == 0 ? context.colors.primary : Colors.transparent,
                                     width: 2,
                                   ),
                                 ),
                               ),
-                              child: Text('소개', style: TextStyle(fontSize: 16, color: _selectedTab == 0 ? Colors.white : AppTheme.textMuted, fontWeight: FontWeight.w600)),
+                              child: Text('소개', style: TextStyle(fontSize: 16, color: _selectedTab == 0 ? context.colors.textPrimary : context.colors.textMuted, fontWeight: FontWeight.w600)),
                             ),
                           ),
                         ),
@@ -284,12 +282,12 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                               decoration: BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
-                                    color: _selectedTab == 1 ? AppTheme.programAccentBlue : Colors.transparent,
+                                    color: _selectedTab == 1 ? context.colors.primary : Colors.transparent,
                                     width: 2,
                                   ),
                                 ),
                               ),
-                              child: Text('운동 상세', style: TextStyle(fontSize: 16, color: _selectedTab == 1 ? Colors.white : AppTheme.textMuted, fontWeight: FontWeight.w600)),
+                              child: Text('운동 상세', style: TextStyle(fontSize: 16, color: _selectedTab == 1 ? context.colors.textPrimary : context.colors.textMuted, fontWeight: FontWeight.w600)),
                             ),
                           ),
                         ),
@@ -303,9 +301,9 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('소개', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                        Text('소개', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: context.colors.textPrimary)),
                         const SizedBox(height: 8),
-                        Text(program.description, style: TextStyle(fontSize: 15, color: AppTheme.textSub)),
+                        Text(program.description, style: TextStyle(fontSize: 15, color: context.colors.textSecondary)),
                 ],
               ),
             ),
@@ -316,14 +314,14 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('운동 상세', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                        Text('운동 상세', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: context.colors.textPrimary)),
                         const SizedBox(height: 8),
                         Builder(
                           builder: (context) {
                             final schedule = program.weeklySchedule;
                             
                             if (schedule == null) {
-                              return Text('운동 루틴 정보가 없습니다.', style: TextStyle(color: AppTheme.textMuted));
+                              return Text('운동 루틴 정보가 없습니다.', style: TextStyle(color: context.colors.textMuted));
                             }
                             
                             if (schedule is List) {
@@ -344,16 +342,16 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                               margin: const EdgeInsets.only(bottom: 16, top: 8),
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                               decoration: BoxDecoration(
-                                                color: AppTheme.programAccentBlue.withOpacity(0.2),
+                                                color: context.colors.primary.withOpacity(0.2),
                                                 borderRadius: BorderRadius.circular(8),
-                                                border: Border.all(color: AppTheme.programAccentBlue.withOpacity(0.3)),
+                                                border: Border.all(color: context.colors.primary.withOpacity(0.3)),
                                               ),
                                               child: Text(
                                                 'Week $weekNum',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16,
-                                                  color: AppTheme.programAccentBlue,
+                                                  color: context.colors.primary,
                                                 ),
                                               ),
                                             ),
@@ -373,9 +371,9 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                     margin: const EdgeInsets.only(bottom: 20),
                                                     padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppTheme.programCardBackground,
+                          color: context.colors.surface,
                                                       borderRadius: BorderRadius.circular(12),
-                                                      border: Border.all(color: AppTheme.surface2.withOpacity(0.3)),
+                                                      border: Border.all(color: context.colors.border.withOpacity(0.3)),
                                                     ),
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,7 +383,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                             Container(
                                                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                                               decoration: BoxDecoration(
-                                                                color: AppTheme.accent1.withOpacity(0.2),
+                                                                color: context.colors.secondary.withOpacity(0.2),
                                                                 borderRadius: BorderRadius.circular(6),
                                                               ),
                                                               child: Text(
@@ -393,7 +391,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                                 style: TextStyle(
                                                                   fontWeight: FontWeight.bold,
                                                                   fontSize: 14,
-                                                                  color: AppTheme.accent1,
+                                                                  color: context.colors.secondary,
                                                                 ),
                                                               ),
                                                             ),
@@ -402,7 +400,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                               '${exercises.length}개 운동',
                                                               style: TextStyle(
                                                                 fontSize: 12,
-                                                                color: AppTheme.textMuted,
+                                                                color: context.colors.textMuted,
                                                               ),
                                                             ),
                                                           ],
@@ -420,7 +418,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                                 margin: const EdgeInsets.only(bottom: 8),
                                                                 padding: const EdgeInsets.all(12),
                                                                 decoration: BoxDecoration(
-                                                                  color: AppTheme.surface1.withOpacity(0.5),
+                                                                  color: context.colors.surfaceVariant.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(8),
                                                                 ),
                                                                 child: Row(
@@ -429,7 +427,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                                       width: 24,
                                                                       height: 24,
                                                                       decoration: BoxDecoration(
-                                                                        color: AppTheme.accent1.withOpacity(0.2),
+                                                                        color: context.colors.secondary.withOpacity(0.2),
                                                                         borderRadius: BorderRadius.circular(4),
                                                                       ),
                                                                       child: Center(
@@ -438,7 +436,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                                           style: TextStyle(
                                                                             fontSize: 12,
                                                                             fontWeight: FontWeight.bold,
-                                                                            color: AppTheme.accent1,
+                                                                            color: context.colors.secondary,
                                                                           ),
                                                                         ),
                                                                       ),
@@ -447,10 +445,10 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                                     Expanded(
                                                                       child: Text(
                                                                         name,
-                                                                        style: const TextStyle(
+                                                                        style: TextStyle(
                                                                           fontSize: 14,
                                                                           fontWeight: FontWeight.w500,
-                                                                          color: Colors.white,
+                                                                          color: context.colors.textPrimary,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -458,14 +456,14 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                                     Container(
                                                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                                                       decoration: BoxDecoration(
-                                                                        color: AppTheme.programAccentBlue.withOpacity(0.2),
+                                                                        color: context.colors.primary.withOpacity(0.2),
                                                                         borderRadius: BorderRadius.circular(4),
                                                                       ),
                                                                       child: Text(
                                                                         '$sets세트',
                                                                         style: TextStyle(
                                                                           fontSize: 12,
-                                                                          color: AppTheme.programAccentBlue,
+                                                                          color: context.colors.primary,
                                                                           fontWeight: FontWeight.w500,
                                                                         ),
                                                                       ),
@@ -474,14 +472,14 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                                                     Container(
                                                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                                                       decoration: BoxDecoration(
-                                                                        color: AppTheme.accent1.withOpacity(0.2),
+                                                                        color: context.colors.secondary.withOpacity(0.2),
                                                                         borderRadius: BorderRadius.circular(4),
                                                                       ),
                                                                       child: Text(
                                                                         '$reps회',
                                                                         style: TextStyle(
                                                                           fontSize: 12,
-                                                                          color: AppTheme.accent1,
+                                                                          color: context.colors.secondary,
                                                                           fontWeight: FontWeight.w500,
                                                                         ),
                                                                       ),
@@ -503,7 +501,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
                                 ],
                               );
                             } else {
-                              return Text('운동 루틴 정보가 없습니다.', style: TextStyle(color: AppTheme.textMuted));
+                              return Text('운동 루틴 정보가 없습니다.', style: TextStyle(color: context.colors.textMuted));
                             }
                           },
                         ),
@@ -518,7 +516,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: AppTheme.programDetailBackground,
+        color: context.colors.background,
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         child: SizedBox(
           width: double.infinity,
@@ -529,8 +527,8 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
               context.read<ProgramsBloc>().add(SaveAsMyRoutine(program.id));
             },
           style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppTheme.programAccentBlue,
-            foregroundColor: Colors.white,
+                                  backgroundColor: context.colors.primary,
+            foregroundColor: context.colors.onPrimary,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               elevation: 0,

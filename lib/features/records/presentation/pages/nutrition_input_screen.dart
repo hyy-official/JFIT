@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:jfit/core/theme/nutrition_input_theme.dart';
+import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/models/nutrition_info.dart';
 
 class NutritionInputScreen extends StatefulWidget {
@@ -101,7 +101,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: NutritionInputTheme.screenBackground,
+      backgroundColor: context.colors.background,
       appBar: _buildAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -176,19 +176,19 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: NutritionInputTheme.accentColor.withOpacity(0.1),
+        color: context.colors.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: NutritionInputTheme.accentColor.withOpacity(0.3)),
+        border: Border.all(color: context.colors.primary.withOpacity(0.3)),
       ),
       child: Row(
         children: [
-          Icon(LucideIcons.calculator, color: NutritionInputTheme.accentColor, size: 20),
+          Icon(LucideIcons.calculator, color: context.colors.primary, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               '계산기 모드: 중량 변경 시 영양성분이 자동 계산됩니다',
               style: TextStyle(
-                color: NutritionInputTheme.accentColor,
+                color: context.colors.primary,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -203,7 +203,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: NutritionInputTheme.inputBackground.withOpacity(0.5),
+        color: context.colors.surface.withOpacity(0.5),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -212,7 +212,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
           Text(
             '기준 정보 (${_standardSize.toStringAsFixed(0)}g당)',
             style: TextStyle(
-              color: NutritionInputTheme.secondaryTextColor,
+              color: context.colors.textSecondary,
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
@@ -224,7 +224,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
             '단 ${_baseProtein.toStringAsFixed(1)}g | '
             '지 ${_baseFat.toStringAsFixed(1)}g',
             style: TextStyle(
-              color: NutritionInputTheme.secondaryTextColor,
+              color: context.colors.textSecondary,
               fontSize: 11,
             ),
           ),
@@ -235,18 +235,18 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: NutritionInputTheme.screenBackground,
+      backgroundColor: context.colors.background,
       elevation: 0,
       leading: IconButton(
         icon: const Icon(LucideIcons.x),
-        color: NutritionInputTheme.primaryTextColor,
+        color: context.colors.textPrimary,
         onPressed: () => Navigator.pop(context),
       ),
       centerTitle: true,
       title: Text(
         _isCalculatorMode ? '영양성분 계산기' : '영양성분 입력',
-        style: const TextStyle(
-          color: NutritionInputTheme.primaryTextColor, 
+        style: TextStyle(
+          color: context.colors.textPrimary, 
           fontSize: 18, 
           fontWeight: FontWeight.w600,
         ),
@@ -257,7 +257,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
           child: Text(
             '저장', 
             style: TextStyle(
-              color: _info.isValid ? NutritionInputTheme.accentColor : NutritionInputTheme.secondaryTextColor, 
+              color: _info.isValid ? context.colors.primary : context.colors.textSecondary, 
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -275,17 +275,18 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: NutritionInputTheme.labelStyle),
+        Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         TextField(
           controller: TextEditingController(text: initialValue),
-          style: NutritionInputTheme.valueStyle.copyWith(
-            color: enabled ? NutritionInputTheme.primaryTextColor : NutritionInputTheme.secondaryTextColor,
+          style: TextStyle(
+            color: enabled ? context.colors.textPrimary : context.colors.textSecondary,
+            fontSize: 16,
           ),
           enabled: enabled,
           decoration: InputDecoration(
             filled: true,
-            fillColor: enabled ? NutritionInputTheme.inputBackground : NutritionInputTheme.inputBackground.withOpacity(0.5),
+            fillColor: enabled ? context.colors.surface : context.colors.surface.withOpacity(0.5),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
           ),
           onChanged: onChanged,
@@ -305,7 +306,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: NutritionInputTheme.labelStyle)),
+          Expanded(child: Text(label, style: TextStyle(color: context.colors.textSecondary, fontSize: 14, fontWeight: FontWeight.w500))),
           const SizedBox(width: 12),
           Expanded(
             child: TextField(
@@ -314,18 +315,21 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
               inputFormatters: [_numberFormatter],
               textAlign: TextAlign.right,
               readOnly: readOnly,
-              style: NutritionInputTheme.valueStyle.copyWith(
-                color: readOnly ? NutritionInputTheme.secondaryTextColor : NutritionInputTheme.primaryTextColor,
+              style: TextStyle(
+                color: readOnly ? context.colors.textSecondary : context.colors.textPrimary,
+                fontSize: 16,
               ),
               decoration: InputDecoration(
                 suffixText: unit,
-                suffixStyle: NutritionInputTheme.labelStyle.copyWith(
-                  color: readOnly ? NutritionInputTheme.secondaryTextColor : NutritionInputTheme.primaryTextColor,
+                suffixStyle: TextStyle(
+                  color: readOnly ? context.colors.textSecondary : context.colors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
                 filled: true,
                 fillColor: readOnly 
-                    ? NutritionInputTheme.inputBackground.withOpacity(0.5)
-                    : NutritionInputTheme.inputBackground,
+                    ? context.colors.surface.withOpacity(0.5)
+                    : context.colors.surface,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               ),
               onChanged: readOnly ? null : (v) => onChanged(double.tryParse(v) ?? 0.0),
@@ -348,7 +352,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('분량 선택', style: NutritionInputTheme.labelStyle),
+        Text('분량 선택', style: TextStyle(color: context.colors.textSecondary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -371,12 +375,12 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     backgroundColor: isSelected 
-                        ? NutritionInputTheme.accentColor.withOpacity(0.2)
-                        : NutritionInputTheme.inputBackground,
+                        ? context.colors.primary.withOpacity(0.2)
+                        : context.colors.surface,
                     side: BorderSide(
                       color: isSelected 
-                          ? NutritionInputTheme.accentColor 
-                          : NutritionInputTheme.inputBackground,
+                          ? context.colors.primary 
+                          : context.colors.surface,
                     ),
                   ),
                   child: Column(
@@ -386,8 +390,8 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
                         f['label'] as String, 
                         style: TextStyle(
                           color: isSelected 
-                              ? NutritionInputTheme.accentColor 
-                              : NutritionInputTheme.primaryTextColor, 
+                              ? context.colors.primary 
+                              : context.colors.textPrimary, 
                           fontSize: isWhole ? 14 : 12,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
@@ -398,8 +402,8 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
                           '${targetWeight.toStringAsFixed(0)}g',
                           style: TextStyle(
                             color: isSelected 
-                                ? NutritionInputTheme.accentColor 
-                                : NutritionInputTheme.secondaryTextColor,
+                                ? context.colors.primary 
+                                : context.colors.textSecondary,
                             fontSize: 10,
                           ),
                         ),
