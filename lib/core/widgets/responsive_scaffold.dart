@@ -5,6 +5,7 @@ import 'package:jfit/features/records/data/models/user_daily_summary_model.dart'
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
+import 'package:jfit/core/models/navigation_item.dart';
 
 class ResponsiveScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
@@ -17,6 +18,7 @@ class ResponsiveScaffold extends StatelessWidget {
   final bool showDefaultRightPanel;
   final DateTime? selectedDate;
   final UserDailySummary? dailySummary;
+  final List<NavigationItem> navigationItems;
 
   const ResponsiveScaffold({
     super.key,
@@ -30,6 +32,7 @@ class ResponsiveScaffold extends StatelessWidget {
     this.showDefaultRightPanel = true,
     this.selectedDate,
     this.dailySummary,
+    required this.navigationItems,
   });
 
   @override
@@ -40,13 +43,23 @@ class ResponsiveScaffold extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       drawer: isWide ? null : null,
-      bottomNavigationBar: isWide ? null : _BottomNavigation(currentIndex: currentIndex, onTap: onNavTap, onAiTap: onAiTap),
+      bottomNavigationBar: isWide ? null : _BottomNavigation(
+        currentIndex: currentIndex, 
+        onTap: onNavTap, 
+        onAiTap: onAiTap,
+        navigationItems: navigationItems,
+      ),
       body: Row(
         children: [
           if (isWide)
             Flexible(
               flex: 3, // 약 15%
-              child: _SideNavigation(currentIndex: currentIndex, onTap: onNavTap, onAiTap: onAiTap),
+              child: _SideNavigation(
+                currentIndex: currentIndex, 
+                onTap: onNavTap, 
+                onAiTap: onAiTap,
+                navigationItems: navigationItems,
+              ),
             ),
           if (isWide)
             VerticalDivider(width: 1, color: context.colors.surfaceVariant),
@@ -169,10 +182,17 @@ class _SideNavigation extends StatelessWidget {
   final int currentIndex;
   final void Function(int)? onTap;
   final VoidCallback? onAiTap;
-  const _SideNavigation({this.currentIndex = 0, this.onTap, this.onAiTap});
+  final List<NavigationItem> navigationItems;
+  
+  const _SideNavigation({
+    this.currentIndex = 0, 
+    this.onTap, 
+    this.onAiTap,
+    required this.navigationItems,
+  });
+  
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     return Container(
       width: 280,
       color: context.colors.surface,
@@ -208,11 +228,14 @@ class _SideNavigation extends StatelessWidget {
           ),
           Divider(height: 1, color: context.colors.border),
           const SizedBox(height: 12),
-          _NavIcon(horizontal: true, icon: Icons.restaurant, label: l10n?.diet ?? '식단', selected: currentIndex == 0, onTap: () => onTap?.call(0)),
-          _NavIcon(horizontal: true, icon: Icons.show_chart, label: l10n?.dashboard ?? '대시보드', selected: currentIndex == 1, onTap: () => onTap?.call(1)),
-          _NavIcon(horizontal: true, icon: Icons.fitness_center, label: l10n?.exercise ?? '운동 기록', selected: currentIndex == 2, onTap: () => onTap?.call(2)),
-          _NavIcon(horizontal: true, icon: Icons.timer, label: l10n?.workout ?? '내 운동', selected: currentIndex == 3, onTap: () => onTap?.call(3)),
-          _NavIcon(horizontal: true, icon: Icons.extension, label: l10n?.routine ?? '루틴', selected: currentIndex == 4, onTap: () => onTap?.call(4)),
+          // 동적 네비게이션 아이템들
+          ...navigationItems.map((item) => _NavIcon(
+            horizontal: true,
+            icon: item.icon,
+            label: item.label,
+            selected: currentIndex == item.index,
+            onTap: () => onTap?.call(item.index),
+          )),
           const Spacer(),
           // ----- Bottom Profile -----
           const _BottomProfile(),
@@ -291,20 +314,29 @@ class _BottomNavigation extends StatelessWidget {
   final int currentIndex;
   final void Function(int)? onTap;
   final VoidCallback? onAiTap;
-  const _BottomNavigation({this.currentIndex = 0, this.onTap, this.onAiTap});
+  final List<NavigationItem> navigationItems;
+  
+  const _BottomNavigation({
+    this.currentIndex = 0, 
+    this.onTap, 
+    this.onAiTap,
+    required this.navigationItems,
+  });
+  
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     return BottomAppBar(
       color: context.colors.surface,
       height: 65,
       child: Row(
         children: [
-          _NavIcon(icon: Icons.restaurant, label: l10n?.diet ?? '식단', selected: currentIndex == 0, onTap: () => onTap?.call(0)),
-          _NavIcon(icon: Icons.show_chart, label: l10n?.dashboard ?? '대시보드', selected: currentIndex == 1, onTap: () => onTap?.call(1)),
-          _NavIcon(icon: Icons.fitness_center, label: l10n?.exercise ?? '운동 기록', selected: currentIndex == 2, onTap: () => onTap?.call(2)),
-          _NavIcon(icon: Icons.timer, label: l10n?.workout ?? '내 운동', selected: currentIndex == 3, onTap: () => onTap?.call(3)),
-          _NavIcon(icon: Icons.extension, label: l10n?.routine ?? '루틴', selected: currentIndex == 4, onTap: () => onTap?.call(4)),
+          // 동적 네비게이션 아이템들
+          ...navigationItems.map((item) => _NavIcon(
+            icon: item.icon,
+            label: item.label,
+            selected: currentIndex == item.index,
+            onTap: () => onTap?.call(item.index),
+          )),
           if (onAiTap != null)
             Expanded(
               child: IconButton(

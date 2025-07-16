@@ -15,6 +15,7 @@ import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
 import 'package:jfit/core/widgets/theme_toggle_button.dart';
 import 'package:jfit/core/theme/theme_system.dart';
+import 'package:jfit/core/models/navigation_item.dart';
 
 /// 앱 하단 내비게이션(ResponsiveScaffold)을 담당하는 메인 페이지.
 ///
@@ -36,6 +37,7 @@ class MainNavigationPage extends StatefulWidget {
 class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
   late List<Widget> _pages;
+  late List<NavigationItem> _navigationItems;
   // Nested navigator key to manage stack within the body area only.
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -43,14 +45,18 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
+    
+    // 네비게이션 아이템 정의 (3개로 줄임)
+    _navigationItems = [
+      const NavigationItem(icon: Icons.restaurant, label: '홈', index: 0),
+      const NavigationItem(icon: Icons.timer, label: '내 운동', index: 1),
+      const NavigationItem(icon: Icons.extension, label: '루틴', index: 2),
+    ];
+    
     _pages = [
       // 0: 식단(기록)
       const RecordPage(),
-      // 1: 대시보드
-      const DashboardPage(),
-      // 2: 운동 기록(ExercisePage)
-      const ExercisePage(),
-      // 3: 내 운동(현재 진행 중인 워크아웃 또는 프리스타일 세션)
+      // 1: 내 운동(현재 진행 중인 워크아웃 또는 프리스타일 세션)
       WorkoutSessionPage(
         sessionId: widget.workoutSessionArgs?['sessionId'],
         programId: widget.workoutSessionArgs?['programId'],
@@ -59,7 +65,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         targetDay: widget.workoutSessionArgs?['targetDay'],
         showNavigation: widget.workoutSessionArgs?['showNavigation'] ?? false,
       ),
-      // 4: 루틴(프로그램 목록)
+      // 2: 루틴(프로그램 목록)
       const ProgramsPage(),
     ];
     
@@ -84,6 +90,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         return ResponsiveScaffold(
           appBar: _buildAppBar(context),
           currentIndex: _currentIndex,
+          navigationItems: _navigationItems,
           onNavTap: (index) {
             // 중앙 Navigator 스택 초기화 후, 새 탭 페이지로 대체
             _navigatorKey.currentState?.popUntil((route) => route.isFirst);
@@ -142,7 +149,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
 
   /// AppBar 생성 (테마 전환 버튼 포함)
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final tabNames = ['기록', '대시보드', '운동', '내 운동', '루틴'];
+    final tabNames = ['홈', '내  운동', '루틴'];
     
     return AppBar(
       title: Text(
