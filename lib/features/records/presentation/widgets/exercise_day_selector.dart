@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/core/theme/theme_system.dart';
-import 'package:jfit/features/records/bloc/record_bloc.dart';
-import 'package:jfit/features/records/bloc/record_event.dart';
 
 class ExerciseDaySelector extends StatelessWidget {
   final String userProgramId;

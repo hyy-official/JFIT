@@ -1,7 +1,10 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:dartz/dartz.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../../core/error/failures.dart';
+import '../../../workout_program/data/models/duplicate_check_result_model.dart';
 import '../models/workout_program_model.dart';
 import '../models/workout_session_model.dart';
 import '../models/user_program_day_model.dart';
@@ -19,7 +22,7 @@ abstract class ProgramRemoteDataSource {
   });
   Future<WorkoutProgramModel> getProgramById(String id);
   Future<void> addProgramToUser(String programId, String userId);
-  Future<void> saveAsMyRoutine(String templateProgramId, String userId);
+  Future<Either<Failure, DuplicateCheckResult>> saveAsMyRoutine(String templateProgramId, String userId);
   Future<List<WorkoutProgramModel>> getUserPrograms(String userId);
   Future<List<WorkoutProgramModel>> searchPrograms(String query);
   // Day별 상태 및 운동 루틴 관련 메서드
@@ -212,24 +215,25 @@ class ProgramRemoteDataSourceImpl implements ProgramRemoteDataSource {
   }
 
   @override
-  Future<void> saveAsMyRoutine(String templateProgramId, String userId) async {
+  Future<Either<Failure, DuplicateCheckResult>> saveAsMyRoutine(String templateProgramId, String userId) async {
     try {
       // 현재 사용자 인증 확인
       final currentUser = supabaseClient.auth.currentUser;
       if (currentUser == null || currentUser.id != userId) {
-        throw Exception('인증되지 않은 사용자입니다.');
+        return Left(WorkoutProgramPermissionFailure(
+          technicalMessage: 'User authentication failed: currentUser=${currentUser?.id}, userId=$userId',
+        ));
       }
 
       // 1. 중복 체크 - 이미 활성화된 프로그램이 있는지 확인
-      final existingPrograms = await supabaseClient
-          .from('user_programs')
-          .select('id')
-          .eq('user_id', userId)
-          .eq('program_id', templateProgramId)
-          .eq('is_active', true);
-
-      if (existingPrograms.isNotEmpty) {
-        throw Exception('이미 저장된 프로그램입니다. 중복된 프로그램은 저장할 수 없습니다.');
+      final duplicateResult = await checkProgramDuplicate(templateProgramId, userId);
+      if (duplicateResult != null) {
+        // 중복이 발견된 경우 DuplicateCheckResult 반환
+        final duplicateCheckResult = DuplicateCheckResult.fromMap(duplicateResult);
+        return Left(ProgramDuplicateFailure(
+          duplicateInfo: duplicateCheckResult.duplicateInfo!,
+          technicalMessage: 'Duplicate program found: $templateProgramId for user $userId',
+        ));
       }
 
       // 2. 템플릿 프로그램 정보 조회 (공개 프로그램만)
@@ -245,7 +249,6 @@ class ProgramRemoteDataSourceImpl implements ProgramRemoteDataSource {
       final workoutsPerWeek = templateProgram['workouts_per_week'] as int? ?? 3;
       final weeklySchedule = templateProgram['weekly_schedule']; // dynamic으로 받기
       final imageUrl = templateProgram['image_url'] as String?;
-
 
       // 3. RPC 함수 호출 (트랜잭션 처리)
       final result = await supabaseClient.rpc('save_program_as_routine', params: {
@@ -264,7 +267,9 @@ class ProgramRemoteDataSourceImpl implements ProgramRemoteDataSource {
       // ======================
 
       if (result == null) {
-        throw Exception('서버에서 응답을 받지 못했습니다.');
+        return Left(WorkoutProgramServerFailure(
+          technicalMessage: 'RPC function returned null response',
+        ));
       }
 
       Map<String, dynamic> resultMap;
@@ -273,19 +278,47 @@ class ProgramRemoteDataSourceImpl implements ProgramRemoteDataSource {
       } else if (result is List && result.isNotEmpty && result.first is Map<String, dynamic>) {
         resultMap = result.first as Map<String, dynamic>;
       } else {
-        throw Exception('예상치 못한 응답 형식입니다: ${result.runtimeType} $result');
+        return Left(DataParsingFailure(
+          message: 'Unexpected RPC response format',
+          technicalMessage: 'Expected Map or List<Map>, got ${result.runtimeType}: $result',
+        ));
       }
 
       final success = resultMap['success'] as bool? ?? false;
       final message = resultMap['message'] as String? ?? '';
       if (!success) {
-        throw Exception(message.isNotEmpty ? message : '프로그램 저장에 실패했습니다.');
+        return Left(WorkoutProgramServerFailure(
+          technicalMessage: 'RPC function failed: $message',
+        ));
       }
+      
       print('Program saved successfully: $message');
+      
+      // 성공적으로 저장된 경우 중복 없음 결과 반환
+      return const Right(DuplicateCheckResult.noDuplicate());
 
     } catch (e) {
       print('Error saving program as routine: $e');
-      throw Exception('프로그램을 내 루틴으로 저장하는 중 오류가 발생했습니다: $e');
+      
+      // 에러 타입에 따른 적절한 실패 반환
+      if (e.toString().contains('permission denied') || e.toString().contains('권한')) {
+        return Left(WorkoutProgramPermissionFailure(
+          technicalMessage: e.toString(),
+        ));
+      } else if (e.toString().contains('network') || e.toString().contains('connection')) {
+        return Left(WorkoutProgramNetworkFailure(
+          technicalMessage: e.toString(),
+        ));
+      } else if (e.toString().contains('not found') || e.toString().contains('찾을 수 없')) {
+        return Left(ProgramNotFoundFailure(
+          programId: templateProgramId,
+          technicalMessage: e.toString(),
+        ));
+      } else {
+        return Left(WorkoutProgramUnknownFailure(
+          technicalMessage: e.toString(),
+        ));
+      }
     }
   }
 

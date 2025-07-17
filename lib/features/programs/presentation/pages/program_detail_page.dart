@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/core/theme/theme_system.dart';
+import 'package:jfit/core/widgets/enhanced_error_feedback.dart';
 import '../../domain/entities/workout_program.dart';
 import '../bloc/programs_bloc.dart';
 import '../bloc/programs_event.dart';
 import '../bloc/programs_state.dart';
+import '../widgets/duplicate_resolution_dialog.dart';
 import 'dart:convert';
 
 class ProgramDetailPage extends StatefulWidget {
@@ -34,7 +36,7 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: context.colors.surface,
         title: Text(
-          '이미 추가된 프로그램입니다',
+          '프로그램 선택',
           style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.bold),
         ),
         content: Column(
@@ -47,19 +49,54 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
             ),
             const SizedBox(height: 8),
             if (state.isCompleted)
-              Text(
-                '✅ 이미 완료한 프로그램입니다',
-                style: TextStyle(color: context.colors.success, fontSize: 14),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.colors.success.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: context.colors.success.withOpacity(0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.check_circle, color: context.colors.success, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '축하합니다! 이미 완료한 프로그램입니다',
+                        style: TextStyle(color: context.colors.success, fontSize: 14, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
               )
             else ...[
-              Text(
-                '현재 진행 상황: ${state.currentWeek}주차 ${state.currentDay}일차',
-                style: TextStyle(color: context.colors.textSecondary, fontSize: 14),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '진행률: ${state.progressPercent.toStringAsFixed(1)}%',
-                style: TextStyle(color: context.colors.info, fontSize: 14),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.colors.info.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: context.colors.info.withOpacity(0.3)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.trending_up, color: context.colors.info, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          '현재 진행 중인 프로그램입니다',
+                          style: TextStyle(color: context.colors.info, fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '진행 상황: ${state.currentWeek}주차 ${state.currentDay}일차 (${state.progressPercent.toStringAsFixed(1)}%)',
+                      style: TextStyle(color: context.colors.textSecondary, fontSize: 13),
+                    ),
+                  ],
+                ),
               ),
             ],
             const SizedBox(height: 16),
@@ -108,6 +145,14 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
     );
   }
 
+  void _showRoutineDuplicateDialog(BuildContext context, RoutineDuplicateFound state) {
+    DuplicateResolutionDialog.show(
+      context: context,
+      duplicateInfo: state.duplicateInfo,
+      templateProgramId: widget.program.id,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final program = widget.program;
@@ -116,47 +161,61 @@ class _ProgramDetailPageState extends State<ProgramDetailPage> {
       listener: (context, state) {
         if (state is ProgramDuplicateFound) {
           _showDuplicateDialog(context, state);
+        } else if (state is RoutineDuplicateFound) {
+          _showRoutineDuplicateDialog(context, state);
         } else if (state is ProgramAddedToUser) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: context.colors.success,
-            ),
+          EnhancedErrorFeedback.showSuccessSnackBar(
+            context,
+            message: state.message,
           );
         } else if (state is ProgramRestarted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: context.colors.info,
-            ),
+          EnhancedErrorFeedback.showInfoSnackBar(
+            context,
+            message: state.message,
           );
         } else if (state is ProgramContinued) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: context.colors.success,
-            ),
+          EnhancedErrorFeedback.showSuccessSnackBar(
+            context,
+            message: state.message,
           );
         } else if (state is RoutineSaved) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: context.colors.success,
-            ),
+          EnhancedErrorFeedback.showSuccessSnackBar(
+            context,
+            message: state.message,
           );
         } else if (state is RoutineSaveError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: context.colors.error,
-            ),
+          EnhancedErrorFeedback.showErrorSnackBar(
+            context,
+            message: state.message,
+            actionLabel: '다시 시도',
+            onActionPressed: () {
+              context.read<ProgramsBloc>().add(SaveAsMyRoutine(widget.program.id));
+            },
+            isRetryable: true,
           );
         } else if (state is ProgramAddError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: context.colors.error,
-            ),
+          EnhancedErrorFeedback.showErrorSnackBar(
+            context,
+            message: state.message,
+            actionLabel: '다시 시도',
+            onActionPressed: () {
+              context.read<ProgramsBloc>().add(CheckProgramDuplicate(widget.program.id));
+            },
+            isRetryable: true,
+          );
+        } else if (state is ProgramsErrorWithRetry) {
+          EnhancedErrorFeedback.showErrorSnackBar(
+            context,
+            message: state.message,
+            actionLabel: state.actionButtonText,
+            onActionPressed: state.retryAction,
+            isRetryable: true,
+          );
+        } else if (state is ProgramsError) {
+          EnhancedErrorFeedback.showErrorSnackBar(
+            context,
+            message: state.message,
+            isRetryable: false,
           );
         }
       },

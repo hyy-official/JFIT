@@ -7,10 +7,16 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/core/theme/theme_system.dart';
-import 'package:jfit/features/records/bloc/record_bloc.dart';
-import 'package:jfit/features/records/bloc/record_event.dart';
+
+import 'package:jfit/features/meal/bloc/meal_bloc.dart';
+import 'package:jfit/features/meal/bloc/meal_event.dart' as meal_events;
+import 'package:jfit/features/workout_program/bloc/workout_program_bloc.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_event.dart' as workout_program_events;
+import 'package:jfit/features/daily_summary/bloc/daily_summary_bloc.dart';
+import 'package:jfit/features/daily_summary/bloc/daily_summary_event.dart' as daily_summary_events;
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jfit/features/records/presentation/widgets/dashboard_header.dart';
 import 'package:jfit/features/records/presentation/widgets/weekly_calendar.dart';
 import 'package:jfit/features/records/presentation/widgets/custom_tab_bar.dart';
@@ -19,6 +25,7 @@ import 'package:jfit/features/records/presentation/widgets/quick_add_section.dar
 import 'package:jfit/features/records/presentation/widgets/diet_tab_content.dart';
 import 'package:jfit/features/records/presentation/widgets/body_tab_content.dart';
 import 'package:jfit/features/records/presentation/widgets/exercise_tab_content.dart';
+import 'package:jfit/features/records/presentation/widgets/todo_tab_content.dart';
 
 // 1. 상단 고정 Scaffold 위젯 추가
 class RecordPageScaffold extends StatelessWidget {
@@ -143,14 +150,9 @@ class _RecordTabContentState extends State<RecordTabContent> with AutomaticKeepA
             key: PageStorageKey('exercise_tab'),
           ),
           // 계획 탭 컨텐츠
-          Center(
-            key: const PageStorageKey('plan_tab'),
-            child: Builder(
-              builder: (context) => Text(
-                '계획 컨텐츠', 
-                style: TextStyle(color: context.colors.textSecondary)
-              ),
-            ),
+          TodoTabContent(
+            key: const PageStorageKey('todo_tab'),
+            selectedDate: widget.selectedDate,
           ),
         ],
       ),
@@ -192,7 +194,8 @@ class _RecordPageState extends State<RecordPage>
   void _refreshExerciseData() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      context.read<RecordBloc>().add(LoadUserPrograms(userId: authState.user.id));
+      final workoutProgramBloc = GetIt.instance<WorkoutProgramBloc>();
+      workoutProgramBloc.add(workout_program_events.LoadUserPrograms(userId: authState.user.id));
     }
   }
 
@@ -200,10 +203,13 @@ class _RecordPageState extends State<RecordPage>
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       final userId = authState.user.id;
-      context.read<RecordBloc>().add(LoadMealRecords(userId: userId, date: _selectedDate));
-      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: _selectedDate));
+      // Use MealBloc for meal records
+      context.read<MealBloc>().add(meal_events.LoadMealRecords(userId: userId, date: _selectedDate));
+      // Use DailySummaryBloc for daily summary
+      context.read<DailySummaryBloc>().add(daily_summary_events.LoadDailySummary(userId: userId, date: _selectedDate));
       // 운동 프로그램도 함께 로드
-      context.read<RecordBloc>().add(LoadUserPrograms(userId: userId));
+      final workoutProgramBloc = GetIt.instance<WorkoutProgramBloc>();
+      workoutProgramBloc.add(workout_program_events.LoadUserPrograms(userId: userId));
     }
   }
 
@@ -211,8 +217,10 @@ class _RecordPageState extends State<RecordPage>
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       final userId = authState.user.id;
-      context.read<RecordBloc>().add(LoadMealRecords(userId: userId, date: date));
-      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: date));
+      // Use MealBloc for meal records
+      context.read<MealBloc>().add(meal_events.LoadMealRecords(userId: userId, date: date));
+      // Use DailySummaryBloc for daily summary
+      context.read<DailySummaryBloc>().add(daily_summary_events.LoadDailySummary(userId: userId, date: date));
     }
   }
 

@@ -1,15 +1,23 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jfit/core/theme/theme_system.dart';
+import 'package:jfit/core/widgets/enhanced_error_feedback.dart';
 import 'package:jfit/features/records/data/models/diet_entry.dart';
+import 'package:jfit/features/records/data/models/meal_record_model.dart';
+import 'package:jfit/features/meal/bloc/meal_bloc.dart';
+import 'package:jfit/features/meal/bloc/meal_event.dart' as meal_events;
+import 'package:jfit/features/meal/bloc/meal_state.dart';
+
+import 'package:jfit/features/auth/bloc/auth_bloc.dart';
+import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get_it/get_it.dart';
-import 'package:jfit/core/services/supabase_service.dart';
 import 'package:jfit/core/models/nutrition_info.dart';
 import 'package:jfit/features/records/presentation/pages/nutrition_manual_input_screen.dart';
 import 'package:jfit/features/records/presentation/pages/food_search_screen.dart';
@@ -49,37 +57,68 @@ class _DietDetailFormState extends State<DietDetailForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildHandlebar(),
-        _buildHeader(),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildImageUpload(),
-                _buildFoodNameInput(),
-                _buildSectionDivider(),
-                _buildMealTypeSelection(),
-                _buildSatisfactionSelection(),
-                _buildScoreSelection(),
-                _buildTimeAdjustment(),
-                _buildSectionDivider(),
-                _buildMemoInput(),
-                _buildAccompanimentsSelection(),
-                _buildSectionDivider(),
-                _buildNutritionSection(),
-                _buildSectionDivider(),
-                _buildBookmarkToggle(),
-                
-              ],
+    return BlocListener<MealBloc, MealState>(
+      listener: (context, state) {
+        debugPrint('🍽️ UI: MealBloc state changed: ${state.runtimeType}');
+        
+        if (state is MealRecordAdded) {
+          debugPrint('✅ UI: Meal record added successfully');
+          // 성공 시 로딩 다이얼로그 닫기
+          Navigator.of(context).pop(); // loading dialog
+          Navigator.of(context).pop(); // form
+          
+          // 성공 메시지
+          EnhancedErrorFeedback.showSuccessSnackBar(
+            context,
+            message: '식단이 저장되었습니다',
+          );
+        } else if (state is MealErrorState) {
+          debugPrint('❌ UI: Meal error: ${state.failure.message}');
+          // 에러 시 로딩 다이얼로그 닫기
+          Navigator.of(context).pop(); // loading dialog
+          
+          // 에러 메시지
+          EnhancedErrorFeedback.showErrorSnackBar(
+            context,
+            message: '저장 실패: ${state.failure.message}',
+            actionLabel: '다시 시도',
+            onActionPressed: _save,
+            isRetryable: true,
+          );
+        }
+      },
+      child: Column(
+        children: [
+          _buildHandlebar(),
+          _buildHeader(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildImageUpload(),
+                  _buildFoodNameInput(),
+                  _buildSectionDivider(),
+                  _buildMealTypeSelection(),
+                  _buildSatisfactionSelection(),
+                  _buildScoreSelection(),
+                  _buildTimeAdjustment(),
+                  _buildSectionDivider(),
+                  _buildMemoInput(),
+                  _buildAccompanimentsSelection(),
+                  _buildSectionDivider(),
+                  _buildNutritionSection(),
+                  _buildSectionDivider(),
+                  _buildBookmarkToggle(),
+                  
+                ],
+              ),
             ),
           ),
-        ),
-        _buildSaveButton(),
-      ],
+          _buildSaveButton(),
+        ],
+      ),
     );
   }
 
@@ -421,7 +460,20 @@ class _DietDetailFormState extends State<DietDetailForm> {
     _nutritionItems.isNotEmpty;
 
   void _save() async {
-    final supabaseService = GetIt.instance<SupabaseService>();
+    debugPrint('🍽️ UI: Starting save process');
+    
+    final authState = context.read<AuthBloc>().state;
+    if (authState is! AuthAuthenticated) {
+      debugPrint('❌ UI: User not authenticated');
+      EnhancedErrorFeedback.showErrorSnackBar(
+        context,
+        message: '로그인이 필요합니다',
+        isRetryable: false,
+      );
+      return;
+    }
+
+    debugPrint('✅ UI: User authenticated, showing loading dialog');
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -429,45 +481,46 @@ class _DietDetailFormState extends State<DietDetailForm> {
     );
     
     try {
-      // 각 영양성분 항목을 개별적으로 user_meal_entries 테이블에 저장
-      for (final nutritionItem in _nutritionItems) {
+      debugPrint('🍽️ UI: Processing ${_nutritionItems.length} nutrition items');
+      
+      // 첫 번째 항목만 MealBloc으로 처리하고, BlocListener에서 나머지를 처리
+      if (_nutritionItems.isNotEmpty) {
+        final nutritionItem = _nutritionItems.first;
+        debugPrint('🍽️ UI: Processing first item');
+        
         // 식사 타입을 영어로 변환
         final mealType = _convertMealTypeToEnglish(_dietEntry.mealTypes.first);
+        debugPrint('🍽️ UI: Meal type converted: ${_dietEntry.mealTypes.first} -> $mealType');
         
-        await supabaseService.saveMealEntry(
-          foodName: nutritionItem.foodName,
+        final mealRecord = MealRecord(
+          id: DateTime.now().millisecondsSinceEpoch.toString() + nutritionItem.hashCode.toString(),
+          userId: authState.user.id,
           mealType: mealType,
-          quantityG: _resolveQuantity(nutritionItem),
-          entryDate: _dietEntry.time,
-          calories: nutritionItem.calories,
-          protein: nutritionItem.protein,
-          carbohydrates: nutritionItem.carbs,
-          fat: nutritionItem.fat,
-          foodItemId: nutritionItem.foodItemId, // DB 음식 ID (있는 경우)
+          mealDate: _dietEntry.time,
+          totalCalories: nutritionItem.calories,
+          totalProtein: nutritionItem.protein,
+          totalCarbs: nutritionItem.carbs,
+          totalFat: nutritionItem.fat,
           notes: _dietEntry.memo.isNotEmpty ? _dietEntry.memo : null,
-          mealTypes: _dietEntry.mealTypes,
-          satisfaction: _dietEntry.satisfaction.isNotEmpty ? _dietEntry.satisfaction : null,
-          score: _dietEntry.score,
-          accompaniments: _dietEntry.accompaniments.isNotEmpty ? _dietEntry.accompaniments : null,
-          imagePath: _dietEntry.imagePath,
+          photoUrl: _dietEntry.imagePath,
         );
-      }
-      
-      Navigator.of(context)
-        ..pop() // loading
-        ..pop(); // form
         
-      // 성공 메시지
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${_nutritionItems.length}개 항목이 저장되었습니다'),
-          backgroundColor: context.colors.success,
-        ),
-      );
-    } catch (e) {
+        debugPrint('🍽️ UI: Created MealRecord with ID: ${mealRecord.id}');
+        debugPrint('🍽️ UI: Dispatching AddMealRecord event to MealBloc');
+        
+        // Use MealBloc to add meal record
+        context.read<MealBloc>().add(meal_events.AddMealRecord(mealRecord: mealRecord));
+      }
+    } catch (e, stackTrace) {
+      debugPrint('💥 UI: Exception in _save: $e');
+      debugPrint('💥 UI: Stack trace: $stackTrace');
       Navigator.pop(context); // loading
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('저장 실패: $e')),
+      EnhancedErrorFeedback.showErrorSnackBar(
+        context,
+        message: '저장 실패: $e',
+        actionLabel: '다시 시도',
+        onActionPressed: _save,
+        isRetryable: true,
       );
     }
   }

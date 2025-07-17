@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/presentation/widgets/diet_add_sheet.dart';
 import 'package:jfit/features/records/presentation/widgets/body_add_sheet.dart';
-import 'package:jfit/features/records/bloc/record_bloc.dart';
-import 'package:jfit/features/records/bloc/record_event.dart';
-import 'package:jfit/features/records/bloc/record_state.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_bloc.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_event.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_state.dart';
+import 'package:jfit/features/workout_program/data/models/current_workout_info_model.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/records/presentation/widgets/program_detail_sheet.dart';
+import 'package:jfit/features/todo/presentation/widgets/todo_add_sheet.dart';
+import 'package:jfit/features/todo/bloc/todo_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 /// Quick Add Section with Workout card spanning 2 columns
 class QuickAddSection extends StatelessWidget {
@@ -32,9 +36,22 @@ class QuickAddSection extends StatelessWidget {
 
             return Column(
               children: [
-                // Workout card full width
-                WorkoutCard(height: cardHeight),
+                // 첫 번째 줄: 운동 카드와 할 일 카드
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2, // 운동 카드가 더 넓게
+                      child: WorkoutCard(height: cardHeight),
+                    ),
+                    SizedBox(width: spacing),
+                    Expanded(
+                      flex: 1, // 할 일 카드는 좁게
+                      child: QuickCard(icon: Icons.task_alt, label: '할 일', accent: context.colors.info),
+                    ),
+                  ],
+                ),
                 SizedBox(height: spacing),
+                // 두 번째 줄: 식단과 신체 카드
                 Row(
                   children: [
                     Expanded(child: QuickCard(icon: Icons.restaurant, label: '식단', accent: context.colors.success)),
@@ -61,21 +78,29 @@ class WorkoutCard extends StatefulWidget {
 
 class _WorkoutCardState extends State<WorkoutCard> {
   bool _hovering = false;
-  CurrentWorkoutInfo? _cachedWorkoutInfo;
+  CurrentWorkoutInfoModel? _cachedWorkoutInfo;
+  WorkoutProgramBloc? _workoutProgramBloc;
 
   @override
   void initState() {
     super.initState();
     print('🚀 [WorkoutCard] initState called');
+    _workoutProgramBloc = GetIt.instance<WorkoutProgramBloc>();
     // 현재 운동 정보 로드
     _loadCurrentWorkoutInfo();
+  }
+
+  @override
+  void dispose() {
+    _workoutProgramBloc?.close();
+    super.dispose();
   }
 
   void _loadCurrentWorkoutInfo() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       print('🎯 [QuickAdd] Loading current workout info for user: ${authState.user.id}');
-      context.read<RecordBloc>().add(LoadCurrentWorkoutInfo(userId: authState.user.id));
+      _workoutProgramBloc?.add(LoadCurrentWorkoutInfo(userId: authState.user.id));
     } else {
       print('❌ [QuickAdd] User not authenticated');
     }
@@ -90,17 +115,13 @@ class _WorkoutCardState extends State<WorkoutCard> {
     }
   }
 
-  void _handleTap(CurrentWorkoutInfo workoutInfo) {
-    if (workoutInfo.hasProgram && workoutInfo.userProgramId != null) {
-      final progressPercent = workoutInfo.totalDays != null && workoutInfo.totalDays! > 0
-          ? (workoutInfo.completedDays ?? 0) / workoutInfo.totalDays! * 100
-          : 0.0;
-      
+  void _handleTap(CurrentWorkoutInfoModel workoutInfo) {
+    if (workoutInfo.hasActiveProgram && workoutInfo.activeProgram?.id != null) {
       _showProgramDetailSheet(
         context, 
-        workoutInfo.userProgramId!,
-        workoutInfo.programName ?? '운동 프로그램',
-        progressPercent,
+        workoutInfo.activeProgram!.id,
+        workoutInfo.activeProgram?.workoutProgram?.name ?? '운동 프로그램',
+        workoutInfo.progressPercentage,
       );
     } else {
       // 운동 프로그램이 없으면 프로그램 선택 화면으로 이동
@@ -108,23 +129,37 @@ class _WorkoutCardState extends State<WorkoutCard> {
     }
   }
 
+  String _getProgressText(CurrentWorkoutInfoModel workoutInfo) {
+    if (!workoutInfo.hasActiveProgram) return '운동 시작하기';
+    
+    final programName = workoutInfo.activeProgram?.workoutProgram?.name ?? '운동 프로그램';
+    final currentWeek = workoutInfo.currentWeek ?? 1;
+    final currentDay = workoutInfo.currentDay ?? 1;
+    final completedDays = workoutInfo.totalCompletedDays;
+    final totalDays = (workoutInfo.activeProgram?.workoutProgram?.durationWeeks ?? 1) * 
+                     (workoutInfo.activeProgram?.workoutProgram?.workoutsPerWeek ?? 3);
+    
+    return '$programName\nWeek $currentWeek, Day $currentDay ($completedDays/$totalDays 완료)';
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RecordBloc, RecordState>(
+    return BlocBuilder<WorkoutProgramBloc, WorkoutProgramState>(
+      bloc: _workoutProgramBloc,
       builder: (context, state) {
         print('🎨 [WorkoutCard] BlocBuilder rebuild - State: ${state.runtimeType}');
         
         // 🎯 현재 운동 정보 가져오기
-        CurrentWorkoutInfo workoutInfo = _cachedWorkoutInfo ?? const CurrentWorkoutInfo();
+        CurrentWorkoutInfoModel workoutInfo = _cachedWorkoutInfo ?? CurrentWorkoutInfoModel.empty();
         
         // 새로운 운동 정보가 로드되면 캐시 업데이트
         if (state is CurrentWorkoutInfoLoaded) {
           print('✅ [WorkoutCard] CurrentWorkoutInfoLoaded received!');
-          print('📋 [WorkoutCard] Workout info: ${state.workoutInfo.programName} - ${state.workoutInfo.progressText}');
-          workoutInfo = state.workoutInfo;
+          print('📋 [WorkoutCard] Workout info: ${state.currentWorkoutInfo.activeProgram?.workoutProgram?.name}');
+          workoutInfo = state.currentWorkoutInfo;
           _cachedWorkoutInfo = workoutInfo;
         } else {
-          print('ℹ️ [WorkoutCard] Using cached or default workout info: ${workoutInfo.progressText}');
+          print('ℹ️ [WorkoutCard] Using cached or default workout info');
         }
 
         return GestureDetector(
@@ -161,13 +196,11 @@ class _WorkoutCardState extends State<WorkoutCard> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        gradient: workoutInfo.hasActiveSession 
-                            ? LinearGradient(colors: [context.colors.success, context.colors.success.withOpacity(0.8)])
-                            : context.colors.gradient,
+                        gradient: context.colors.gradient,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        workoutInfo.hasActiveSession ? Icons.play_circle_filled : Icons.fitness_center,
+                        Icons.fitness_center,
                         color: context.colors.textPrimary,
                       ),
                     ),
@@ -186,7 +219,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            workoutInfo.progressText,
+                            _getProgressText(workoutInfo),
                             style: context.textTheme.bodySmall?.copyWith(
                               color: context.colors.textSecondary,
                               height: 1.2,
@@ -198,7 +231,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                       ),
                     ),
                     Icon(
-                      workoutInfo.hasProgram ? Icons.arrow_forward_ios : Icons.add,
+                      workoutInfo.hasActiveProgram ? Icons.arrow_forward_ios : Icons.add,
                       color: context.colors.textPrimary,
                       size: 16,
                     ),
@@ -233,6 +266,8 @@ class _QuickCardState extends State<QuickCard> {
         _showAddDietSheet(context);
       } else if (widget.label == '신체') {
         _showAddBodySheet(context);
+      } else if (widget.label == '할 일') {
+        _showAddTodoSheet(context);
       }
     }
 
@@ -342,6 +377,43 @@ void _showAddBodySheet(BuildContext context, {DateTime? date}) {
       builder: (ctx) => FractionallySizedBox(
         heightFactor: 0.9,
         child: BodyAddSheetContent(selectedDate: date ?? DateTime.now()),
+      ),
+    );
+  }
+}
+
+void _showAddTodoSheet(BuildContext context, {DateTime? date}) {
+  final isDesktop = MediaQuery.of(context).size.width >= 1024;
+  if (isDesktop) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) => BlocProvider(
+        create: (context) => GetIt.instance<TodoBloc>(),
+        child: Dialog(
+          insetPadding: const EdgeInsets.all(32),
+          backgroundColor: Colors.transparent,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600, maxHeight: 800),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: TodoAddSheetContent(selectedDate: date ?? DateTime.now()),
+            ),
+          ),
+        ),
+      ),
+    );
+  } else {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => BlocProvider(
+        create: (context) => GetIt.instance<TodoBloc>(),
+        child: FractionallySizedBox(
+          heightFactor: 0.9,
+          child: TodoAddSheetContent(selectedDate: date ?? DateTime.now()),
+        ),
       ),
     );
   }

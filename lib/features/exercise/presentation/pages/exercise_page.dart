@@ -20,8 +20,8 @@ class _ExercisePageState extends State<ExercisePage> {
   @override
   void initState() {
     super.initState();
-    // TODO: 실제 사용자 ID를 AuthBloc에서 가져와야 함
-    context.read<ExerciseBloc>().add(const LoadExerciseRecords(userId: 1)); // 임시 사용자 ID 1
+    // Load exercise data - using search with empty query to get all exercises
+    context.read<ExerciseBloc>().add(const SearchExercises(query: ''));
   }
 
   @override
@@ -32,8 +32,8 @@ class _ExercisePageState extends State<ExercisePage> {
       builder: (context, state) {
         if (state is ExerciseLoading) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state is ExerciseLoaded) {
-          final exercises = state.records;
+        } else if (state is ExerciseSearchResults) {
+          final exercises = state.exercises;
           return Container(
             color: context.colors.background,
             child: SingleChildScrollView(

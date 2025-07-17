@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jfit/features/programs/data/models/user_program_day_model.dart';
 import 'package:jfit/features/programs/data/models/workout_session_model.dart';
+import 'package:jfit/features/workout_program/utils/exercise_data_parser.dart';
+import 'package:jfit/core/error/failures.dart';
 
 /// 프로그램 상세 화면의 비즈니스 로직을 담당하는 컨트롤러
 class ProgramDetailController extends ChangeNotifier {
@@ -171,26 +173,107 @@ class ProgramDetailController extends ChangeNotifier {
           .eq('id', userProgramId)
           .single();
 
-      final exercisesJson = response['exercises_json'] as List<dynamic>? ?? [];
+      final exercisesData = response['exercises_json'];
+      
+      // ExerciseDataParser를 사용하여 안전하게 파싱
+      final parseResult = ExerciseDataParser.parseExercisesForWeekDay(exercisesData, week, day);
+      
+      return parseResult.fold(
+        (failure) {
+          if (kDebugMode) {
+            print('운동 데이터 파싱 실패: ${failure.message}');
+            if (failure is DataParsingFailure) {
+              print('기술적 오류: ${failure.technicalMessage}');
+            }
+          }
+          
+          // 파싱 실패 시 폴백: 기존 방식으로 시도
+          return _getOriginalProgramExercisesFallback(exercisesData, week, day);
+        },
+        (exercises) {
+          if (kDebugMode) {
+            print('파싱된 운동 수: ${exercises.length}');
+          }
+          
+          // Exercise 객체를 Map 형태로 변환하여 기존 UI와 호환
+          return exercises.map((exercise) => {
+            'id': exercise.id,
+            'exercise_name': exercise.titleKo,
+            'name': exercise.titleKo,
+            'sets': int.tryParse(exercise.recommendedSets ?? '3') ?? 3,
+            'reps': exercise.recommendedReps ?? '10',
+            'type': exercise.type,
+            'equipment': exercise.equipment,
+            'notes': '',
+          }).toList();
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('원본 프로그램 운동 정보 가져오기 실패: $e');
+      }
+      return null;
+    }
+  }
+
+  /// 파싱 실패 시 사용할 폴백 메서드 (기존 방식)
+  List<dynamic>? _getOriginalProgramExercisesFallback(dynamic exercisesData, int week, int day) {
+    try {
+      if (exercisesData == null) return null;
+      
+      if (exercisesData is! List) {
+        if (kDebugMode) {
+          print('exercises_json이 List 타입이 아닙니다: ${exercisesData.runtimeType}');
+        }
+        return null;
+      }
+      
+      final exercisesJson = exercisesData as List<dynamic>;
       if (exercisesJson.isEmpty) return null;
 
       // 주차와 일차에 맞는 운동 정보 추출
       final weekIndex = week - 1;
       if (weekIndex < 0 || weekIndex >= exercisesJson.length) return null;
 
-      final weekData = exercisesJson[weekIndex] as Map<String, dynamic>? ?? {};
-      final days = weekData['days'] as List<dynamic>? ?? [];
+      final weekData = exercisesJson[weekIndex];
+      if (weekData is! Map<String, dynamic>) {
+        if (kDebugMode) {
+          print('weekData가 Map 타입이 아닙니다: ${weekData.runtimeType}');
+        }
+        return null;
+      }
+      
+      final days = weekData['days'];
+      if (days is! List<dynamic>) {
+        if (kDebugMode) {
+          print('days가 List 타입이 아닙니다: ${days.runtimeType}');
+        }
+        return null;
+      }
 
       final dayIndex = day - 1;
       if (dayIndex < 0 || dayIndex >= days.length) return null;
 
-      final dayData = days[dayIndex] as Map<String, dynamic>? ?? {};
-      final exercises = dayData['exercises'] as List<dynamic>? ?? [];
+      final dayData = days[dayIndex];
+      if (dayData is! Map<String, dynamic>) {
+        if (kDebugMode) {
+          print('dayData가 Map 타입이 아닙니다: ${dayData.runtimeType}');
+        }
+        return null;
+      }
+      
+      final exercises = dayData['exercises'];
+      if (exercises is! List<dynamic>) {
+        if (kDebugMode) {
+          print('exercises가 List 타입이 아닙니다: ${exercises.runtimeType}');
+        }
+        return null;
+      }
 
       return exercises;
     } catch (e) {
       if (kDebugMode) {
-        print('원본 프로그램 운동 정보 가져오기 실패: $e');
+        print('폴백 방식도 실패: $e');
       }
       return null;
     }

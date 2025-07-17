@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import '../../../../core/error/workout_program_failures.dart';
 import '../../domain/entities/workout_program.dart';
 import '../../data/models/user_program_day_model.dart';
 import '../../data/models/workout_session_model.dart';
@@ -71,6 +73,30 @@ class ProgramsError extends ProgramsState {
   List<Object?> get props => [message];
 }
 
+/// Enhanced error state with retry capability
+class ProgramsErrorWithRetry extends ProgramsState {
+  final String message;
+  final VoidCallback retryAction;
+  final String? recoverySuggestion;
+
+  const ProgramsErrorWithRetry({
+    required this.message,
+    required this.retryAction,
+    this.recoverySuggestion,
+  });
+
+  @override
+  List<Object?> get props => [message, retryAction, recoverySuggestion];
+
+  /// Get action button text for retry
+  String get actionButtonText => '다시 시도';
+
+  /// Get recovery suggestion message
+  String get recoveryMessage {
+    return recoverySuggestion ?? '문제가 지속되면 고객센터에 문의해주세요.';
+  }
+}
+
 class ProgramDetailLoading extends ProgramsState {}
 
 class ProgramDetailLoaded extends ProgramsState {
@@ -116,6 +142,15 @@ class RoutineSaveError extends ProgramsState {
 
   @override
   List<Object?> get props => [message];
+}
+
+class RoutineDuplicateFound extends ProgramsState {
+  final ProgramDuplicateInfo duplicateInfo;
+
+  const RoutineDuplicateFound(this.duplicateInfo);
+
+  @override
+  List<Object?> get props => [duplicateInfo];
 }
 
 class ProgramAddError extends ProgramsState {

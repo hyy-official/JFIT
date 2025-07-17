@@ -175,42 +175,11 @@ class RecordRepository {
     }
   }
 
-  /// 운동 세션 생성
-  Future<String> createWorkoutSession(String userProgramId, Map<String, dynamic> exercisesJson) async {
-    try {
-      final response = await _supabaseClient
-          .from('workout_sessions')
-          .insert({
-            'user_program_id': userProgramId,
-            'session_date': DateTime.now().toIso8601String().split('T')[0],
-            'started_at': DateTime.now().toIso8601String(),
-            'exercises_json': exercisesJson,
-          })
-          .select('id')
-          .single();
-      
-      return response['id'] as String;
-    } catch (e) {
-      throw Exception('Failed to create workout session: $e');
-    }
-  }
 
-  /// 운동 세션 완료 처리
-  Future<void> completeWorkoutSession(String sessionId) async {
-    try {
-      await _supabaseClient
-          .from('workout_sessions')
-          .update({
-            'ended_at': DateTime.now().toIso8601String(),
-            'is_completed': true,
-          })
-          .eq('id', sessionId);
-    } catch (e) {
-      throw Exception('Failed to complete workout session: $e');
-    }
-  }
 
-  /// 운동 실행 정보 (exercises 테이블)에서 운동 세부 정보 가져오기
+  // Exercise methods have been moved to ExerciseRepository
+  // These methods are deprecated and will be removed in future versions
+  @Deprecated('Use ExerciseRepository.getExercisesByIds instead')
   Future<List<Map<String, dynamic>>> getExerciseDetails(List<String> exerciseIds) async {
     try {
       final response = await _supabaseClient
@@ -224,7 +193,7 @@ class RecordRepository {
     }
   }
 
-  /// 운동 이름으로 운동 정보 검색
+  @Deprecated('Use ExerciseRepository.search instead')
   Future<List<Map<String, dynamic>>> searchExercises(String query) async {
     try {
       final response = await _supabaseClient
@@ -241,6 +210,9 @@ class RecordRepository {
     }
   }
 
+  // Daily summary methods have been moved to DailySummaryRepository
+  // These methods are deprecated and will be removed in future versions
+  @Deprecated('Use DailySummaryRepository.getDailySummary instead')
   Future<UserDailySummary?> getDailySummary(String userId, DateTime date) async {
     try {
       final response = await _supabaseClient
@@ -261,6 +233,7 @@ class RecordRepository {
     }
   }
 
+  @Deprecated('Use DailySummaryRepository.upsertDailySummary instead')
   Future<void> upsertDailySummary(UserDailySummary summary) async {
     try {
       await _supabaseClient
@@ -283,52 +256,7 @@ class RecordRepository {
     }
   }
 
-  // =========================== 워크아웃 세션 관련 메서드들 ===========================
 
-  /// 워크아웃 세션 생성/업데이트
-  Future<String> upsertWorkoutSession(Map<String, dynamic> sessionData) async {
-    try {
-      final response = await _supabaseClient
-          .from('workout_sessions')
-          .upsert(sessionData)
-          .select('id')
-          .single();
-      
-      return response['id'] as String;
-    } catch (e) {
-      throw Exception('Failed to upsert workout session: $e');
-    }
-  }
-
-  /// 워크아웃 세션 조회
-  Future<Map<String, dynamic>?> getWorkoutSession(String sessionId) async {
-    try {
-      final response = await _supabaseClient
-          .from('workout_sessions')
-          .select('*')
-          .eq('id', sessionId)
-          .single();
-      
-      return response;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  /// 사용자의 모든 워크아웃 세션 조회
-  Future<List<Map<String, dynamic>>> getWorkoutSessions(String userId) async {
-    try {
-      final response = await _supabaseClient
-          .from('workout_sessions')
-          .select('*')
-          .eq('user_id', userId)
-          .order('started_at', ascending: false);
-      
-      return List<Map<String, dynamic>>.from(response);
-    } catch (e) {
-      return [];
-    }
-  }
 
   /// 최근 활성 사용자 프로그램 조회
   Future<Map<String, dynamic>?> getLatestActiveUserProgram(String userId) async {
@@ -345,6 +273,36 @@ class RecordRepository {
         return response.first;
       }
       return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 운동 세션 생성/업데이트
+  Future<String> upsertWorkoutSession(Map<String, dynamic> session) async {
+    try {
+      final response = await _supabaseClient
+          .from('workout_sessions')
+          .upsert(session)
+          .select('id')
+          .single();
+      
+      return response['id'] as String;
+    } catch (e) {
+      throw Exception('Failed to upsert workout session: $e');
+    }
+  }
+
+  /// 운동 세션 조회
+  Future<Map<String, dynamic>?> getWorkoutSession(String sessionId) async {
+    try {
+      final response = await _supabaseClient
+          .from('workout_sessions')
+          .select('*')
+          .eq('id', sessionId)
+          .single();
+      
+      return response;
     } catch (e) {
       return null;
     }
@@ -368,61 +326,15 @@ class RecordRepository {
     }
   }
 
-  /// 새로운 커스텀 운동 생성
-  Future<String> createCustomExercise(String exerciseName) async {
-    try {
-      final response = await _supabaseClient
-          .from('exercises')
-          .insert({
-            'title_ko': exerciseName,
-            'title_en': exerciseName,
-            'category': 'custom',
-            'is_active': true,
-            'popularity_score': 0,
-          })
-          .select('id')
-          .single();
-      
-      return response['id'] as String;
-    } catch (e) {
-      throw Exception('Failed to create custom exercise: $e');
-    }
-  }
-
-  /// 워크아웃 로그 생성
-  Future<void> insertWorkoutLog({
-    required String exerciseId,
-    required String sessionId,
-    required int sets,
-    required int reps,
-    required double weight,
-  }) async {
-    try {
-      await _supabaseClient.from('workout_logs').insert({
-        'exercise_id': exerciseId,
-        'session_id': sessionId,
-        'set_number': sets,
-        'reps': reps,
-        'weight': weight,
-        'logged_at': DateTime.now().toIso8601String(),
-      });
-    } catch (e) {
-      throw Exception('Failed to insert workout log: $e');
-    }
-  }
-
-  /// 특정 운동의 마지막 로그 조회
+  /// 사용자의 특정 운동에 대한 마지막 기록 조회
   Future<Map<String, dynamic>?> getLastWorkoutLogByExercise(String exerciseId, String userId) async {
     try {
       final response = await _supabaseClient
           .from('workout_logs')
-          .select('''
-            *,
-            workout_sessions!inner(user_id)
-          ''')
+          .select('*')
           .eq('exercise_id', exerciseId)
-          .eq('workout_sessions.user_id', userId)
-          .order('logged_at', ascending: false)
+          .eq('user_id', userId)
+          .order('created_at', ascending: false)
           .limit(1);
       
       if (response.isNotEmpty) {
@@ -434,19 +346,57 @@ class RecordRepository {
     }
   }
 
-  /// 현재 진행 중인 워크아웃 세션 조회 (완료되지 않은 세션)
-  Future<List<Map<String, dynamic>>> getActiveWorkoutSessions(String userId) async {
+  /// 커스텀 운동 생성
+  Future<String> createCustomExercise(String exerciseName) async {
     try {
       final response = await _supabaseClient
-          .from('workout_sessions')
-          .select('*')
-          .eq('user_id', userId)
-          .eq('is_completed', false)
-          .order('started_at', ascending: false);
+          .from('exercises')
+          .insert({
+            'title_ko': exerciseName,
+            'title_en': exerciseName,
+            'type': 'custom',
+            'is_active': true,
+            'created_at': DateTime.now().toIso8601String(),
+          })
+          .select('id')
+          .single();
       
-      return List<Map<String, dynamic>>.from(response);
+      return response['id'] as String;
     } catch (e) {
-      return [];
+      throw Exception('Failed to create custom exercise: $e');
     }
   }
+
+  /// 운동 로그 삽입
+  Future<void> insertWorkoutLog({
+    required String exerciseId,
+    required String sessionId,
+    required int sets,
+    required int reps,
+    required double weight,
+  }) async {
+    try {
+      // 세션에서 user_id 가져오기
+      final session = await getWorkoutSession(sessionId);
+      if (session == null) {
+        throw Exception('Session not found');
+      }
+
+      await _supabaseClient
+          .from('workout_logs')
+          .insert({
+            'exercise_id': exerciseId,
+            'session_id': sessionId,
+            'user_id': session['user_id'],
+            'set_number': sets,
+            'reps': reps,
+            'weight': weight,
+            'created_at': DateTime.now().toIso8601String(),
+          });
+    } catch (e) {
+      throw Exception('Failed to insert workout log: $e');
+    }
+  }
+
+
 }

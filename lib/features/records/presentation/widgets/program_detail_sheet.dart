@@ -9,16 +9,15 @@ import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_event.dart' as programs_events;
 import 'package:jfit/features/programs/presentation/bloc/programs_state.dart';
 import 'package:jfit/features/programs/domain/repositories/program_repository.dart';
-import 'package:jfit/features/records/bloc/record_bloc.dart';
-import 'package:jfit/features/records/bloc/record_event.dart';
-import 'package:jfit/features/records/bloc/record_state.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_bloc.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_event.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_state.dart';
 
 // Model imports
 import 'package:jfit/features/programs/data/models/user_program_day_model.dart';
 import 'package:jfit/features/programs/data/models/workout_session_model.dart';
 
 // Theme imports
-import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/core/theme/theme_system.dart';
 
 // Navigation imports
@@ -73,10 +72,10 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
 
   /// 초기 데이터 로드
   Future<void> _loadInitialData() async {
-    final recordBloc = BlocProvider.of<RecordBloc>(context, listen: false);
+    final workoutProgramBloc = GetIt.instance<WorkoutProgramBloc>();
     
     // 사용자 프로그램 상세 정보 로드
-    recordBloc.add(LoadUserProgramDetails(userProgramId: widget.userProgramId));
+    workoutProgramBloc.add(LoadProgramDetails(userProgramId: widget.userProgramId));
     
     // Day별 상태와 세션 정보 로드
     _programsBloc.add(programs_events.LoadUserProgramDays(widget.userProgramId));
@@ -197,30 +196,35 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
               ],
             ),
             clipBehavior: Clip.antiAlias,
-            child: MultiBlocListener(
-              listeners: [
-                BlocListener<RecordBloc, RecordState>(
-                  listener: (context, state) {
-                    if (state is UserProgramDetailsLoaded) {
-                      final programDetails = state.programDetails;
-                      final programsState = context.read<ProgramsBloc>().state;
-                      if (programsState is ProgramDetailData && programsState.days.isNotEmpty) {
-                        controller.setNextWorkoutDay(programDetails, programsState.days);
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: GetIt.instance<WorkoutProgramBloc>()),
+              ],
+              child: MultiBlocListener(
+                listeners: [
+                  BlocListener<WorkoutProgramBloc, WorkoutProgramState>(
+                    listener: (context, state) {
+                      if (state is ProgramDetailsLoaded) {
+                        final programDetails = state.userProgram.toJson();
+                        final programsState = context.read<ProgramsBloc>().state;
+                        if (programsState is ProgramDetailData && programsState.days.isNotEmpty) {
+                          controller.setNextWorkoutDay(programDetails, programsState.days);
+                        }
                       }
+                    },
+                  ),
+                ],
+                child: BlocBuilder<ProgramsBloc, ProgramsState>(
+                  builder: (context, state) {
+                    if (state is! ProgramDetailData) {
+                      return Center(
+                        child: CircularProgressIndicator(color: context.colors.primary),
+                      );
                     }
+
+                    return _buildContent(context, state, controller, horizontalPadding);
                   },
                 ),
-              ],
-              child: BlocBuilder<ProgramsBloc, ProgramsState>(
-                builder: (context, state) {
-                  if (state is! ProgramDetailData) {
-                    return Center(
-                      child: CircularProgressIndicator(color: context.colors.primary),
-                    );
-                  }
-
-                  return _buildContent(context, state, controller, horizontalPadding);
-                },
               ),
             ),
           ),

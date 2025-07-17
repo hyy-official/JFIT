@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfit/l10n/app_localizations.dart';
+
 import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

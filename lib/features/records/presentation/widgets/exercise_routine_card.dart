@@ -4,9 +4,11 @@ import 'package:jfit/core/theme/theme_system.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_event.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_state.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_bloc.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_event.dart';
+import 'package:jfit/features/auth/bloc/auth_bloc.dart';
+import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'program_detail_sheet.dart';
-import '../../bloc/record_bloc.dart';
-import '../../bloc/record_event.dart';
 
 class ExerciseRoutineCard extends StatelessWidget {
   final String title;
@@ -247,9 +249,15 @@ class ExerciseRoutineCard extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                context.read<RecordBloc>().add(
-                  DeleteUserProgram(userProgramId: userProgramId),
-                );
+                final authState = context.read<AuthBloc>().state;
+                if (authState is AuthAuthenticated) {
+                  context.read<WorkoutProgramBloc>().add(
+                    DeleteUserProgram(
+                      userProgramId: userProgramId,
+                      userId: authState.user.id,
+                    ),
+                  );
+                }
               },
               style: TextButton.styleFrom(
                 foregroundColor: context.colors.error,

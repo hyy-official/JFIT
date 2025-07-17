@@ -4,16 +4,17 @@ import 'package:jfit/core/widgets/responsive_scaffold.dart';
 import 'package:jfit/features/programs/presentation/pages/programs_page.dart';
 import 'package:jfit/features/workout_session/presentation/pages/workout_session_page.dart';
 import 'package:jfit/features/records/presentation/pages/record_page.dart';
-import 'package:jfit/features/records/bloc/record_bloc.dart';
-import 'package:jfit/features/records/bloc/record_event.dart';
-import 'package:jfit/features/records/bloc/record_state.dart';
+
+import 'package:jfit/features/daily_summary/bloc/daily_summary_bloc.dart';
+import 'package:jfit/features/daily_summary/bloc/daily_summary_event.dart' as daily_summary_events;
+import 'package:jfit/features/daily_summary/bloc/daily_summary_state.dart' as daily_summary_states;
 import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
 import 'package:jfit/core/widgets/theme_toggle_button.dart';
 import 'package:jfit/core/theme/theme_system.dart';
-import 'package:jfit/core/models/navigation_item.dart';
+
 import 'package:jfit/core/constants/navigation_constants.dart';
 
 /// 앱 하단 내비게이션(ResponsiveScaffold)을 담당하는 메인 페이지.
@@ -71,11 +72,15 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   @override
   Widget build(BuildContext context) {
     // 데스크톱에서는 항상 우측 패널을 표시
-    return BlocBuilder<RecordBloc, RecordState>(
+    return BlocBuilder<DailySummaryBloc, daily_summary_states.DailySummaryState>(
       builder: (context, state) {
         UserDailySummary? dailySummary;
-        if (state is DailySummaryLoaded && _currentIndex == NavigationConstants.homeIndex) {
-          dailySummary = state.dailySummary;
+        if (_currentIndex == NavigationConstants.homeIndex) {
+          if (state is daily_summary_states.DailySummaryLoaded) {
+            dailySummary = state.summary;
+          } else if (state is daily_summary_states.DailySummaryUpdated) {
+            dailySummary = state.summary;
+          }
         }
         
         return ResponsiveScaffold(
@@ -134,7 +139,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     if (authState is AuthAuthenticated) {
       final userId = authState.user.id;
       final today = DateTime.now();
-      context.read<RecordBloc>().add(LoadDailySummary(userId: userId, date: today));
+      context.read<DailySummaryBloc>().add(daily_summary_events.LoadDailySummary(userId: userId, date: today));
     }
   }
 

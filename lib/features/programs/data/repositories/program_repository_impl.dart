@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/error/failures.dart';
+import '../../../workout_program/data/models/duplicate_check_result_model.dart';
 import '../../domain/entities/workout_program.dart';
 import '../../domain/repositories/program_repository.dart';
 import '../datasources/program_remote_datasource.dart';
@@ -77,19 +78,15 @@ class ProgramRepositoryImpl implements ProgramRepository {
   }
 
   @override
-  Future<Either<Failure, void>> saveAsMyRoutine(String templateProgramId) async {
-    try {
-      final user = supabaseClient.auth.currentUser;
-      print('현재 로그인된 사용자 UID: ${user?.id}');
-      if (user == null) {
-        return const Left(AuthFailure('사용자가 로그인되지 않았습니다.'));
-      }
-
-      await remoteDataSource.saveAsMyRoutine(templateProgramId, user.id);
-      return const Right(null);
-    } on Exception catch (e) {
-      return Left(DatabaseFailure(e.toString()));
+  Future<Either<Failure, DuplicateCheckResult>> saveAsMyRoutine(String templateProgramId) async {
+    final user = supabaseClient.auth.currentUser;
+    print('현재 로그인된 사용자 UID: ${user?.id}');
+    if (user == null) {
+      return const Left(AuthFailure('사용자가 로그인되지 않았습니다.'));
     }
+
+    final result = await remoteDataSource.saveAsMyRoutine(templateProgramId, user.id);
+    return result;
   }
 
   @override

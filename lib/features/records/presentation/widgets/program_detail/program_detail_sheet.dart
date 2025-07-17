@@ -3,13 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+// Core imports
+import 'package:jfit/core/widgets/enhanced_error_feedback.dart';
+
 // BLoC imports
 import 'package:jfit/features/programs/presentation/bloc/programs_bloc.dart';
 import 'package:jfit/features/programs/presentation/bloc/programs_event.dart' as programs_events;
 import 'package:jfit/features/programs/presentation/bloc/programs_state.dart';
-import 'package:jfit/features/records/bloc/record_bloc.dart';
-import 'package:jfit/features/records/bloc/record_event.dart';
-import 'package:jfit/features/records/bloc/record_state.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_bloc.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_event.dart';
+import 'package:jfit/features/workout_program/bloc/workout_program_state.dart';
 
 // Model imports
 import 'package:jfit/features/programs/data/models/user_program_day_model.dart';
@@ -66,10 +69,10 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
   /// 초기 데이터 로드
   Future<void> _loadInitialData() async {
     final bloc = BlocProvider.of<ProgramsBloc>(context, listen: false);
-    final recordBloc = BlocProvider.of<RecordBloc>(context, listen: false);
+    final workoutProgramBloc = BlocProvider.of<WorkoutProgramBloc>(context, listen: false);
     
     // 사용자 프로그램 상세 정보 로드
-    recordBloc.add(LoadUserProgramDetails(userProgramId: widget.userProgramId));
+    workoutProgramBloc.add(LoadProgramDetails(userProgramId: widget.userProgramId));
     
     // Day별 상태와 세션 정보 로드
     bloc.add(programs_events.LoadUserProgramDays(widget.userProgramId));
@@ -115,11 +118,12 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('프로그램 정보를 불러올 수 없습니다: $e'),
-          backgroundColor: context.colors.error,
-        ),
+      EnhancedErrorFeedback.showErrorSnackBar(
+        context,
+        message: '프로그램 정보를 불러올 수 없습니다: $e',
+        actionLabel: '다시 시도',
+        onActionPressed: () => _startWorkoutSession(selectedDayObj, session),
+        isRetryable: true,
       );
     }
   }
@@ -189,9 +193,9 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
             clipBehavior: Clip.antiAlias,
             child: MultiBlocListener(
               listeners: [
-                BlocListener<RecordBloc, RecordState>(
+                BlocListener<WorkoutProgramBloc, WorkoutProgramState>(
                   listener: (context, state) {
-                    if (state is UserProgramDetailsLoaded) {
+                    if (state is ProgramDetailsLoaded) {
                       final programDetails = state.programDetails;
                       final programsState = context.read<ProgramsBloc>().state;
                       if (programsState is ProgramDetailData && programsState.days.isNotEmpty) {

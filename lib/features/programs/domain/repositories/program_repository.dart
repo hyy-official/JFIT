@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:jfit/core/error/failures.dart';
+import '../../../workout_program/data/models/duplicate_check_result_model.dart';
 import '../entities/workout_program.dart';
 import '../../data/models/user_program_day_model.dart';
 import '../../data/models/workout_session_model.dart';
@@ -17,7 +18,7 @@ abstract class ProgramRepository {
   });
   Future<Either<Failure, WorkoutProgram>> getProgramById(String id);
   Future<Either<Failure, void>> addProgramToUser(String programId);
-  Future<Either<Failure, void>> saveAsMyRoutine(String templateProgramId);
+  Future<Either<Failure, DuplicateCheckResult>> saveAsMyRoutine(String templateProgramId);
   Future<Either<Failure, List<WorkoutProgram>>> getUserPrograms();
   Future<Either<Failure, List<WorkoutProgram>>> searchPrograms(String query);
   Future<Either<Failure, List<UserProgramDayModel>>> getUserProgramDays(String userProgramId);

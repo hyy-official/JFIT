@@ -23,6 +23,38 @@ class ExerciseRoutineList extends StatelessWidget {
         final userProgram = userPrograms[idx];
         final workoutProgram = userProgram['workout_programs'];
         
+        // workout_programs가 null인 경우 기본값 사용
+        if (workoutProgram == null) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '운동 프로그램 정보를 불러올 수 없습니다',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '프로그램 데이터에 문제가 있습니다.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[500],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        
         // 현재 진행 상황 정보
         final currentWeek = userProgram['current_week'] ?? 1;
         final currentDay = userProgram['current_day'] ?? 1;

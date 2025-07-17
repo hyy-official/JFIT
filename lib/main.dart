@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
-
+// Essential BLoCs for app startup
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/data/repositories/auth_repository.dart';
-import 'package:jfit/features/exercise/bloc/exercise_bloc.dart';
-import 'package:jfit/features/exercise/data/repositories/exercise_repository.dart';
-import 'package:jfit/features/records/bloc/record_bloc.dart';
-import 'package:jfit/features/records/data/repositories/record_repository.dart';
-import 'package:jfit/features/dashboard/bloc/dashboard_bloc.dart';
-import 'package:jfit/features/dashboard/data/repositories/dashboard_repository.dart';
+
+// Analytics (needed for dashboard)
 import 'package:jfit/features/analytics/presentation/bloc/analytics_bloc.dart';
-import 'package:jfit/features/analytics/domain/repositories/analytics_repository.dart';
 import 'package:jfit/features/analytics/data/repositories/supabase_analytics_repository.dart';
+
+// New BLoCs from refactoring
+import 'package:jfit/features/meal/bloc/meal_bloc.dart';
+import 'package:jfit/features/daily_summary/bloc/daily_summary_bloc.dart';
 import 'core/theme/theme_system.dart';
 import 'core/theme/theme_manager.dart';
 import 'core/utils/locale_manager.dart';
+import 'core/utils/performance_monitor.dart';
 import 'package:provider/provider.dart';
 // import 'core/services/auth_service.dart'; // 주석 처리: 나중에 사용할 예정
 // import 'features/auth/presentation/pages/login_page.dart'; // 주석 처리: 나중에 사용할 예정
@@ -29,26 +30,65 @@ import 'core/di/injection_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Start performance monitoring
+  PerformanceMonitor.startTiming('app_initialization');
 
-  // Supabase 프로젝트 초기화
-  await Supabase.initialize(
-    url: const String.fromEnvironment('SUPABASE_URL'),
-    anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
-  );
-  
-  // 의존성 주입 초기화
-  setupDependencies();
-  
-  // 테마 매니저 초기화
-  final themeManager = ThemeManager();
-  await themeManager.initialize();
-  
-  runApp(
-    ChangeNotifierProvider.value(
-      value: themeManager,
-      child: const JFitApp(),
-    ),
-  );
+  try {
+    // Supabase 프로젝트 초기화 with error handling
+    PerformanceMonitor.startTiming('supabase_initialization');
+    final supabaseUrl = const String.fromEnvironment('SUPABASE_URL');
+    final supabaseKey = const String.fromEnvironment('SUPABASE_SERVICE_KEY', 
+        defaultValue: const String.fromEnvironment('SUPABASE_ANON_KEY'));
+    
+    print('🔑 Supabase URL: $supabaseUrl');
+    print('🔑 Supabase Key (first 20 chars): ${supabaseKey.substring(0, 20)}...');
+    
+    await Supabase.initialize(
+      url: supabaseUrl,
+      anonKey: supabaseKey,
+    );
+    PerformanceMonitor.endTiming('supabase_initialization');
+    
+    // 의존성 주입 초기화 with error handling
+    PerformanceMonitor.startTiming('dependency_injection_setup');
+    setupDependencies();
+    PerformanceMonitor.endTiming('dependency_injection_setup');
+    
+    // 테마 매니저 초기화 with error handling
+    PerformanceMonitor.startTiming('theme_manager_initialization');
+    final themeManager = ThemeManager();
+    await themeManager.initialize();
+    PerformanceMonitor.endTiming('theme_manager_initialization');
+    
+    PerformanceMonitor.endTiming('app_initialization');
+    PerformanceMonitor.logAllDurations();
+    
+    runApp(
+      ChangeNotifierProvider.value(
+        value: themeManager,
+        child: const JFitApp(),
+      ),
+    );
+  } catch (error, stackTrace) {
+    // Log the error for debugging
+    debugPrint('❌ App initialization failed: $error');
+    debugPrint('Stack trace: $stackTrace');
+    
+    // Clear performance monitoring on error
+    PerformanceMonitor.clear();
+    
+    // Run app with minimal configuration for error recovery
+    runApp(
+      MaterialApp(
+        title: 'JFiT - Error',
+        home: AppInitializationErrorScreen(
+          error: error.toString(),
+          onRetry: () => main(),
+        ),
+      ),
+    );
+  }
 }
 
 class JFitApp extends StatelessWidget {
@@ -56,54 +96,40 @@ class JFitApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
+    // Only initialize essential BLoCs at startup for better performance
+    return MultiBlocProvider(
       providers: [
-        RepositoryProvider<AuthRepository>(
-          create: (context) => AuthRepository(),
+        // Essential: Authentication is needed immediately
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(AuthRepository()),
         ),
-        RepositoryProvider<ExerciseRepository>(
-          create: (context) => ExerciseRepository(),
+        // Essential: Analytics for dashboard (but lazy loaded)
+        BlocProvider<AnalyticsBloc>(
+          lazy: true,
+          create: (context) {
+            try {
+              debugPrint('🔧 Creating AnalyticsBloc...');
+              final bloc = GetIt.instance<AnalyticsBloc>();
+              debugPrint('✅ AnalyticsBloc created successfully');
+              return bloc;
+            } catch (e, stackTrace) {
+              debugPrint('❌ Failed to create AnalyticsBloc: $e');
+              debugPrint('Stack trace: $stackTrace');
+              rethrow;
+            }
+          },
         ),
-        RepositoryProvider<RecordRepository>(
-          create: (context) => RecordRepository(),
+        // New BLoCs from refactoring - all lazy loaded for performance
+        BlocProvider<MealBloc>(
+          lazy: true,
+          create: (context) => GetIt.instance<MealBloc>(),
         ),
-        RepositoryProvider<DashboardRepository>(
-          create: (context) => DashboardRepository(),
-        ),
-        RepositoryProvider<AnalyticsRepository>(
-          create: (context) => SupabaseAnalyticsRepository(),
+        BlocProvider<DailySummaryBloc>(
+          lazy: true,
+          create: (context) => GetIt.instance<DailySummaryBloc>(),
         ),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(
-              RepositoryProvider.of<AuthRepository>(context),
-            ),
-          ),
-          BlocProvider<ExerciseBloc>(
-            create: (context) => ExerciseBloc(
-              exerciseRepository: RepositoryProvider.of<ExerciseRepository>(context),
-            ),
-          ),
-          BlocProvider<RecordBloc>(
-            create: (context) => RecordBloc(
-              recordRepository: RepositoryProvider.of<RecordRepository>(context),
-            ),
-          ),
-          BlocProvider<DashboardBloc>(
-            create: (context) => DashboardBloc(
-              dashboardRepository: RepositoryProvider.of<DashboardRepository>(context),
-            ),
-          ),
-          BlocProvider<AnalyticsBloc>(
-            create: (context) => AnalyticsBloc(
-              analyticsRepository: RepositoryProvider.of<AnalyticsRepository>(context),
-            ),
-          ),
-        ],
-        child: const MyApp(),
-      ),
+      child: const MyApp(),
     );
   }
 }
@@ -156,6 +182,60 @@ class _MyAppState extends State<MyApp> {
           home: const AuthGate(child: MainNavigationPage()),
         );
       },
+    );
+  }
+}
+
+/// Error screen displayed when app initialization fails
+/// Provides retry mechanism for recovery
+class AppInitializationErrorScreen extends StatelessWidget {
+  final String error;
+  final VoidCallback onRetry;
+
+  const AppInitializationErrorScreen({
+    super.key,
+    required this.error,
+    required this.onRetry,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.error_outline,
+                size: 64,
+                color: Colors.red,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'App Initialization Failed',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'An error occurred while starting the app:\n$error',
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: onRetry,
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../core/error/workout_program_failures.dart';
 
 abstract class ProgramsEvent extends Equatable {
   const ProgramsEvent();
@@ -125,4 +126,24 @@ class ContinueProgram extends ProgramsEvent {
   const ContinueProgram(this.programId);
   @override
   List<Object?> get props => [programId];
+}
+
+// 중복 해결 관련 이벤트들
+class ResolveDuplicateProgram extends ProgramsEvent {
+  final String templateProgramId;
+  final String userProgramId;
+  final ResolutionOption option;
+
+  const ResolveDuplicateProgram({
+    required this.templateProgramId,
+    required this.userProgramId,
+    required this.option,
+  });
+
+  @override
+  List<Object?> get props => [templateProgramId, userProgramId, option];
+}
+
+class CancelDuplicateResolution extends ProgramsEvent {
+  const CancelDuplicateResolution();
 } 

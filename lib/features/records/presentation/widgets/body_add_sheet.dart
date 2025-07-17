@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jfit/core/theme/theme_system.dart';
+import 'package:jfit/core/widgets/enhanced_error_feedback.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:jfit/core/utils/responsive_utils.dart';
@@ -347,7 +348,11 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
   void _onSave() {
     // 기본 유효성: 체중, 근육, 체지방 중 하나는 입력
     if (_weightController.text.isEmpty && _muscleController.text.isEmpty && _fatController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('체중 등 신체 데이터를 입력해 주세요')));
+      EnhancedErrorFeedback.showErrorSnackBar(
+        context,
+        message: '체중 등 신체 데이터를 입력해 주세요',
+        isRetryable: false,
+      );
       return;
     }
 
@@ -374,11 +379,20 @@ class _BodyAddSheetContentState extends State<BodyAddSheetContent> {
         Navigator.of(context)
           ..pop() // loading
           ..pop(); // sheet
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('신체 정보가 저장되었습니다'), backgroundColor: context.colors.success));
+        EnhancedErrorFeedback.showSuccessSnackBar(
+          context,
+          message: '신체 정보가 저장되었습니다',
+        );
       });
     } catch (e) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('저장 실패: $e')));
+      EnhancedErrorFeedback.showErrorSnackBar(
+        context,
+        message: '저장 실패: $e',
+        actionLabel: '다시 시도',
+        onActionPressed: _onSave,
+        isRetryable: true,
+      );
     }
   }
 
