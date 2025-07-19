@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:jfit/core/bloc/bloc_event_bus.dart';
 import 'package:jfit/features/meal/bloc/meal_bloc.dart';

@@ -1,0 +1,667 @@
+Launching lib/main.dart on macOS in debug mode...
+Building macOS application...                                   
+lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_bloc.dart:1142:40: Error: Member not found: 'GroupActivityErrorState.fromMessage'.
+          emit(GroupActivityErrorState.fromMessage(
+                                       ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_bloc.dart:1136:17: Error: No named parameter with the name 'lastUpdated'.
+                lastUpdated: DateTime.now(),
+                ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1736:28: Error: Undefined name '_repository'.
+      final result = await _repository.searchPostsWithCriteria(
+                           ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1735:5: Error: A try block must be followed by an 'on', 'catch', or 'finally' clause.
+Try adding either a catch or finally clause, or remove the try statement.
+    try {
+    ^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1770:8: Error: Expected an identifier, but got ','.
+Try inserting an identifier before ','.
+      },
+       ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1770:7: Error: Expected ';' after this.
+      },
+      ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1770:8: Error: Unexpected token ';'.
+      },
+       ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1774:8: Error: Expected ';' after this.
+      )),
+       ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1774:9: Error: Expected an identifier, but got ','.
+Try inserting an identifier before ','.
+      )),
+        ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1774:9: Error: Unexpected token ';'.
+      )),
+        ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1775:5: Error: Expected an identifier, but got ')'.
+Try inserting an identifier before ')'.
+    );
+    ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1774:9: Error: Expected ';' after this.
+      )),
+        ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1775:5: Error: Unexpected token ';'.
+    );
+    ^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1783:26: Error: Undefined name 'state'.
+    final currentState = state;
+                         ^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1795:30: Error: Undefined name '_repository'.
+        final result = await _repository.searchPostsWithCriteria(
+                             ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1793:11: Error: Method not found: 'safeAsyncOperation'.
+    await safeAsyncOperation(
+          ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1830:30: Error: Undefined name '_repository'.
+        final result = await _repository.getSuggestedPosts(
+                             ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1828:11: Error: Method not found: 'safeAsyncOperation'.
+    await safeAsyncOperation(
+          ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1870:30: Error: Undefined name '_repository'.
+        final result = await _repository.getRelatedPosts(
+                             ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1868:11: Error: Method not found: 'safeAsyncOperation'.
+    await safeAsyncOperation(
+          ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1919:30: Error: Undefined name '_repository'.
+        final result = await _repository.searchTags(
+                             ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1917:11: Error: Method not found: 'safeAsyncOperation'.
+    await safeAsyncOperation(
+          ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1961:30: Error: Undefined name '_repository'.
+        final result = await _repository.getSearchSuggestions(
+                             ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1959:11: Error: Method not found: 'safeAsyncOperation'.
+    await safeAsyncOperation(
+          ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1996:30: Error: Undefined name '_repository'.
+        final result = await _repository.saveSearchQuery(
+                             ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:2005:13: Error: Method not found: 'debugPrint'.
+            debugPrint('Failed to save search query: ${failure.message}');
+            ^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:2019:9: Error: Method not found: 'debugPrint'.
+        debugPrint('Error saving search query: $error');
+        ^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_bloc.dart:1994:11: Error: Method not found: 'safeAsyncOperation'.
+    await safeAsyncOperation(
+          ^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:105:51: Error: Required named parameter 'groupName' must be provided.
+              return AuthGate(child: GroupChatPage(groupId: groupId));
+                                                  ^
+lib/features/group_workout_community/presentation/pages/group_chat_page.dart:16:9: Context: Found this candidate, but the arguments don't match.
+  const GroupChatPage({
+        ^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:125:62: Error: No named parameter with the name 'routineId'.
+              return AuthGate(child: SharedRoutineDetailPage(routineId: routineId));
+                                                             ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/shared_routine_detail_page.dart:14:9: Context: Found this candidate, but the arguments don't match.
+  const SharedRoutineDetailPage({
+        ^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:139:19: Error: No named parameter with the name 'targetUserId'.
+                  targetUserId: targetUserId,
+                  ^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/encouragement_message_page.dart:17:9: Context: Found this candidate, but the arguments don't match.
+  const EncouragementMessagePage({
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:151:66: Error: No named parameter with the name 'groupId'.
+              return AuthGate(child: GroupRankingLeaderboardPage(groupId: groupId));
+                                                                 ^^^^^^^
+lib/features/group_workout_community/presentation/pages/group_ranking_leaderboard_page.dart:16:9: Context: Found this candidate, but the arguments don't match.
+  const GroupRankingLeaderboardPage({super.key});
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:160:72: Error: Required named parameter 'groupName' must be provided.
+                  return AuthGate(child: GroupMemberScoreComparisonPage(groupId: groupId));
+                                                                       ^
+lib/features/group_workout_community/presentation/pages/group_member_score_comparison_page.dart:20:9: Context: Found this candidate, but the arguments don't match.
+  const GroupMemberScoreComparisonPage({
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:182:62: Error: Required named parameter 'trainerId' must be provided.
+              return AuthGate(child: PTGroupDietDashboardPage(groupId: groupId));
+                                                             ^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:20:9: Context: Found this candidate, but the arguments don't match.
+  const PTGroupDietDashboardPage({
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:193:48: Error: Required named parameter 'trainerId' must be provided.
+                    child: MemberDietDetailPage(
+                                               ^
+lib/features/group_workout_community/presentation/pages/member_diet_detail_page.dart:27:9: Context: Found this candidate, but the arguments don't match.
+  const MemberDietDetailPage({
+        ^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:209:54: Error: Required named parameter 'trainerId' must be provided.
+                        child: DietFeedbackCreatePage(
+                                                     ^
+lib/features/group_workout_community/presentation/pages/diet_feedback_create_page.dart:25:9: Context: Found this candidate, but the arguments don't match.
+  const DietFeedbackCreatePage({
+        ^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:226:64: Error: Required named parameter 'trainerId' must be provided.
+                  return AuthGate(child: DietAnalysisReportPage(groupId: groupId));
+                                                               ^
+lib/features/group_workout_community/presentation/pages/diet_analysis_report_page.dart:26:9: Context: Found this candidate, but the arguments don't match.
+  const DietAnalysisReportPage({
+        ^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:236:69: Error: Required named parameter 'memberId' must be provided.
+                  return AuthGate(child: DietPermissionsSettingsPage(groupId: groupId));
+                                                                    ^
+lib/features/group_workout_community/presentation/pages/diet_permissions_settings_page.dart:23:9: Context: Found this candidate, but the arguments don't match.
+  const DietPermissionsSettingsPage({
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:260:53: Error: No named parameter with the name 'highlightedPostId'.
+          return AuthGate(child: CommunityBoardPage(highlightedPostId: postId));
+                                                    ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:18:9: Context: Found this candidate, but the arguments don't match.
+  const CommunityBoardPage({
+        ^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:268:89: Error: Required named parameter 'userId' must be provided.
+        builder: (context, state) => const AuthGate(child: UserWorkoutScoreDashboardPage()),
+                                                                                        ^
+lib/features/group_workout_community/presentation/pages/user_workout_score_dashboard_page.dart:21:9: Context: Found this candidate, but the arguments don't match.
+  const UserWorkoutScoreDashboardPage({
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:280:19: Error: No named parameter with the name 'period'.
+                  period: period,
+                  ^^^^^^
+lib/features/group_workout_community/presentation/pages/score_detailed_analysis_page.dart:24:9: Context: Found this candidate, but the arguments don't match.
+  const ScoreDetailedAnalysisPage({
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/app_router.dart:335:58: Error: No named parameter with the name 'routineId'.
+          return AuthGate(child: SharedRoutineDetailPage(routineId: routineId));
+                                                         ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/shared_routine_detail_page.dart:14:9: Context: Found this candidate, but the arguments don't match.
+  const SharedRoutineDetailPage({
+        ^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/navigation/main_navigation_page.dart:115:25: Error: The method 'goToGroups' isn't defined for the class 'BuildContext'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'goToGroups'.
+                context.goToGroups();
+                        ^^^^^^^^^^
+lib/core/navigation/main_navigation_page.dart:118:25: Error: The method 'goToCommunity' isn't defined for the class 'BuildContext'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'goToCommunity'.
+                context.goToCommunity();
+                        ^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:57:48: Error: Required named parameter 'request' must be provided.
+    context.read<CommunityBloc>().add(LoadPosts(
+                                               ^
+lib/features/group_workout_community/presentation/bloc/community/community_event.dart:16:9: Context: Found this candidate, but the arguments don't match.
+  const LoadPosts({
+        ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:75:54: Error: Too few positional arguments: 1 required, 0 given.
+      context.read<CommunityBloc>().add(LoadMorePosts(
+                                                     ^
+lib/features/group_workout_community/presentation/bloc/community/community_event.dart:29:9: Context: Found this candidate, but the arguments don't match.
+  const LoadMorePosts(this.request);
+        ^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:87:7: Error: No named parameter with the name 'groupId'.
+      groupId: widget.groupId,
+      ^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_event.dart:16:9: Context: Found this candidate, but the arguments don't match.
+  const LoadPosts({
+        ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:101:7: Error: No named parameter with the name 'groupId'.
+      groupId: widget.groupId,
+      ^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_event.dart:16:9: Context: Found this candidate, but the arguments don't match.
+  const LoadPosts({
+        ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:115:7: Error: No named parameter with the name 'groupId'.
+      groupId: widget.groupId,
+      ^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_event.dart:16:9: Context: Found this candidate, but the arguments don't match.
+  const LoadPosts({
+        ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:133:23: Error: The getter 'isRefresh' isn't defined for the class 'PostsLoaded'.
+ - 'PostsLoaded' is from 'package:jfit/features/group_workout_community/presentation/bloc/community/community_state.dart' ('lib/features/group_workout_community/presentation/bloc/community/community_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'isRefresh'.
+            if (state.isRefresh) {
+                      ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:145:36: Error: The getter 'message' isn't defined for the class 'CommunityErrorState'.
+ - 'CommunityErrorState' is from 'package:jfit/features/group_workout_community/presentation/bloc/community/community_state.dart' ('lib/features/group_workout_community/presentation/bloc/community/community_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          _showErrorSnackBar(state.message);
+                                   ^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:399:15: Error: No named parameter with the name 'groupId'.
+              groupId: widget.groupId,
+              ^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_event.dart:16:9: Context: Found this candidate, but the arguments don't match.
+  const LoadPosts({
+        ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:389:42: Error: The getter 'message' isn't defined for the class 'CommunityState'.
+ - 'CommunityState' is from 'package:jfit/features/group_workout_community/presentation/bloc/community/community_state.dart' ('lib/features/group_workout_community/presentation/bloc/community/community_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          return _buildErrorWidget(state.message);
+                                         ^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:449:15: Error: No named parameter with the name 'groupId'.
+              groupId: widget.groupId,
+              ^^^^^^^
+lib/features/group_workout_community/presentation/bloc/community/community_event.dart:16:9: Context: Found this candidate, but the arguments don't match.
+  const LoadPosts({
+        ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/community_board_page.dart:439:42: Error: The getter 'message' isn't defined for the class 'CommunityState'.
+ - 'CommunityState' is from 'package:jfit/features/group_workout_community/presentation/bloc/community/community_state.dart' ('lib/features/group_workout_community/presentation/bloc/community/community_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          return _buildErrorWidget(state.message);
+                                         ^^^^^^^
+lib/features/group_workout_community/presentation/pages/post_create_page.dart:106:29: Error: The getter 'message' isn't defined for the class 'CommunityErrorState'.
+ - 'CommunityErrorState' is from 'package:jfit/features/group_workout_community/presentation/bloc/community/community_state.dart' ('lib/features/group_workout_community/presentation/bloc/community/community_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+        content: Text(state.message),
+                            ^^^^^^^
+lib/features/group_workout_community/presentation/pages/routine_share_page.dart:123:29: Error: The getter 'message' isn't defined for the class 'GroupActivityErrorState'.
+ - 'GroupActivityErrorState' is from 'package:jfit/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart' ('lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+        content: Text(state.message),
+                            ^^^^^^^
+lib/features/group_workout_community/presentation/pages/routine_share_page.dart:137:7: Error: No named parameter with the name 'routineId'.
+      routineId: _selectedProgramId!,
+      ^^^^^^^^^
+lib/features/group_workout_community/domain/repositories/group_activity_repository.dart:17:9: Context: Found this candidate, but the arguments don't match.
+  const ShareRoutineRequest({
+        ^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/shared_routine_detail_page.dart:68:30: Error: The getter 'sharedRoutine' isn't defined for the class 'GroupActivitiesLoaded'.
+ - 'GroupActivitiesLoaded' is from 'package:jfit/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart' ('lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'sharedRoutine'.
+      _sharedRoutine = state.sharedRoutine;
+                             ^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/shared_routine_detail_page.dart:69:26: Error: The getter 'exercises' isn't defined for the class 'GroupActivitiesLoaded'.
+ - 'GroupActivitiesLoaded' is from 'package:jfit/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart' ('lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'exercises'.
+      _exercises = state.exercises;
+                         ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/shared_routine_detail_page.dart:101:29: Error: The getter 'message' isn't defined for the class 'GroupActivityErrorState'.
+ - 'GroupActivityErrorState' is from 'package:jfit/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart' ('lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+        content: Text(state.message),
+                            ^^^^^^^
+lib/features/group_workout_community/presentation/pages/shared_routine_detail_page.dart:110:55: Error: Too few positional arguments: 1 required, 0 given.
+    context.read<GroupActivityBloc>().add(ShareRoutine(
+                                                      ^
+lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_event.dart:66:9: Context: Found this candidate, but the arguments don't match.
+  const ShareRoutine(this.request);
+        ^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/encouragement_message_page.dart:99:29: Error: The getter 'message' isn't defined for the class 'GroupActivityErrorState'.
+ - 'GroupActivityErrorState' is from 'package:jfit/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart' ('lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+        content: Text(state.message),
+                            ^^^^^^^
+lib/features/group_workout_community/presentation/pages/encouragement_message_page.dart:117:61: Error: The argument type 'SendEncouragementRequest' can't be assigned to the parameter type 'EncouragementRequest'.
+ - 'SendEncouragementRequest' is from 'package:jfit/features/group_workout_community/domain/entities/encouragement_request.dart' ('lib/features/group_workout_community/domain/entities/encouragement_request.dart').
+ - 'EncouragementRequest' is from 'package:jfit/features/group_workout_community/domain/repositories/group_activity_repository.dart' ('lib/features/group_workout_community/domain/repositories/group_activity_repository.dart').
+    context.read<GroupActivityBloc>().add(SendEncouragement(request));
+                                                            ^
+lib/features/group_workout_community/presentation/pages/group_ranking_leaderboard_page.dart:218:43: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+            if (BreakpointUtils.isDesktop(context))
+                                          ^
+lib/features/group_workout_community/presentation/pages/user_workout_score_dashboard_page.dart:133:44: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+          bottom: BreakpointUtils.isMobile(context)
+                                           ^
+lib/features/group_workout_community/presentation/pages/user_workout_score_dashboard_page.dart:333:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 200 : 250,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/user_workout_score_dashboard_page.dart:360:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 200 : 300,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/user_workout_score_dashboard_page.dart:387:53: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                isCompact: BreakpointUtils.isMobile(context),
+                                                    ^
+lib/features/group_workout_community/presentation/pages/user_workout_score_dashboard_page.dart:414:55: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                isDetailed: !BreakpointUtils.isMobile(context),
+                                                      ^
+lib/features/group_workout_community/presentation/pages/group_member_score_comparison_page.dart:88:43: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+            if (!BreakpointUtils.isMobile(context))
+                                          ^
+lib/features/group_workout_community/presentation/pages/group_member_score_comparison_page.dart:309:43: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+            if (BreakpointUtils.isDesktop(context))
+                                          ^
+lib/features/group_workout_community/presentation/pages/score_detailed_analysis_page.dart:128:44: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+          bottom: BreakpointUtils.isMobile(context)
+                                           ^
+lib/features/group_workout_community/presentation/pages/score_detailed_analysis_page.dart:371:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 200 : 250,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/score_detailed_analysis_page.dart:398:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 200 : 250,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/score_detailed_analysis_page.dart:425:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 200 : 250,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/score_detailed_analysis_page.dart:453:53: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                isCompact: BreakpointUtils.isMobile(context),
+                                                    ^
+lib/features/group_workout_community/presentation/pages/score_detailed_analysis_page.dart:480:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 200 : 300,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/score_detailed_analysis_page.dart:508:55: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                isDetailed: !BreakpointUtils.isMobile(context),
+                                                      ^
+lib/features/group_workout_community/presentation/pages/ranking_history_trends_page.dart:122:44: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+          bottom: BreakpointUtils.isMobile(context)
+                                           ^
+lib/features/group_workout_community/presentation/pages/ranking_history_trends_page.dart:290:43: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+            if (BreakpointUtils.isDesktop(context))
+                                          ^
+lib/features/group_workout_community/presentation/pages/ranking_history_trends_page.dart:406:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 250 : 300,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/ranking_history_trends_page.dart:434:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 250 : 300,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/ranking_history_trends_page.dart:462:50: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                height: BreakpointUtils.isMobile(context) ? 250 : 300,
+                                                 ^
+lib/features/group_workout_community/presentation/pages/ranking_history_trends_page.dart:491:55: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                isDetailed: !BreakpointUtils.isMobile(context),
+                                                      ^
+lib/features/group_workout_community/presentation/pages/ranking_history_trends_page.dart:540:53: Error: The argument type 'BuildContext' can't be assigned to the parameter type 'double'.
+ - 'BuildContext' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+                isCompact: BreakpointUtils.isMobile(context),
+                                                    ^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:96:36: Error: The getter 'message' isn't defined for the class 'GroupActivityErrorState'.
+ - 'GroupActivityErrorState' is from 'package:jfit/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart' ('lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          _showErrorSnackBar(state.message);
+                                   ^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:143:42: Error: The getter 'message' isn't defined for the class 'GroupActivityState'.
+ - 'GroupActivityState' is from 'package:jfit/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart' ('lib/features/group_workout_community/presentation/bloc/group_activity/group_activity_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          return _buildErrorWidget(state.message);
+                                         ^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:255:41: Error: The argument type 'GroupActivityType' can't be assigned to the parameter type 'String'.
+ - 'GroupActivityType' is from 'package:jfit/features/group_workout_community/domain/entities/workout_group.dart' ('lib/features/group_workout_community/domain/entities/workout_group.dart').
+              _getActivityIcon(activity.activityType),
+                                        ^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:424:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.workoutCompleted:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:426:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.routineShared:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:428:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.memberJoined:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:430:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.encouragementSent:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:432:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.achievementUnlocked:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_activity_feed.dart:423:22: Error: The type 'GroupActivityType' is not exhaustively matched by the switch cases since it doesn't match 'GroupActivityType.workoutCompleted'.
+ - 'GroupActivityType' is from 'package:jfit/features/group_workout_community/domain/entities/workout_group.dart' ('lib/features/group_workout_community/domain/entities/workout_group.dart').
+Try adding a default case or cases that match 'GroupActivityType.workoutCompleted'.
+    switch (activity.activityType) {
+                     ^
+lib/features/group_workout_community/presentation/bloc/group_chat/group_chat_bloc.dart:240:42: Error: The argument type 'GroupMessage' can't be assigned to the parameter type 'Map<String, dynamic>'.
+ - 'GroupMessage' is from 'package:jfit/features/group_workout_community/domain/entities/group_message.dart' ('lib/features/group_workout_community/domain/entities/group_message.dart').
+ - 'Map' is from 'dart:core'.
+        add(MessageReceived(messageData: message));
+                                         ^
+lib/features/group_workout_community/presentation/bloc/group_chat/group_chat_bloc.dart:276:34: Error: Member not found: 'GroupMessage.fromJson'.
+    final message = GroupMessage.fromJson(event.messageData);
+                                 ^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_bloc.dart:145:17: Error: The argument type 'String' can't be assigned to the parameter type 'UpdateCommentRequest'.
+ - 'UpdateCommentRequest' is from 'package:jfit/features/group_workout_community/domain/repositories/post_interaction_repository.dart' ('lib/features/group_workout_community/domain/repositories/post_interaction_repository.dart').
+          event.content,
+                ^
+lib/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_bloc.dart:196:17: Error: The argument type 'String' can't be assigned to the parameter type 'ToggleLikeRequest'.
+ - 'ToggleLikeRequest' is from 'package:jfit/features/group_workout_community/domain/repositories/post_interaction_repository.dart' ('lib/features/group_workout_community/domain/repositories/post_interaction_repository.dart').
+          event.postId,
+                ^
+lib/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_bloc.dart:203:50: Error: The method 'getLikeStatus' isn't defined for the class 'PostInteractionRepository'.
+ - 'PostInteractionRepository' is from 'package:jfit/features/group_workout_community/domain/repositories/post_interaction_repository.dart' ('lib/features/group_workout_community/domain/repositories/post_interaction_repository.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'getLikeStatus'.
+            final likeResult = await _repository.getLikeStatus(
+                                                 ^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_bloc.dart:232:42: Error: The method 'getLikeStatus' isn't defined for the class 'PostInteractionRepository'.
+ - 'PostInteractionRepository' is from 'package:jfit/features/group_workout_community/domain/repositories/post_interaction_repository.dart' ('lib/features/group_workout_community/domain/repositories/post_interaction_repository.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'getLikeStatus'.
+        final result = await _repository.getLikeStatus(
+                                         ^^^^^^^^^^^^^
+lib/features/group_workout_community/data/services/group_realtime_manager.dart:130:30: Error: The type 'GroupActivityType' is not exhaustively matched by the switch cases since it doesn't match 'GroupActivityType.memberLeft'.
+ - 'GroupActivityType' is from 'package:jfit/features/group_workout_community/domain/entities/workout_group.dart' ('lib/features/group_workout_community/domain/entities/workout_group.dart').
+Try adding a default case or cases that match 'GroupActivityType.memberLeft'.
+      switch (latestActivity.activityType) {
+                             ^
+lib/features/group_workout_community/data/repositories/ranking_repository_impl.dart:734:9: Error: No named parameter with the name 'bodyPartVolumeData'.
+        bodyPartVolumeData: _bodyPartVolumesToJson(bodyPartVolumes),
+        ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/domain/entities/workout_score_calculation.dart:15:9: Context: Found this candidate, but the arguments don't match.
+  const WorkoutScoreCalculation({
+        ^^^^^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/diet_permissions_settings_page.dart:81:18: Error: The method 'DietPermissionRequest' isn't defined for the class '_DietPermissionsSettingsPageState'.
+ - '_DietPermissionsSettingsPageState' is from 'package:jfit/features/group_workout_community/presentation/pages/diet_permissions_settings_page.dart' ('lib/features/group_workout_community/presentation/pages/diet_permissions_settings_page.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'DietPermissionRequest'.
+        request: DietPermissionRequest(
+                 ^^^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/diet_analysis_report_page.dart:80:16: Error: The method 'DietAnalyticsRequest' isn't defined for the class '_DietAnalysisReportPageState'.
+ - '_DietAnalysisReportPageState' is from 'package:jfit/features/group_workout_community/presentation/pages/diet_analysis_report_page.dart' ('lib/features/group_workout_community/presentation/pages/diet_analysis_report_page.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'DietAnalyticsRequest'.
+      request: DietAnalyticsRequest(
+               ^^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/diet_analysis_report_page.dart:167:45: Error: The value 'null' can't be returned from a function with return type 'Widget' because 'Widget' is not nullable.
+ - 'Widget' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+            if (deviceType.isMobile) return null;
+                                            ^
+lib/features/group_workout_community/presentation/pages/diet_analysis_report_page.dart:164:17: Error: The argument type 'ResponsiveBuilder' can't be assigned to the parameter type 'PreferredSizeWidget?'.
+ - 'ResponsiveBuilder' is from 'package:jfit/core/widgets/responsive_layout.dart' ('lib/core/widgets/responsive_layout.dart').
+ - 'PreferredSizeWidget' is from 'package:flutter/src/widgets/preferred_size.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/preferred_size.dart').
+        bottom: ResponsiveBuilder(
+                ^
+lib/features/group_workout_community/presentation/pages/diet_feedback_create_page.dart:94:18: Error: The method 'CreateDietFeedbackRequest' isn't defined for the class '_DietFeedbackCreatePageState'.
+ - '_DietFeedbackCreatePageState' is from 'package:jfit/features/group_workout_community/presentation/pages/diet_feedback_create_page.dart' ('lib/features/group_workout_community/presentation/pages/diet_feedback_create_page.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'CreateDietFeedbackRequest'.
+        request: CreateDietFeedbackRequest(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/member_diet_detail_page.dart:122:45: Error: The value 'null' can't be returned from a function with return type 'Widget' because 'Widget' is not nullable.
+ - 'Widget' is from 'package:flutter/src/widgets/framework.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/framework.dart').
+            if (deviceType.isMobile) return null;
+                                            ^
+lib/features/group_workout_community/presentation/pages/member_diet_detail_page.dart:119:17: Error: The argument type 'ResponsiveBuilder' can't be assigned to the parameter type 'PreferredSizeWidget?'.
+ - 'ResponsiveBuilder' is from 'package:jfit/core/widgets/responsive_layout.dart' ('lib/core/widgets/responsive_layout.dart').
+ - 'PreferredSizeWidget' is from 'package:flutter/src/widgets/preferred_size.dart' ('/usr/local/Caskroom/flutter/3.32.0/flutter/packages/flutter/lib/src/widgets/preferred_size.dart').
+        bottom: ResponsiveBuilder(
+                ^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:40:36: Error: The method 'LoadGroupDietSummaries' isn't defined for the class '_PTGroupDietDashboardPageState'.
+ - '_PTGroupDietDashboardPageState' is from 'package:jfit/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart' ('lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'LoadGroupDietSummaries'.
+    context.read<PTDietBloc>().add(LoadGroupDietSummaries(
+                                   ^^^^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:46:36: Error: The method 'LoadRecentDietActivity' isn't defined for the class '_PTGroupDietDashboardPageState'.
+ - '_PTGroupDietDashboardPageState' is from 'package:jfit/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart' ('lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'LoadRecentDietActivity'.
+    context.read<PTDietBloc>().add(LoadRecentDietActivity(
+                                   ^^^^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:52:36: Error: The method 'LoadNutritionAlerts' isn't defined for the class '_PTGroupDietDashboardPageState'.
+ - '_PTGroupDietDashboardPageState' is from 'package:jfit/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart' ('lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'LoadNutritionAlerts'.
+    context.read<PTDietBloc>().add(LoadNutritionAlerts(
+                                   ^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:86:38: Error: 'PTDietState' isn't a type.
+      body: BlocConsumer<PTDietBloc, PTDietState>(
+                                     ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:88:24: Error: 'PTDietError' isn't a type.
+          if (state is PTDietError) {
+                       ^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:95:31: Error: 'PTDietOperationSuccess' isn't a type.
+          } else if (state is PTDietOperationSuccess) {
+                              ^^^^^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:105:24: Error: 'PTDietLoading' isn't a type.
+          if (state is PTDietLoading) {
+                       ^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:82:27: Error: The getter 'settings' isn't defined for the class 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:jfit/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'settings'.
+            tooltip: l10n.settings ?? '설정',
+                          ^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:321:51: Error: The getter 'dashboardSettings' isn't defined for the class 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:jfit/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'dashboardSettings'.
+        title: Text(AppLocalizations.of(context)!.dashboardSettings ?? '대시보드 설정'),
+                                                  ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:327:57: Error: The getter 'notifications' isn't defined for the class 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:jfit/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'notifications'.
+              title: Text(AppLocalizations.of(context)!.notifications ?? '알림 설정'),
+                                                        ^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:335:57: Error: The getter 'analytics' isn't defined for the class 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:jfit/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'analytics'.
+              title: Text(AppLocalizations.of(context)!.analytics ?? '분석 설정'),
+                                                        ^^^^^^^^^
+lib/features/group_workout_community/presentation/pages/pt_group_diet_dashboard_page.dart:343:57: Error: The getter 'exportData' isn't defined for the class 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:jfit/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'exportData'.
+              title: Text(AppLocalizations.of(context)!.exportData ?? '데이터 내보내기'),
+                                                        ^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/diet_dashboard/member_diet_grid.dart:312:9: Error: No named parameter with the name 'trainerId'.
+        trainerId: trainerId,
+        ^^^^^^^^^
+lib/features/group_workout_community/domain/entities/pt_group_diet_summary.dart:21:9: Context: Found this candidate, but the arguments don't match.
+  const PTGroupDietSummary({
+        ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/diet_dashboard/member_diet_grid.dart:330:9: Error: No named parameter with the name 'trainerId'.
+        trainerId: trainerId,
+        ^^^^^^^^^
+lib/features/group_workout_community/domain/entities/pt_group_diet_summary.dart:21:9: Context: Found this candidate, but the arguments don't match.
+  const PTGroupDietSummary({
+        ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/diet_dashboard/member_diet_grid.dart:348:9: Error: No named parameter with the name 'trainerId'.
+        trainerId: trainerId,
+        ^^^^^^^^^
+lib/features/group_workout_community/domain/entities/pt_group_diet_summary.dart:21:9: Context: Found this candidate, but the arguments don't match.
+  const PTGroupDietSummary({
+        ^^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/diet_dashboard/group_diet_overview_card.dart:60:32: Error: The getter 'isMobile' isn't defined for the class 'DeviceType'.
+ - 'DeviceType' is from 'package:jfit/core/utils/breakpoint_utils.dart' ('lib/core/utils/breakpoint_utils.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'isMobile'.
+                if (deviceType.isMobile || isCompact) {
+                               ^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:139:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.workoutCompleted:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:141:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.routineShared:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:143:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.achievementUnlocked:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:183:28: Error: The getter 'context' isn't defined for the class 'ActivityTimelineItem'.
+ - 'ActivityTimelineItem' is from 'package:jfit/features/group_workout_community/presentation/widgets/activity_timeline_item.dart' ('lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'context'.
+    final theme = Theme.of(context);
+                           ^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:374:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.workoutCompleted:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:376:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.routineShared:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:378:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.memberJoined:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:380:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.encouragementSent:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:382:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.achievementUnlocked:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:389:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.workoutCompleted:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:391:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.routineShared:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:393:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.memberJoined:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:395:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.encouragementSent:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:397:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.achievementUnlocked:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:411:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.workoutCompleted:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:413:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.routineShared:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:415:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.memberJoined:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:417:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.encouragementSent:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:420:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.achievementUnlocked:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:427:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.workoutCompleted:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:428:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.routineShared:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:429:12: Error: Undefined name 'GroupActivityType'.
+      case GroupActivityType.achievementUnlocked:
+           ^^^^^^^^^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:373:22: Error: The type 'GroupActivityType' is not exhaustively matched by the switch cases since it doesn't match 'GroupActivityType.workoutCompleted'.
+ - 'GroupActivityType' is from 'package:jfit/features/group_workout_community/domain/entities/workout_group.dart' ('lib/features/group_workout_community/domain/entities/workout_group.dart').
+Try adding a default case or cases that match 'GroupActivityType.workoutCompleted'.
+    switch (activity.activityType) {
+                     ^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:388:22: Error: The type 'GroupActivityType' is not exhaustively matched by the switch cases since it doesn't match 'GroupActivityType.workoutCompleted'.
+ - 'GroupActivityType' is from 'package:jfit/features/group_workout_community/domain/entities/workout_group.dart' ('lib/features/group_workout_community/domain/entities/workout_group.dart').
+Try adding a default case or cases that match 'GroupActivityType.workoutCompleted'.
+    switch (activity.activityType) {
+                     ^
+lib/features/group_workout_community/presentation/widgets/activity_timeline_item.dart:410:22: Error: The type 'GroupActivityType' is not exhaustively matched by the switch cases since it doesn't match 'GroupActivityType.workoutCompleted'.
+ - 'GroupActivityType' is from 'package:jfit/features/group_workout_community/domain/entities/workout_group.dart' ('lib/features/group_workout_community/domain/entities/workout_group.dart').
+Try adding a default case or cases that match 'GroupActivityType.workoutCompleted'.
+    switch (activity.activityType) {
+                     ^
+lib/features/group_workout_community/presentation/widgets/group_member_list.dart:59:23: Error: Type 'GroupRole' not found.
+  String _getRoleText(GroupRole role) {
+                      ^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_member_list.dart:59:23: Error: 'GroupRole' isn't a type.
+  String _getRoleText(GroupRole role) {
+                      ^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_member_list.dart:61:12: Error: Undefined name 'GroupRole'.
+      case GroupRole.admin:
+           ^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_member_list.dart:63:12: Error: Undefined name 'GroupRole'.
+      case GroupRole.moderator:
+           ^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_member_list.dart:65:12: Error: Undefined name 'GroupRole'.
+      case GroupRole.member:
+           ^^^^^^^^^
+lib/features/group_workout_community/presentation/widgets/group_member_list.dart:59:10: Error: A non-null value must be returned since the return type 'String' doesn't allow null.
+  String _getRoleText(GroupRole role) {
+         ^
+Target kernel_snapshot_program failed: Exception
+
+Command PhaseScriptExecution failed with a nonzero exit code
+** BUILD FAILED **
+
+Error: Build process failed

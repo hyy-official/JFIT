@@ -91,16 +91,16 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
       
       parseResult.fold(
         (failure) {
-          print('운동 데이터 파싱 실패: ${failure.message}');
+          debugPrint('운동 데이터 파싱 실패: ${failure.message}');
           if (failure is DataParsingFailure) {
-            print('기술적 오류: ${failure.technicalMessage}');
+            debugPrint('기술적 오류: ${failure.technicalMessage}');
           }
           
           // 파싱 실패 시 폴백: 기존 방식으로 시도
           _parseExerciseDataFallback(details);
         },
         (exercises) {
-          print('파싱된 운동 수: ${exercises.length}');
+          debugPrint('파싱된 운동 수: ${exercises.length}');
           
           // Exercise 객체를 UI에서 사용할 수 있는 Map 형태로 변환
           todayExercises = exercises.map((exercise) => {
@@ -145,8 +145,8 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
             final exercises = dayData['exercises'];
             if (exercises is List<dynamic>) {
               todayExercises = exercises
-                  .where((e) => e is Map<String, dynamic>)
-                  .map((e) => Map<String, dynamic>.from(e as Map<String, dynamic>))
+                  .whereType<Map<String, dynamic>>()
+                  .map((e) => Map<String, dynamic>.from(e))
                   .toList();
             }
             
@@ -198,8 +198,8 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                   final exercises = currentDayData['exercises'];
                   if (exercises is List<dynamic>) {
                     todayExercises = exercises
-                        .where((e) => e is Map<String, dynamic>)
-                        .map((e) => Map<String, dynamic>.from(e as Map<String, dynamic>))
+                        .whereType<Map<String, dynamic>>()
+                        .map((e) => Map<String, dynamic>.from(e))
                         .toList();
                   }
                   
@@ -218,7 +218,7 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
         }
       }
     } catch (e) {
-      print('폴백 방식 파싱도 실패: $e');
+      debugPrint('폴백 방식 파싱도 실패: $e');
       // 최종 폴백: 빈 상태로 설정
       todayExercises = [];
       partDesc = 'Day ${widget.currentDay} 운동';
@@ -315,134 +315,136 @@ class _ExerciseRoutineDetailPageState extends State<ExerciseRoutineDetailPage> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              widget.routineName,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: context.colors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${(widget.progress * 100).toStringAsFixed(0)}% 진행 중',
+                              style: TextStyle(color: context.colors.textSecondary),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ExerciseDaySelector(
+                        userProgramId: widget.userProgramId,
+                        currentWeek: widget.currentWeek,
+                        currentDay: widget.currentDay,
+                        programDays: programDays,
+                        totalWeeks: programDetails?['workout_programs']?['duration_weeks'] ?? 1,
+                      ),
+                      const SizedBox(height: 16),
+                      if (partDesc.isNotEmpty)
                         Text(
-                          widget.routineName,
+                          partDesc,
                           style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             color: context.colors.textPrimary,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${(widget.progress * 100).toStringAsFixed(0)}% 진행 중',
-                          style: TextStyle(color: context.colors.textSecondary),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ExerciseDaySelector(
-                    userProgramId: widget.userProgramId,
-                    currentWeek: widget.currentWeek,
-                    currentDay: widget.currentDay,
-                    programDays: programDays,
-                    totalWeeks: programDetails?['workout_programs']?['duration_weeks'] ?? 1,
-                  ),
-                  const SizedBox(height: 16),
-                  if (partDesc.isNotEmpty)
-                    Text(
-                      partDesc,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: context.colors.textPrimary,
-                      ),
-                    ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: widget.isRestDay
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.bedtime,
-                                  color: context.colors.textMuted,
-                                  size: 64,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  '휴식일입니다',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: context.colors.textSecondary,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '오늘은 몸을 쉬어주세요',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: context.colors.textMuted,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : todayExercises.isNotEmpty
-                            ? ExerciseTodayList(exercises: todayExercises)
-                            : Center(
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: widget.isRestDay
+                            ? Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.fitness_center,
+                                      Icons.bedtime,
                                       color: context.colors.textMuted,
                                       size: 64,
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
-                                      '오늘의 운동 정보가 없습니다',
+                                      '휴식일입니다',
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
                                         color: context.colors.textSecondary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      '오늘은 몸을 쉬어주세요',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: context.colors.textMuted,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                  ),
-                  const SizedBox(height: 16),
-                  if (!widget.isRestDay && todayExercises.isNotEmpty)
-                    ElevatedButton(
-                      onPressed: () {
-                        _workoutSessionBloc.add(
-                          CreateWorkoutSession(
-                            userProgramId: widget.userProgramId,
-                            exercisesJson: {
-                              'week': widget.currentWeek,
-                              'day': widget.currentDay,
-                              'exercises': todayExercises,
-                            },
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: context.colors.primary,
-                        foregroundColor: context.colors.onPrimary,
-                        minimumSize: const Size(double.infinity, 48),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                              )
+                            : todayExercises.isNotEmpty
+                                ? ExerciseTodayList(exercises: todayExercises)
+                                : Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.fitness_center,
+                                          color: context.colors.textMuted,
+                                          size: 64,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          '오늘의 운동 정보가 없습니다',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: context.colors.textSecondary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                       ),
-                      child: const Text('운동 시작하기'),
-                    ),
-                ],
-              ),
-            ),
-          );
-        },
+                      const SizedBox(height: 16),
+                      if (!widget.isRestDay && todayExercises.isNotEmpty)
+                        ElevatedButton(
+                          onPressed: () {
+                            _workoutSessionBloc.add(
+                              CreateWorkoutSession(
+                                userProgramId: widget.userProgramId,
+                                exercisesJson: {
+                                  'week': widget.currentWeek,
+                                  'day': widget.currentDay,
+                                  'exercises': todayExercises,
+                                },
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: context.colors.primary,
+                            foregroundColor: context.colors.onPrimary,
+                            minimumSize: const Size(double.infinity, 48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text('운동 시작하기'),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
-} 
+}

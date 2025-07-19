@@ -715,6 +715,1938 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Registration successful!'**
   String get registration_successful;
+
+  /// No description provided for @groups.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups'**
+  String get groups;
+
+  /// No description provided for @community.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get community;
+
+  /// No description provided for @myGroups.
+  ///
+  /// In en, this message translates to:
+  /// **'My Groups'**
+  String get myGroups;
+
+  /// No description provided for @publicGroups.
+  ///
+  /// In en, this message translates to:
+  /// **'Public Groups'**
+  String get publicGroups;
+
+  /// No description provided for @createGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Group'**
+  String get createGroup;
+
+  /// No description provided for @joinGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Group'**
+  String get joinGroup;
+
+  /// No description provided for @groupName.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Name'**
+  String get groupName;
+
+  /// No description provided for @groupDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Description'**
+  String get groupDescription;
+
+  /// No description provided for @groupPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Privacy'**
+  String get groupPrivacy;
+
+  /// No description provided for @publicGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get publicGroup;
+
+  /// No description provided for @privateGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get privateGroup;
+
+  /// No description provided for @maxMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Members'**
+  String get maxMembers;
+
+  /// No description provided for @inviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Code'**
+  String get inviteCode;
+
+  /// No description provided for @groupCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Group created successfully!'**
+  String get groupCreated;
+
+  /// No description provided for @groupJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined group successfully!'**
+  String get groupJoined;
+
+  /// No description provided for @groupLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left group successfully!'**
+  String get groupLeft;
+
+  /// No description provided for @groupDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Group deleted successfully!'**
+  String get groupDeleted;
+
+  /// No description provided for @groupNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Group not found'**
+  String get groupNotFound;
+
+  /// No description provided for @groupFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Group is full'**
+  String get groupFull;
+
+  /// No description provided for @invalidInviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired invite code'**
+  String get invalidInviteCode;
+
+  /// No description provided for @insufficientPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient permissions'**
+  String get insufficientPermissions;
+
+  /// No description provided for @groupMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Members'**
+  String get groupMembers;
+
+  /// No description provided for @groupAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get groupAdmin;
+
+  /// No description provided for @groupModerator.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderator'**
+  String get groupModerator;
+
+  /// No description provided for @groupMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get groupMember;
+
+  /// No description provided for @removeFromGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from Group'**
+  String get removeFromGroup;
+
+  /// No description provided for @leaveGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Group'**
+  String get leaveGroup;
+
+  /// No description provided for @deleteGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Group'**
+  String get deleteGroup;
+
+  /// No description provided for @groupSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Settings'**
+  String get groupSettings;
+
+  /// No description provided for @editGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Group'**
+  String get editGroup;
+
+  /// No description provided for @shareGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Group'**
+  String get shareGroup;
+
+  /// No description provided for @copyInviteLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Invite Link'**
+  String get copyInviteLink;
+
+  /// No description provided for @inviteLinkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link copied to clipboard!'**
+  String get inviteLinkCopied;
+
+  /// No description provided for @groupActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Activity'**
+  String get groupActivity;
+
+  /// No description provided for @activityFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Feed'**
+  String get activityFeed;
+
+  /// No description provided for @shareRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Routine'**
+  String get shareRoutine;
+
+  /// No description provided for @sharedRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared Routine'**
+  String get sharedRoutine;
+
+  /// No description provided for @routineShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine shared successfully!'**
+  String get routineShared;
+
+  /// No description provided for @copyRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Routine'**
+  String get copyRoutine;
+
+  /// No description provided for @routineCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine copied successfully!'**
+  String get routineCopied;
+
+  /// No description provided for @workoutCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Completed'**
+  String get workoutCompleted;
+
+  /// No description provided for @encourageMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Encourage Members'**
+  String get encourageMembers;
+
+  /// No description provided for @sendEncouragement.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Encouragement'**
+  String get sendEncouragement;
+
+  /// No description provided for @encouragementSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Encouragement sent!'**
+  String get encouragementSent;
+
+  /// No description provided for @workoutSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Session'**
+  String get workoutSession;
+
+  /// No description provided for @completedWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'completed a workout'**
+  String get completedWorkout;
+
+  /// No description provided for @sharedARoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'shared a routine'**
+  String get sharedARoutine;
+
+  /// No description provided for @joinedGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'joined the group'**
+  String get joinedGroup;
+
+  /// No description provided for @leftGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'left the group'**
+  String get leftGroup;
+
+  /// No description provided for @noActivities.
+  ///
+  /// In en, this message translates to:
+  /// **'No activities yet'**
+  String get noActivities;
+
+  /// No description provided for @loadMoreActivities.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More Activities'**
+  String get loadMoreActivities;
+
+  /// No description provided for @groupChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Chat'**
+  String get groupChat;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeMessage;
+
+  /// No description provided for @sendMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Message'**
+  String get sendMessage;
+
+  /// No description provided for @messageReactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Message Reactions'**
+  String get messageReactions;
+
+  /// No description provided for @replyToMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply to Message'**
+  String get replyToMessage;
+
+  /// No description provided for @editMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Message'**
+  String get editMessage;
+
+  /// No description provided for @deleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Message'**
+  String get deleteMessage;
+
+  /// No description provided for @messageDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Message deleted'**
+  String get messageDeleted;
+
+  /// No description provided for @typingIndicator.
+  ///
+  /// In en, this message translates to:
+  /// **'is typing...'**
+  String get typingIndicator;
+
+  /// No description provided for @onlineMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Members'**
+  String get onlineMembers;
+
+  /// No description provided for @offlineMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline Members'**
+  String get offlineMembers;
+
+  /// No description provided for @lastSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'Last seen'**
+  String get lastSeen;
+
+  /// No description provided for @messageDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get messageDelivered;
+
+  /// No description provided for @messageRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get messageRead;
+
+  /// No description provided for @communityBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Community Board'**
+  String get communityBoard;
+
+  /// No description provided for @createPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Post'**
+  String get createPost;
+
+  /// No description provided for @postTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Post Title'**
+  String get postTitle;
+
+  /// No description provided for @postContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Post Content'**
+  String get postContent;
+
+  /// No description provided for @postCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get postCategory;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category'**
+  String get selectCategory;
+
+  /// No description provided for @postTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get postTags;
+
+  /// No description provided for @addTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Tags'**
+  String get addTags;
+
+  /// No description provided for @uploadMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Media'**
+  String get uploadMedia;
+
+  /// No description provided for @uploadImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Image'**
+  String get uploadImage;
+
+  /// No description provided for @uploadVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Video'**
+  String get uploadVideo;
+
+  /// No description provided for @postCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Post created successfully!'**
+  String get postCreated;
+
+  /// No description provided for @postUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Post updated successfully!'**
+  String get postUpdated;
+
+  /// No description provided for @postDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Post deleted successfully!'**
+  String get postDeleted;
+
+  /// No description provided for @likePost.
+  ///
+  /// In en, this message translates to:
+  /// **'Like Post'**
+  String get likePost;
+
+  /// No description provided for @dislikePost.
+  ///
+  /// In en, this message translates to:
+  /// **'Dislike Post'**
+  String get dislikePost;
+
+  /// No description provided for @commentOnPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment on Post'**
+  String get commentOnPost;
+
+  /// No description provided for @sharePost.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Post'**
+  String get sharePost;
+
+  /// No description provided for @bookmarkPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark Post'**
+  String get bookmarkPost;
+
+  /// No description provided for @reportPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Post'**
+  String get reportPost;
+
+  /// No description provided for @postReported.
+  ///
+  /// In en, this message translates to:
+  /// **'Post reported successfully'**
+  String get postReported;
+
+  /// No description provided for @addComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Comment'**
+  String get addComment;
+
+  /// No description provided for @replyToComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply to Comment'**
+  String get replyToComment;
+
+  /// No description provided for @editComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Comment'**
+  String get editComment;
+
+  /// No description provided for @deleteComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Comment'**
+  String get deleteComment;
+
+  /// No description provided for @commentAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment added successfully!'**
+  String get commentAdded;
+
+  /// No description provided for @commentUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment updated successfully!'**
+  String get commentUpdated;
+
+  /// No description provided for @commentDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment deleted successfully!'**
+  String get commentDeleted;
+
+  /// No description provided for @viewComments.
+  ///
+  /// In en, this message translates to:
+  /// **'View Comments'**
+  String get viewComments;
+
+  /// No description provided for @hideComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Comments'**
+  String get hideComments;
+
+  /// No description provided for @noComments.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet'**
+  String get noComments;
+
+  /// No description provided for @loadMoreComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More Comments'**
+  String get loadMoreComments;
+
+  /// No description provided for @searchPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Posts'**
+  String get searchPosts;
+
+  /// No description provided for @filterByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Category'**
+  String get filterByCategory;
+
+  /// No description provided for @sortByLatest.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Latest'**
+  String get sortByLatest;
+
+  /// No description provided for @sortByPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Popular'**
+  String get sortByPopular;
+
+  /// No description provided for @sortByMostLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Most Liked'**
+  String get sortByMostLiked;
+
+  /// No description provided for @noPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts found'**
+  String get noPosts;
+
+  /// No description provided for @loadMorePosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More Posts'**
+  String get loadMorePosts;
+
+  /// No description provided for @ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking'**
+  String get ranking;
+
+  /// No description provided for @leaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get leaderboard;
+
+  /// No description provided for @myScore.
+  ///
+  /// In en, this message translates to:
+  /// **'My Score'**
+  String get myScore;
+
+  /// No description provided for @groupRanking.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Ranking'**
+  String get groupRanking;
+
+  /// No description provided for @userScore.
+  ///
+  /// In en, this message translates to:
+  /// **'User Score'**
+  String get userScore;
+
+  /// No description provided for @totalScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Score'**
+  String get totalScore;
+
+  /// No description provided for @bodyBalanceScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Balance Score'**
+  String get bodyBalanceScore;
+
+  /// No description provided for @volumeScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Score'**
+  String get volumeScore;
+
+  /// No description provided for @progressScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Score'**
+  String get progressScore;
+
+  /// No description provided for @consistencyScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency Score'**
+  String get consistencyScore;
+
+  /// No description provided for @bodyPartScores.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Part Scores'**
+  String get bodyPartScores;
+
+  /// No description provided for @chestScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get chestScore;
+
+  /// No description provided for @backScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backScore;
+
+  /// No description provided for @legsScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get legsScore;
+
+  /// No description provided for @shouldersScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get shouldersScore;
+
+  /// No description provided for @armsScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get armsScore;
+
+  /// No description provided for @coreScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get coreScore;
+
+  /// No description provided for @weeklyRanking.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Ranking'**
+  String get weeklyRanking;
+
+  /// No description provided for @monthlyRanking.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Ranking'**
+  String get monthlyRanking;
+
+  /// No description provided for @dailyRanking.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Ranking'**
+  String get dailyRanking;
+
+  /// No description provided for @rankingPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking Period'**
+  String get rankingPeriod;
+
+  /// No description provided for @currentRank.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Rank'**
+  String get currentRank;
+
+  /// No description provided for @previousRank.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous Rank'**
+  String get previousRank;
+
+  /// No description provided for @rankImproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank Improved!'**
+  String get rankImproved;
+
+  /// No description provided for @rankDeclined.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank Declined'**
+  String get rankDeclined;
+
+  /// No description provided for @scoreAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Score Analysis'**
+  String get scoreAnalysis;
+
+  /// No description provided for @detailedAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Analysis'**
+  String get detailedAnalysis;
+
+  /// No description provided for @scoreBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Score Breakdown'**
+  String get scoreBreakdown;
+
+  /// No description provided for @performanceTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Trends'**
+  String get performanceTrends;
+
+  /// No description provided for @memberComparison.
+  ///
+  /// In en, this message translates to:
+  /// **'Member Comparison'**
+  String get memberComparison;
+
+  /// No description provided for @groupStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Stats'**
+  String get groupStats;
+
+  /// No description provided for @averageGroupScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Group Score'**
+  String get averageGroupScore;
+
+  /// No description provided for @topPerformer.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Performer'**
+  String get topPerformer;
+
+  /// No description provided for @mostImproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Improved'**
+  String get mostImproved;
+
+  /// No description provided for @mostConsistent.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Consistent'**
+  String get mostConsistent;
+
+  /// No description provided for @ptDietDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'PT Diet Dashboard'**
+  String get ptDietDashboard;
+
+  /// No description provided for @memberDiets.
+  ///
+  /// In en, this message translates to:
+  /// **'Member Diets'**
+  String get memberDiets;
+
+  /// No description provided for @dietSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet Summary'**
+  String get dietSummary;
+
+  /// No description provided for @dailyCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Calories'**
+  String get dailyCalories;
+
+  /// No description provided for @calorieGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie Goal'**
+  String get calorieGoal;
+
+  /// No description provided for @proteinIntake.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein Intake'**
+  String get proteinIntake;
+
+  /// No description provided for @carbIntake.
+  ///
+  /// In en, this message translates to:
+  /// **'Carb Intake'**
+  String get carbIntake;
+
+  /// No description provided for @fatIntake.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat Intake'**
+  String get fatIntake;
+
+  /// No description provided for @mealCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Count'**
+  String get mealCount;
+
+  /// No description provided for @lastMealTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Meal Time'**
+  String get lastMealTime;
+
+  /// No description provided for @dietFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet Feedback'**
+  String get dietFeedback;
+
+  /// No description provided for @addFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Feedback'**
+  String get addFeedback;
+
+  /// No description provided for @feedbackType.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback Type'**
+  String get feedbackType;
+
+  /// No description provided for @positiveFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive'**
+  String get positiveFeedback;
+
+  /// No description provided for @suggestionFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion'**
+  String get suggestionFeedback;
+
+  /// No description provided for @concernFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Concern'**
+  String get concernFeedback;
+
+  /// No description provided for @feedbackText.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback Text'**
+  String get feedbackText;
+
+  /// No description provided for @feedbackSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback sent successfully!'**
+  String get feedbackSent;
+
+  /// No description provided for @dietAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet Analysis'**
+  String get dietAnalysis;
+
+  /// No description provided for @weeklyTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Trends'**
+  String get weeklyTrends;
+
+  /// No description provided for @monthlyTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Trends'**
+  String get monthlyTrends;
+
+  /// No description provided for @goalAchievement.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal Achievement'**
+  String get goalAchievement;
+
+  /// No description provided for @nutritionBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Balance'**
+  String get nutritionBalance;
+
+  /// No description provided for @dietPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet Permissions'**
+  String get dietPermissions;
+
+  /// No description provided for @viewMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'View Meals'**
+  String get viewMeals;
+
+  /// No description provided for @viewPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'View Photos'**
+  String get viewPhotos;
+
+  /// No description provided for @viewNutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'View Nutrition'**
+  String get viewNutrition;
+
+  /// No description provided for @permissionsUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions updated successfully!'**
+  String get permissionsUpdated;
+
+  /// No description provided for @accessibilityGroupList.
+  ///
+  /// In en, this message translates to:
+  /// **'List of workout groups'**
+  String get accessibilityGroupList;
+
+  /// No description provided for @accessibilityGroupCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Group card for {groupName}'**
+  String accessibilityGroupCard(Object groupName);
+
+  /// No description provided for @accessibilityJoinGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Join group {groupName}'**
+  String accessibilityJoinGroup(Object groupName);
+
+  /// No description provided for @accessibilityLeaveGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave group {groupName}'**
+  String accessibilityLeaveGroup(Object groupName);
+
+  /// No description provided for @accessibilityGroupMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'{memberCount} members'**
+  String accessibilityGroupMembers(Object memberCount);
+
+  /// No description provided for @accessibilityGroupAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Group administrator'**
+  String get accessibilityGroupAdmin;
+
+  /// No description provided for @accessibilityGroupModerator.
+  ///
+  /// In en, this message translates to:
+  /// **'Group moderator'**
+  String get accessibilityGroupModerator;
+
+  /// No description provided for @accessibilityGroupMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Group member'**
+  String get accessibilityGroupMember;
+
+  /// No description provided for @accessibilityActivityFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Group activity feed'**
+  String get accessibilityActivityFeed;
+
+  /// No description provided for @accessibilityActivityItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity by {userName}'**
+  String accessibilityActivityItem(Object userName);
+
+  /// No description provided for @accessibilityPostCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Post by {authorName}'**
+  String accessibilityPostCard(Object authorName);
+
+  /// No description provided for @accessibilityLikeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Like this post'**
+  String get accessibilityLikeButton;
+
+  /// No description provided for @accessibilityDislikeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Dislike this post'**
+  String get accessibilityDislikeButton;
+
+  /// No description provided for @accessibilityCommentButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment on this post'**
+  String get accessibilityCommentButton;
+
+  /// No description provided for @accessibilityShareButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this post'**
+  String get accessibilityShareButton;
+
+  /// No description provided for @accessibilityBookmarkButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark this post'**
+  String get accessibilityBookmarkButton;
+
+  /// No description provided for @accessibilityRankingItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking position {rank} for {groupName}'**
+  String accessibilityRankingItem(Object groupName, Object rank);
+
+  /// No description provided for @accessibilityScoreCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Score card showing {score} points'**
+  String accessibilityScoreCard(Object score);
+
+  /// No description provided for @accessibilityNavigateBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate back'**
+  String get accessibilityNavigateBack;
+
+  /// No description provided for @accessibilityOpenMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Open menu'**
+  String get accessibilityOpenMenu;
+
+  /// No description provided for @accessibilityCloseMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Close menu'**
+  String get accessibilityCloseMenu;
+
+  /// No description provided for @accessibilitySearchField.
+  ///
+  /// In en, this message translates to:
+  /// **'Search field'**
+  String get accessibilitySearchField;
+
+  /// No description provided for @accessibilityFilterButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter options'**
+  String get accessibilityFilterButton;
+
+  /// No description provided for @accessibilitySortButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort options'**
+  String get accessibilitySortButton;
+
+  /// No description provided for @errorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get errorOccurred;
+
+  /// No description provided for @networkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Network connection error'**
+  String get networkError;
+
+  /// No description provided for @serverError.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error occurred'**
+  String get serverError;
+
+  /// No description provided for @loadingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading data...'**
+  String get loadingData;
+
+  /// No description provided for @noDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get noDataAvailable;
+
+  /// No description provided for @refreshData.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Data'**
+  String get refreshData;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// No description provided for @join.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get join;
+
+  /// No description provided for @leave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get leave;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @reply.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get reply;
+
+  /// No description provided for @like.
+  ///
+  /// In en, this message translates to:
+  /// **'Like'**
+  String get like;
+
+  /// No description provided for @dislike.
+  ///
+  /// In en, this message translates to:
+  /// **'Dislike'**
+  String get dislike;
+
+  /// No description provided for @comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get comment;
+
+  /// No description provided for @bookmark.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark'**
+  String get bookmark;
+
+  /// No description provided for @report.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get report;
+
+  /// No description provided for @block.
+  ///
+  /// In en, this message translates to:
+  /// **'Block'**
+  String get block;
+
+  /// No description provided for @unblock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unblock'**
+  String get unblock;
+
+  /// No description provided for @mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get mute;
+
+  /// No description provided for @unmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get unmute;
+
+  /// No description provided for @follow.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get follow;
+
+  /// No description provided for @unfollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get unfollow;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @sort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @loadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More'**
+  String get loadMore;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// No description provided for @viewLess.
+  ///
+  /// In en, this message translates to:
+  /// **'View Less'**
+  String get viewLess;
+
+  /// No description provided for @showMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Show More'**
+  String get showMore;
+
+  /// No description provided for @showLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Less'**
+  String get showLess;
+
+  /// No description provided for @expand.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand'**
+  String get expand;
+
+  /// No description provided for @collapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse'**
+  String get collapse;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previous;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @redo.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get redo;
+
+  /// No description provided for @excellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get excellent;
+
+  /// No description provided for @good.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get good;
+
+  /// No description provided for @insufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient'**
+  String get insufficient;
+
+  /// No description provided for @excessive.
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive'**
+  String get excessive;
+
+  /// No description provided for @average.
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get average;
+
+  /// No description provided for @permissionsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions saved successfully'**
+  String get permissionsSaved;
+
+  /// No description provided for @permissionsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred while saving permissions'**
+  String get permissionsError;
+
+  /// No description provided for @revokePermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke Permissions'**
+  String get revokePermissions;
+
+  /// No description provided for @revokePermissionsConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to revoke all permissions?'**
+  String get revokePermissionsConfirm;
+
+  /// No description provided for @revoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get revoke;
+
+  /// No description provided for @viewMealsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Trainer can view your meal records'**
+  String get viewMealsDesc;
+
+  /// No description provided for @viewPhotosDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Trainer can view your meal photos'**
+  String get viewPhotosDesc;
+
+  /// No description provided for @viewNutritionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Trainer can view your nutrition intake information'**
+  String get viewNutritionDesc;
+
+  /// No description provided for @allowAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Data Analysis'**
+  String get allowAnalysis;
+
+  /// No description provided for @allowAnalysisDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze diet data to identify trends and patterns'**
+  String get allowAnalysisDesc;
+
+  /// No description provided for @allowRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Recommendations'**
+  String get allowRecommendations;
+
+  /// No description provided for @allowRecommendationsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive AI-based diet recommendations'**
+  String get allowRecommendationsDesc;
+
+  /// No description provided for @allowComparison.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Group Comparison'**
+  String get allowComparison;
+
+  /// No description provided for @allowComparisonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare anonymously with other group members'**
+  String get allowComparisonDesc;
+
+  /// No description provided for @savePermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Permissions'**
+  String get savePermissions;
+
+  /// No description provided for @revokeAllPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke All Permissions'**
+  String get revokeAllPermissions;
+
+  /// No description provided for @permissionsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission settings can be changed at any time. Your data is securely protected.'**
+  String get permissionsNote;
+
+  /// No description provided for @groupDietAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Diet Analysis'**
+  String get groupDietAnalysis;
+
+  /// No description provided for @memberDietAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Member Diet Analysis'**
+  String get memberDietAnalysis;
+
+  /// No description provided for @export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
+
+  /// No description provided for @trends.
+  ///
+  /// In en, this message translates to:
+  /// **'Trends'**
+  String get trends;
+
+  /// No description provided for @distribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Distribution'**
+  String get distribution;
+
+  /// No description provided for @timing.
+  ///
+  /// In en, this message translates to:
+  /// **'Timing'**
+  String get timing;
+
+  /// No description provided for @insights.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get insights;
+
+  /// No description provided for @shareStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing started'**
+  String get shareStarted;
+
+  /// No description provided for @exportReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Report'**
+  String get exportReport;
+
+  /// No description provided for @analysisReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis Report'**
+  String get analysisReport;
+
+  /// No description provided for @feedbackError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred while sending feedback'**
+  String get feedbackError;
+
+  /// No description provided for @createFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Feedback'**
+  String get createFeedback;
+
+  /// No description provided for @sendFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Feedback'**
+  String get sendFeedback;
+
+  /// No description provided for @preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get preview;
+
+  /// No description provided for @feedbackTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get feedbackTemplates;
+
+  /// No description provided for @mealReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Reference'**
+  String get mealReference;
+
+  /// No description provided for @feedbackRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter feedback content'**
+  String get feedbackRequired;
+
+  /// No description provided for @positiveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Specifically praise what they\'re doing well'**
+  String get positiveHint;
+
+  /// No description provided for @suggestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest ways to improve'**
+  String get suggestionHint;
+
+  /// No description provided for @concernHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Specifically describe your concerns'**
+  String get concernHint;
+
+  /// No description provided for @positive.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive'**
+  String get positive;
+
+  /// No description provided for @suggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion'**
+  String get suggestion;
+
+  /// No description provided for @concern.
+  ///
+  /// In en, this message translates to:
+  /// **'Concern'**
+  String get concern;
+
+  /// No description provided for @memberDietDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Member Diet Detail'**
+  String get memberDietDetail;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @nutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition'**
+  String get nutrition;
+
+  /// No description provided for @photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get photos;
+
+  /// No description provided for @feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get feedback;
+
+  /// No description provided for @exportStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Export started'**
+  String get exportStarted;
+
+  /// No description provided for @dietTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet Trends'**
+  String get dietTrends;
+
+  /// No description provided for @mealPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Photos'**
+  String get mealPhotos;
+
+  /// No description provided for @nutritionBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Breakdown'**
+  String get nutritionBreakdown;
+
+  /// No description provided for @mealTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Timeline'**
+  String get mealTimeline;
+
+  /// No description provided for @dailyNutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Nutrition'**
+  String get dailyNutrition;
+
+  /// No description provided for @memberDietHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Member Diet Information'**
+  String get memberDietHeader;
+
+  /// No description provided for @memberHeaderPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading member information...'**
+  String get memberHeaderPlaceholder;
+
+  /// No description provided for @alerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get alerts;
+
+  /// No description provided for @alertsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading alerts...'**
+  String get alertsPlaceholder;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
+
+  /// No description provided for @activityPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading recent activity...'**
+  String get activityPlaceholder;
+
+  /// No description provided for @dietAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet Analytics'**
+  String get dietAnalytics;
+
+  /// No description provided for @analyticsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading analytics data...'**
+  String get analyticsPlaceholder;
+
+  /// No description provided for @groupOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Overview'**
+  String get groupOverview;
+
+  /// No description provided for @activeMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Members'**
+  String get activeMembers;
+
+  /// No description provided for @onTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'On Track'**
+  String get onTrack;
+
+  /// No description provided for @avgCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Calories'**
+  String get avgCalories;
+
+  /// No description provided for @avgProtein.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Protein'**
+  String get avgProtein;
+
+  /// No description provided for @totalMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Members'**
+  String get totalMembers;
+
+  /// No description provided for @needAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Need Attention'**
+  String get needAttention;
+
+  /// No description provided for @avgCalorieAchievement.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Calorie Achievement'**
+  String get avgCalorieAchievement;
+
+  /// No description provided for @avgProteinAchievement.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Protein Achievement'**
+  String get avgProteinAchievement;
+
+  /// No description provided for @dietDashboardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View group members\' diet status at a glance'**
+  String get dietDashboardSubtitle;
+
+  /// No description provided for @previousDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous Day'**
+  String get previousDay;
+
+  /// No description provided for @nextDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Day'**
+  String get nextDay;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
 }
 
 class _AppLocalizationsDelegate

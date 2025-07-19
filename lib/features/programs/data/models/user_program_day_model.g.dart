@@ -21,14 +21,14 @@ UserProgramDayModel _$UserProgramDayModelFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$UserProgramDayModelToJson(
-  UserProgramDayModel instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'user_program_id': instance.userProgramId,
-  'week': instance.week,
-  'day': instance.day,
-  'completed_at': instance.completedAt?.toIso8601String(),
-  'note': instance.note,
-  'created_at': instance.createdAt.toIso8601String(),
-  'updated_at': instance.updatedAt.toIso8601String(),
-};
+        UserProgramDayModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'user_program_id': instance.userProgramId,
+      'week': instance.week,
+      'day': instance.day,
+      'completed_at': instance.completedAt?.toIso8601String(),
+      'note': instance.note,
+      'created_at': instance.createdAt.toIso8601String(),
+      'updated_at': instance.updatedAt.toIso8601String(),
+    };

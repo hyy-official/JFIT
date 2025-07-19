@@ -15,6 +15,13 @@ import 'package:jfit/features/analytics/data/repositories/supabase_analytics_rep
 // New BLoCs from refactoring
 import 'package:jfit/features/meal/bloc/meal_bloc.dart';
 import 'package:jfit/features/daily_summary/bloc/daily_summary_bloc.dart';
+
+// Group Workout Community BLoCs
+import 'package:jfit/features/group_workout_community/presentation/bloc/group/group_bloc.dart';
+import 'package:jfit/features/group_workout_community/presentation/bloc/group_activity/group_activity_bloc.dart';
+import 'package:jfit/features/group_workout_community/presentation/bloc/community/community_bloc.dart';
+import 'package:jfit/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_bloc.dart';
+
 import 'core/theme/theme_system.dart';
 import 'core/theme/theme_manager.dart';
 import 'core/utils/locale_manager.dart';
@@ -23,10 +30,12 @@ import 'package:provider/provider.dart';
 // import 'core/services/auth_service.dart'; // 주석 처리: 나중에 사용할 예정
 // import 'features/auth/presentation/pages/login_page.dart'; // 주석 처리: 나중에 사용할 예정
 import 'l10n/app_localizations.dart'; // 추가
-import 'core/navigation/main_navigation_page.dart';
+import 'core/navigation/app_router.dart';
 import 'core/widgets/auth_gate.dart';
 import 'core/navigation/stack_logging_observer.dart';
 import 'core/di/injection_container.dart';
+import 'core/utils/deep_link_handler.dart';
+import 'package:app_links/app_links.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -128,6 +137,23 @@ class JFitApp extends StatelessWidget {
           lazy: true,
           create: (context) => GetIt.instance<DailySummaryBloc>(),
         ),
+        // Group Workout Community BLoCs - all lazy loaded for performance
+        BlocProvider<GroupBloc>(
+          lazy: true,
+          create: (context) => GetIt.instance<GroupBloc>(),
+        ),
+        BlocProvider<GroupActivityBloc>(
+          lazy: true,
+          create: (context) => GetIt.instance<GroupActivityBloc>(),
+        ),
+        BlocProvider<CommunityBloc>(
+          lazy: true,
+          create: (context) => GetIt.instance<CommunityBloc>(),
+        ),
+        BlocProvider<PostInteractionBloc>(
+          lazy: true,
+          create: (context) => GetIt.instance<PostInteractionBloc>(),
+        ),
       ],
       child: const MyApp(),
     );
@@ -143,6 +169,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final LocaleManager _localeManager = LocaleManager();
+  late AppLinks _appLinks;
 
   @override
   void initState() {
@@ -150,6 +177,9 @@ class _MyAppState extends State<MyApp> {
     _localeManager.addListener(() {
       setState(() {});
     });
+    
+    // Initialize deep link handling
+    _initDeepLinks();
   }
 
   @override
@@ -158,11 +188,43 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
+  /// Initialize deep link handling
+  void _initDeepLinks() {
+    _appLinks = AppLinks();
+    
+    // Handle initial link when app is launched from a deep link
+    _appLinks.getInitialLink().then((Uri? uri) {
+      if (uri != null) {
+        _handleDeepLink(uri);
+      }
+    }).catchError((err) {
+      debugPrint('Failed to get initial link: $err');
+    });
+    
+    // Handle incoming links when app is already running
+    _appLinks.uriLinkStream.listen((Uri uri) {
+      _handleDeepLink(uri);
+    }, onError: (err) {
+      debugPrint('Failed to handle incoming link: $err');
+    });
+  }
+
+  /// Handle deep link navigation
+  void _handleDeepLink(Uri uri) {
+    // Wait for the app to be fully initialized before handling deep links
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = AppRouter.router.routerDelegate.navigatorKey.currentContext;
+      if (context != null) {
+        DeepLinkHandler.handleDeepLink(context, uri.toString());
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeManager>(
       builder: (context, themeManager, child) {
-        return MaterialApp(
+        return MaterialApp.router(
           title: 'JFiT',
           theme: JFitTheme.lightTheme,
           darkTheme: JFitTheme.darkTheme,
@@ -178,8 +240,7 @@ class _MyAppState extends State<MyApp> {
             Locale('en'), // English
             Locale('ko'), // Korean
           ],
-          navigatorObservers: [StackLoggingObserver()],
-          home: const AuthGate(child: MainNavigationPage()),
+          routerConfig: AppRouter.router,
         );
       },
     );

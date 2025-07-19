@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jfit/core/widgets/responsive_scaffold.dart';
 import 'package:jfit/features/programs/presentation/pages/programs_page.dart';
 import 'package:jfit/features/workout_session/presentation/pages/workout_session_page.dart';
@@ -15,6 +16,10 @@ import 'package:jfit/features/analytics/presentation/pages/analytics_page.dart';
 import 'package:jfit/core/widgets/theme_toggle_button.dart';
 import 'package:jfit/core/theme/theme_system.dart';
 
+// Group Workout Community Pages
+import 'package:jfit/features/group_workout_community/presentation/pages/group_list_page.dart';
+import 'package:jfit/features/group_workout_community/presentation/pages/community_board_page.dart';
+
 import 'package:jfit/core/constants/navigation_constants.dart';
 
 /// 앱 하단 내비게이션(ResponsiveScaffold)을 담당하는 메인 페이지.
@@ -23,11 +28,13 @@ import 'package:jfit/core/constants/navigation_constants.dart';
 class MainNavigationPage extends StatefulWidget {
   final int initialIndex;
   final Map<String, dynamic>? workoutSessionArgs;
+  final Widget? child; // For GoRouter shell integration
 
   const MainNavigationPage({
     super.key,
     this.initialIndex = 0,
     this.workoutSessionArgs,
+    this.child,
   });
 
   @override
@@ -66,6 +73,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         showNavigation: widget.workoutSessionArgs?['showNavigation'] ?? false,
       ),
       const ProgramsPage(),
+      const GroupListPage(),
+      const CommunityBoardPage(),
     ];
   }
 
@@ -88,24 +97,33 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           currentIndex: _currentIndex,
           navigationItems: NavigationConstants.defaultNavigationItems,
           onNavTap: (index) {
-            // 중앙 Navigator 스택 초기화 후, 새 탭 페이지로 대체
-            _navigatorKey.currentState?.popUntil((route) => route.isFirst);
-            _navigatorKey.currentState?.pushReplacement(
-              MaterialPageRoute(builder: (_) => _pages[index]),
-            );
-
             setState(() => _currentIndex = index);
 
-            // RecordPage(홈)로 이동할 때 데이터 로드
-            if (index == NavigationConstants.homeIndex) {
-              _loadRecordData();
+            // Navigate using GoRouter based on the selected tab
+            switch (index) {
+              case NavigationConstants.homeIndex:
+                context.go('/');
+                _loadRecordData();
+                break;
+              case NavigationConstants.workoutIndex:
+                // Stay on current page for workout session
+                break;
+              case NavigationConstants.programsIndex:
+                // Stay on current page for programs
+                break;
+              case NavigationConstants.groupsIndex:
+                context.go('/groups');
+                break;
+              case NavigationConstants.communityIndex:
+                context.go('/community');
+                break;
             }
           },
           onAiTap: () {
             // TODO: AI 기능 연결
           },
-          // 중앙 영역에만 적용되는 Navigator
-          body: Navigator(
+          // Use child from GoRouter shell if available, otherwise use Navigator
+          body: widget.child ?? Navigator(
             key: _navigatorKey,
             onGenerateRoute: (settings) {
               // Analytics 전용 라우트
@@ -115,8 +133,6 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                   settings: settings,
                 );
               }
-
-
 
               // 기본: 현재 탭 페이지
               return MaterialPageRoute(

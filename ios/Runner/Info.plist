@@ -53,5 +53,32 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	
+	<!-- Deep link URL schemes for group workout community -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>jfit.app.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>jfit</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>jfit.app.https</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+			</array>
+		</dict>
+	</array>
+	
+	<!-- Associated domains for universal links -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:jfit.app</string>
+	</array>
 </dict>
 </plist>

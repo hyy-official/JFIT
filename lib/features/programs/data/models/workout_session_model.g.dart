@@ -24,13 +24,13 @@ WorkoutSessionModel _$WorkoutSessionModelFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$WorkoutSessionModelToJson(
-  WorkoutSessionModel instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'user_program_id': instance.userProgramId,
-  'session_date': instance.sessionDate?.toIso8601String(),
-  'started_at': instance.startedAt?.toIso8601String(),
-  'ended_at': instance.endedAt?.toIso8601String(),
-  'is_completed': instance.isCompleted,
-  'exercises_json': instance.exercisesJson,
-};
+        WorkoutSessionModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'user_program_id': instance.userProgramId,
+      'session_date': instance.sessionDate?.toIso8601String(),
+      'started_at': instance.startedAt?.toIso8601String(),
+      'ended_at': instance.endedAt?.toIso8601String(),
+      'is_completed': instance.isCompleted,
+      'exercises_json': instance.exercisesJson,
+    };

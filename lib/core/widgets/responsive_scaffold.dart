@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_bloc.dart';
 import 'package:jfit/features/auth/bloc/auth_state.dart';
 import 'package:jfit/core/models/navigation_item.dart';
+import '../utils/breakpoint_utils.dart';
+import 'responsive_layout.dart';
 
 class ResponsiveScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
@@ -37,48 +39,55 @@ class ResponsiveScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWide = MediaQuery.of(context).size.width > 1200;
-    final showRightPanel = isWide && (rightPanel != null || showDefaultRightPanel);
-    
-    return Scaffold(
-      appBar: appBar,
-      drawer: isWide ? null : null,
-      bottomNavigationBar: isWide ? null : _BottomNavigation(
-        currentIndex: currentIndex, 
-        onTap: onNavTap, 
-        onAiTap: onAiTap,
-        navigationItems: navigationItems,
-      ),
-      body: Row(
-        children: [
-          if (isWide)
-            Flexible(
-              flex: 3, // 약 15%
-              child: _SideNavigation(
-                currentIndex: currentIndex, 
-                onTap: onNavTap, 
-                onAiTap: onAiTap,
-                navigationItems: navigationItems,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final deviceType = BreakpointUtils.getDeviceType(width);
+        final showSidebar = BreakpointUtils.shouldShowPersistentSidebar(width);
+        final showRightPanel = showSidebar && (rightPanel != null || showDefaultRightPanel);
+        
+        return Scaffold(
+          appBar: appBar,
+          drawer: showSidebar ? null : null,
+          bottomNavigationBar: BreakpointUtils.shouldUseBottomNavigation(width) 
+              ? _BottomNavigation(
+                  currentIndex: currentIndex, 
+                  onTap: onNavTap, 
+                  onAiTap: onAiTap,
+                  navigationItems: navigationItems,
+                )
+              : null,
+          body: Row(
+            children: [
+              if (showSidebar)
+                SizedBox(
+                  width: BreakpointUtils.getSidebarWidth(width),
+                  child: _SideNavigation(
+                    currentIndex: currentIndex, 
+                    onTap: onNavTap, 
+                    onAiTap: onAiTap,
+                    navigationItems: navigationItems,
+                  ),
+                ),
+              if (showSidebar)
+                VerticalDivider(width: 1, color: context.colors.surfaceVariant),
+              Expanded(
+                child: body,
               ),
-            ),
-          if (isWide)
-            VerticalDivider(width: 1, color: context.colors.surfaceVariant),
-          Flexible(
-            flex: isWide ? 14 : 1, // 약 70% (모바일에서는 전체)
-            child: body,
+              if (showRightPanel)
+                VerticalDivider(width: 1, color: context.colors.surfaceVariant),
+              if (showRightPanel)
+                SizedBox(
+                  width: rightPanelWidth,
+                  child: rightPanel ?? _DefaultRightPanel(
+                    selectedDate: selectedDate ?? DateTime.now(),
+                    dailySummary: dailySummary,
+                  ),
+                ),
+            ],
           ),
-          if (showRightPanel)
-            VerticalDivider(width: 1, color: context.colors.surfaceVariant),
-          if (showRightPanel)
-            Flexible(
-              flex: 3, // 약 15%
-              child: rightPanel ?? _DefaultRightPanel(
-                selectedDate: selectedDate ?? DateTime.now(),
-                dailySummary: dailySummary,
-              ),
-            ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

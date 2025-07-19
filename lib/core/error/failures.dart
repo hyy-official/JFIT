@@ -40,4 +40,19 @@ class AuthFailure extends Failure {
 // General Failure
 class GeneralFailure extends Failure {
   const GeneralFailure(super.message);
+}
+
+// Validation Failure
+class ValidationFailure extends Failure {
+  const ValidationFailure(super.message);
+}
+
+// Permission Failure
+class PermissionFailure extends Failure {
+  const PermissionFailure(super.message);
+}
+
+// Not Found Failure
+class NotFoundFailure extends Failure {
+  const NotFoundFailure(super.message);
 } 

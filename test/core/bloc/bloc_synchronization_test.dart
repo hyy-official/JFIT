@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
@@ -9,21 +8,16 @@ import 'package:jfit/features/meal/bloc/meal_bloc.dart';
 import 'package:jfit/features/meal/bloc/meal_event.dart';
 import 'package:jfit/features/meal/bloc/meal_state.dart';
 import 'package:jfit/features/daily_summary/bloc/daily_summary_bloc.dart';
-import 'package:jfit/features/daily_summary/bloc/daily_summary_event.dart';
 import 'package:jfit/features/daily_summary/bloc/daily_summary_state.dart';
 import 'package:jfit/features/workout_session/bloc/workout_session_bloc.dart';
-import 'package:jfit/features/workout_session/bloc/workout_session_event.dart';
-import 'package:jfit/features/workout_session/bloc/workout_session_state.dart';
 import 'package:jfit/features/workout_program/bloc/workout_program_bloc.dart';
 import 'package:jfit/features/workout_program/bloc/workout_program_event.dart';
-import 'package:jfit/features/workout_program/bloc/workout_program_state.dart';
 import 'package:jfit/features/meal/data/repositories/meal_repository.dart';
 import 'package:jfit/features/daily_summary/data/repositories/daily_summary_repository.dart';
 import 'package:jfit/features/workout_session/data/repositories/workout_session_repository.dart';
 import 'package:jfit/features/workout_program/data/repositories/workout_program_repository.dart';
 import 'package:jfit/features/records/data/models/meal_record_model.dart';
 import 'package:jfit/features/records/data/models/user_daily_summary_model.dart';
-import 'package:jfit/features/programs/data/models/workout_session_model.dart';
 
 // Generate mocks
 @GenerateMocks([
@@ -103,8 +97,7 @@ void main() {
         when(mockDailySummaryRepository.calculateAndUpdateDailySummary(any, any))
             .thenAnswer((_) async => Right(testSummary));
 
-        // Track daily summary events
-        final summaryEvents = <DailySummaryEvent>[];
+        // Track daily summary state changes
         dailySummaryBloc.stream.listen((state) {
           // In a real test, we'd track the events that caused state changes
           // For now, we'll verify the communication events are emitted
