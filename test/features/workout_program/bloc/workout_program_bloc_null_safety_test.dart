@@ -6,8 +6,14 @@ import 'package:jfit/features/workout_program/bloc/workout_program_bloc.dart';
 import 'package:jfit/features/workout_program/bloc/workout_program_event.dart';
 import 'package:jfit/features/workout_program/bloc/workout_program_state.dart';
 import 'package:jfit/features/workout_program/utils/workout_program_repository_manager.dart';
+import '../../../helpers/test_helpers.dart';
 
 void main() {
+  setUpAll(() async {
+    // Initialize test environment including Supabase
+    await TestHelpers.setupMockSupabase();
+  });
+
   group('WorkoutProgramBloc Null Safety Tests', () {
     setUp(() {
       // Reset the repository manager before each test
@@ -20,17 +26,18 @@ void main() {
 
     group('Repository Null Safety', () {
       blocTest<WorkoutProgramBloc, WorkoutProgramState>(
-        'emits RepositoryNotInitialized error when repository is null and cannot be initialized',
+        'emits error when network request fails',
         build: () {
-          // Create bloc without repository
+          // Create bloc - repository will be created but network will fail
           return WorkoutProgramBloc();
         },
         act: (bloc) => bloc.add(const LoadUserPrograms(userId: 'test-user-id')),
         expect: () => [
+          isA<WorkoutProgramLoading>(),
           isA<WorkoutProgramErrorState>().having(
             (state) => state.failure.code,
             'error code',
-            BlocErrorCodes.repositoryNotInitialized,
+            BlocErrorCodes.unknown, // Network error becomes unknown error
           ),
         ],
       );
@@ -38,33 +45,35 @@ void main() {
 
     group('All Event Handlers Null Safety', () {
       blocTest<WorkoutProgramBloc, WorkoutProgramState>(
-        'LoadProgramDetails emits repository error when repository is null',
+        'LoadProgramDetails emits error when network request fails',
         build: () => WorkoutProgramBloc(),
         act: (bloc) => bloc.add(const LoadProgramDetails(userProgramId: 'test-id')),
         expect: () => [
+          isA<WorkoutProgramLoading>(),
           isA<WorkoutProgramErrorState>().having(
             (state) => state.failure.code,
             'error code',
-            BlocErrorCodes.repositoryNotInitialized,
+            BlocErrorCodes.unknown,
           ),
         ],
       );
 
       blocTest<WorkoutProgramBloc, WorkoutProgramState>(
-        'LoadProgramDays emits repository error when repository is null',
+        'LoadProgramDays emits error when network request fails',
         build: () => WorkoutProgramBloc(),
         act: (bloc) => bloc.add(const LoadProgramDays(userProgramId: 'test-id')),
         expect: () => [
+          isA<WorkoutProgramLoading>(),
           isA<WorkoutProgramErrorState>().having(
             (state) => state.failure.code,
             'error code',
-            BlocErrorCodes.repositoryNotInitialized,
+            BlocErrorCodes.unknown,
           ),
         ],
       );
 
       blocTest<WorkoutProgramBloc, WorkoutProgramState>(
-        'UpdateProgramProgress emits repository error when repository is null',
+        'UpdateProgramProgress emits error when network request fails',
         build: () => WorkoutProgramBloc(),
         act: (bloc) => bloc.add(const UpdateProgramProgress(
           userProgramId: 'test-id',
@@ -72,16 +81,17 @@ void main() {
           currentDay: 1,
         )),
         expect: () => [
+          isA<WorkoutProgramLoading>(),
           isA<WorkoutProgramErrorState>().having(
             (state) => state.failure.code,
             'error code',
-            BlocErrorCodes.repositoryNotInitialized,
+            BlocErrorCodes.unknown,
           ),
         ],
       );
 
       blocTest<WorkoutProgramBloc, WorkoutProgramState>(
-        'CompleteProgramDay emits repository error when repository is null',
+        'CompleteProgramDay emits error when network request fails',
         build: () => WorkoutProgramBloc(),
         act: (bloc) => bloc.add(const CompleteProgramDay(
           userProgramId: 'test-id',
@@ -89,55 +99,58 @@ void main() {
           day: 1,
         )),
         expect: () => [
+          isA<WorkoutProgramLoading>(),
           isA<WorkoutProgramErrorState>().having(
             (state) => state.failure.code,
             'error code',
-            BlocErrorCodes.repositoryNotInitialized,
+            BlocErrorCodes.unknown,
           ),
         ],
       );
 
       blocTest<WorkoutProgramBloc, WorkoutProgramState>(
-        'DeleteUserProgram emits repository error when repository is null',
+        'DeleteUserProgram emits error when network request fails',
         build: () => WorkoutProgramBloc(),
         act: (bloc) => bloc.add(const DeleteUserProgram(
           userProgramId: 'test-id',
           userId: 'test-user-id',
         )),
         expect: () => [
+          isA<WorkoutProgramLoading>(),
           isA<WorkoutProgramErrorState>().having(
             (state) => state.failure.code,
             'error code',
-            BlocErrorCodes.repositoryNotInitialized,
+            BlocErrorCodes.unknown,
           ),
         ],
       );
 
       blocTest<WorkoutProgramBloc, WorkoutProgramState>(
-        'LoadCurrentWorkoutInfo emits repository error when repository is null',
+        'LoadCurrentWorkoutInfo emits error when network request fails',
         build: () => WorkoutProgramBloc(),
         act: (bloc) => bloc.add(const LoadCurrentWorkoutInfo(userId: 'test-user-id')),
         expect: () => [
+          isA<WorkoutProgramLoading>(),
           isA<WorkoutProgramErrorState>().having(
             (state) => state.failure.code,
             'error code',
-            BlocErrorCodes.repositoryNotInitialized,
+            BlocErrorCodes.unknown,
           ),
         ],
       );
     });
 
     group('Repository Manager Tests', () {
-      test('getInstance returns null when no repository is available', () {
+      test('getInstance returns repository when Supabase is available', () {
         WorkoutProgramRepositoryManager.reset();
         final repository = WorkoutProgramRepositoryManager.getInstance();
-        expect(repository, isNull);
+        expect(repository, isNotNull);
       });
 
-      test('checkRepositoryHealth returns correct status', () {
+      test('checkRepositoryHealth returns healthy status when Supabase is available', () {
         WorkoutProgramRepositoryManager.reset();
         var status = WorkoutProgramRepositoryManager.checkRepositoryHealth();
-        expect(status, equals(RepositoryHealthStatus.notInitialized));
+        expect(status, equals(RepositoryHealthStatus.healthy));
       });
 
       test('createInitializationFailure returns proper failure', () {

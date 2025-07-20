@@ -34,11 +34,15 @@ class _GroupSearchBarState extends State<GroupSearchBar> {
     _debounceTimer = Timer(widget.debounceTime, () {
       widget.onSearchChanged(value);
     });
+    // Trigger rebuild to show/hide clear button
+    setState(() {});
   }
 
   void _clearSearch() {
+    _debounceTimer?.cancel();
     _controller.clear();
     widget.onSearchChanged('');
+    setState(() {});
   }
 
   @override

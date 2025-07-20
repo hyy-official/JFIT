@@ -3,23 +3,23 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i4;
 
-import 'package:dartz/dartz.dart' as _i3;
-import 'package:jfit/core/error/failures.dart' as _i7;
-import 'package:jfit/features/programs/data/datasources/program_remote_datasource.dart'
-    as _i5;
-import 'package:jfit/features/programs/data/models/exercise_model.dart' as _i4;
+import 'package:dartz/dartz.dart' as _i2;
+import 'package:jfit/core/error/failures.dart' as _i5;
+import 'package:jfit/features/programs/data/models/exercise_model.dart' as _i11;
 import 'package:jfit/features/programs/data/models/user_program_day_model.dart'
-    as _i9;
-import 'package:jfit/features/programs/data/models/workout_log_model.dart'
-    as _i11;
-import 'package:jfit/features/programs/data/models/workout_program_model.dart'
-    as _i2;
-import 'package:jfit/features/programs/data/models/workout_session_model.dart'
-    as _i10;
-import 'package:jfit/features/workout_program/data/models/duplicate_check_result_model.dart'
     as _i8;
+import 'package:jfit/features/programs/data/models/workout_log_model.dart'
+    as _i10;
+import 'package:jfit/features/programs/data/models/workout_session_model.dart'
+    as _i9;
+import 'package:jfit/features/programs/domain/entities/workout_program.dart'
+    as _i6;
+import 'package:jfit/features/programs/domain/repositories/program_repository.dart'
+    as _i3;
+import 'package:jfit/features/workout_program/data/models/duplicate_check_result_model.dart'
+    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -36,9 +36,8 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeWorkoutProgramModel_0 extends _i1.SmartFake
-    implements _i2.WorkoutProgramModel {
-  _FakeWorkoutProgramModel_0(
+class _FakeEither_0<L, R> extends _i1.SmartFake implements _i2.Either<L, R> {
+  _FakeEither_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -47,48 +46,34 @@ class _FakeWorkoutProgramModel_0 extends _i1.SmartFake
         );
 }
 
-class _FakeEither_1<L, R> extends _i1.SmartFake implements _i3.Either<L, R> {
-  _FakeEither_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeExerciseModel_2 extends _i1.SmartFake implements _i4.ExerciseModel {
-  _FakeExerciseModel_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-/// A class which mocks [ProgramRemoteDataSource].
+/// A class which mocks [ProgramRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockProgramRemoteDataSource extends _i1.Mock
-    implements _i5.ProgramRemoteDataSource {
-  MockProgramRemoteDataSource() {
+class MockProgramRepository extends _i1.Mock implements _i3.ProgramRepository {
+  MockProgramRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<List<_i2.WorkoutProgramModel>> getPopularPrograms() =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getPopularPrograms,
-          [],
-        ),
-        returnValue: _i6.Future<List<_i2.WorkoutProgramModel>>.value(
-            <_i2.WorkoutProgramModel>[]),
-      ) as _i6.Future<List<_i2.WorkoutProgramModel>>);
+  _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>
+      getPopularPrograms() => (super.noSuchMethod(
+            Invocation.method(
+              #getPopularPrograms,
+              [],
+            ),
+            returnValue: _i4.Future<
+                    _i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i6.WorkoutProgram>>(
+              this,
+              Invocation.method(
+                #getPopularPrograms,
+                [],
+              ),
+            )),
+          ) as _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>);
 
   @override
-  _i6.Future<List<_i2.WorkoutProgramModel>> getPrograms({
+  _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>> getPrograms({
     String? searchQuery,
     String? difficultyLevel,
     String? programType,
@@ -107,203 +92,245 @@ class MockProgramRemoteDataSource extends _i1.Mock
             #tags: tags,
           },
         ),
-        returnValue: _i6.Future<List<_i2.WorkoutProgramModel>>.value(
-            <_i2.WorkoutProgramModel>[]),
-      ) as _i6.Future<List<_i2.WorkoutProgramModel>>);
+        returnValue:
+            _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i6.WorkoutProgram>>(
+          this,
+          Invocation.method(
+            #getPrograms,
+            [],
+            {
+              #searchQuery: searchQuery,
+              #difficultyLevel: difficultyLevel,
+              #programType: programType,
+              #workoutsPerWeek: workoutsPerWeek,
+              #tags: tags,
+            },
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>);
 
   @override
-  _i6.Future<_i2.WorkoutProgramModel> getProgramById(String? id) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i6.WorkoutProgram>> getProgramById(
+          String? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getProgramById,
           [id],
         ),
-        returnValue: _i6.Future<_i2.WorkoutProgramModel>.value(
-            _FakeWorkoutProgramModel_0(
+        returnValue:
+            _i4.Future<_i2.Either<_i5.Failure, _i6.WorkoutProgram>>.value(
+                _FakeEither_0<_i5.Failure, _i6.WorkoutProgram>(
           this,
           Invocation.method(
             #getProgramById,
             [id],
           ),
         )),
-      ) as _i6.Future<_i2.WorkoutProgramModel>);
+      ) as _i4.Future<_i2.Either<_i5.Failure, _i6.WorkoutProgram>>);
 
   @override
-  _i6.Future<void> addProgramToUser(
-    String? programId,
-    String? userId,
-  ) =>
+  _i4.Future<_i2.Either<_i5.Failure, void>> addProgramToUser(
+          String? programId) =>
       (super.noSuchMethod(
         Invocation.method(
           #addProgramToUser,
-          [
-            programId,
-            userId,
-          ],
+          [programId],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+            _FakeEither_0<_i5.Failure, void>(
+          this,
+          Invocation.method(
+            #addProgramToUser,
+            [programId],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
 
   @override
-  _i6.Future<_i3.Either<_i7.Failure, _i8.DuplicateCheckResult>> saveAsMyRoutine(
-    String? templateProgramId,
-    String? userId,
-  ) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i7.DuplicateCheckResult>> saveAsMyRoutine(
+          String? templateProgramId) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveAsMyRoutine,
-          [
-            templateProgramId,
-            userId,
-          ],
+          [templateProgramId],
         ),
         returnValue:
-            _i6.Future<_i3.Either<_i7.Failure, _i8.DuplicateCheckResult>>.value(
-                _FakeEither_1<_i7.Failure, _i8.DuplicateCheckResult>(
+            _i4.Future<_i2.Either<_i5.Failure, _i7.DuplicateCheckResult>>.value(
+                _FakeEither_0<_i5.Failure, _i7.DuplicateCheckResult>(
           this,
           Invocation.method(
             #saveAsMyRoutine,
-            [
-              templateProgramId,
-              userId,
-            ],
+            [templateProgramId],
           ),
         )),
-      ) as _i6.Future<_i3.Either<_i7.Failure, _i8.DuplicateCheckResult>>);
+      ) as _i4.Future<_i2.Either<_i5.Failure, _i7.DuplicateCheckResult>>);
 
   @override
-  _i6.Future<List<_i2.WorkoutProgramModel>> getUserPrograms(String? userId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getUserPrograms,
-          [userId],
-        ),
-        returnValue: _i6.Future<List<_i2.WorkoutProgramModel>>.value(
-            <_i2.WorkoutProgramModel>[]),
-      ) as _i6.Future<List<_i2.WorkoutProgramModel>>);
+  _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>
+      getUserPrograms() => (super.noSuchMethod(
+            Invocation.method(
+              #getUserPrograms,
+              [],
+            ),
+            returnValue: _i4.Future<
+                    _i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i6.WorkoutProgram>>(
+              this,
+              Invocation.method(
+                #getUserPrograms,
+                [],
+              ),
+            )),
+          ) as _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>);
 
   @override
-  _i6.Future<List<_i2.WorkoutProgramModel>> searchPrograms(String? query) =>
+  _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>> searchPrograms(
+          String? query) =>
       (super.noSuchMethod(
         Invocation.method(
           #searchPrograms,
           [query],
         ),
-        returnValue: _i6.Future<List<_i2.WorkoutProgramModel>>.value(
-            <_i2.WorkoutProgramModel>[]),
-      ) as _i6.Future<List<_i2.WorkoutProgramModel>>);
+        returnValue:
+            _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i6.WorkoutProgram>>(
+          this,
+          Invocation.method(
+            #searchPrograms,
+            [query],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, List<_i6.WorkoutProgram>>>);
 
   @override
-  _i6.Future<List<_i9.UserProgramDayModel>> getUserProgramDays(
-          String? userProgramId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getUserProgramDays,
-          [userProgramId],
-        ),
-        returnValue: _i6.Future<List<_i9.UserProgramDayModel>>.value(
-            <_i9.UserProgramDayModel>[]),
-      ) as _i6.Future<List<_i9.UserProgramDayModel>>);
+  _i4.Future<_i2.Either<_i5.Failure, List<_i8.UserProgramDayModel>>>
+      getUserProgramDays(String? userProgramId) => (super.noSuchMethod(
+            Invocation.method(
+              #getUserProgramDays,
+              [userProgramId],
+            ),
+            returnValue: _i4.Future<
+                    _i2
+                    .Either<_i5.Failure, List<_i8.UserProgramDayModel>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i8.UserProgramDayModel>>(
+              this,
+              Invocation.method(
+                #getUserProgramDays,
+                [userProgramId],
+              ),
+            )),
+          ) as _i4
+              .Future<_i2.Either<_i5.Failure, List<_i8.UserProgramDayModel>>>);
 
   @override
-  _i6.Future<List<_i10.WorkoutSessionModel>> getWorkoutSessionsByUserProgram(
-          String? userProgramId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getWorkoutSessionsByUserProgram,
-          [userProgramId],
-        ),
-        returnValue: _i6.Future<List<_i10.WorkoutSessionModel>>.value(
-            <_i10.WorkoutSessionModel>[]),
-      ) as _i6.Future<List<_i10.WorkoutSessionModel>>);
+  _i4.Future<_i2.Either<_i5.Failure, List<_i9.WorkoutSessionModel>>>
+      getWorkoutSessionsByUserProgram(String? userProgramId) =>
+          (super.noSuchMethod(
+            Invocation.method(
+              #getWorkoutSessionsByUserProgram,
+              [userProgramId],
+            ),
+            returnValue: _i4.Future<
+                    _i2
+                    .Either<_i5.Failure, List<_i9.WorkoutSessionModel>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i9.WorkoutSessionModel>>(
+              this,
+              Invocation.method(
+                #getWorkoutSessionsByUserProgram,
+                [userProgramId],
+              ),
+            )),
+          ) as _i4
+              .Future<_i2.Either<_i5.Failure, List<_i9.WorkoutSessionModel>>>);
 
   @override
-  _i6.Future<List<_i11.WorkoutLogModel>> getWorkoutLogsBySession(
-          String? sessionId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getWorkoutLogsBySession,
-          [sessionId],
-        ),
-        returnValue: _i6.Future<List<_i11.WorkoutLogModel>>.value(
-            <_i11.WorkoutLogModel>[]),
-      ) as _i6.Future<List<_i11.WorkoutLogModel>>);
+  _i4.Future<_i2.Either<_i5.Failure, List<_i10.WorkoutLogModel>>>
+      getWorkoutLogsBySession(String? sessionId) => (super.noSuchMethod(
+            Invocation.method(
+              #getWorkoutLogsBySession,
+              [sessionId],
+            ),
+            returnValue: _i4.Future<
+                    _i2.Either<_i5.Failure, List<_i10.WorkoutLogModel>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i10.WorkoutLogModel>>(
+              this,
+              Invocation.method(
+                #getWorkoutLogsBySession,
+                [sessionId],
+              ),
+            )),
+          ) as _i4.Future<_i2.Either<_i5.Failure, List<_i10.WorkoutLogModel>>>);
 
   @override
-  _i6.Future<_i4.ExerciseModel> getExerciseById(String? exerciseId) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i11.ExerciseModel>> getExerciseById(
+          String? exerciseId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getExerciseById,
           [exerciseId],
         ),
-        returnValue: _i6.Future<_i4.ExerciseModel>.value(_FakeExerciseModel_2(
+        returnValue:
+            _i4.Future<_i2.Either<_i5.Failure, _i11.ExerciseModel>>.value(
+                _FakeEither_0<_i5.Failure, _i11.ExerciseModel>(
           this,
           Invocation.method(
             #getExerciseById,
             [exerciseId],
           ),
         )),
-      ) as _i6.Future<_i4.ExerciseModel>);
+      ) as _i4.Future<_i2.Either<_i5.Failure, _i11.ExerciseModel>>);
 
   @override
-  _i6.Future<Map<String, dynamic>?> checkProgramDuplicate(
-    String? programId,
-    String? userId,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #checkProgramDuplicate,
-          [
-            programId,
-            userId,
-          ],
-        ),
-        returnValue: _i6.Future<Map<String, dynamic>?>.value(),
-      ) as _i6.Future<Map<String, dynamic>?>);
+  _i4.Future<_i2.Either<_i5.Failure, Map<String, dynamic>?>>
+      checkProgramDuplicate(String? programId) => (super.noSuchMethod(
+            Invocation.method(
+              #checkProgramDuplicate,
+              [programId],
+            ),
+            returnValue: _i4
+                .Future<_i2.Either<_i5.Failure, Map<String, dynamic>?>>.value(
+                _FakeEither_0<_i5.Failure, Map<String, dynamic>?>(
+              this,
+              Invocation.method(
+                #checkProgramDuplicate,
+                [programId],
+              ),
+            )),
+          ) as _i4.Future<_i2.Either<_i5.Failure, Map<String, dynamic>?>>);
 
   @override
-  _i6.Future<void> restartProgram(
-    String? programId,
-    String? userId,
-  ) =>
+  _i4.Future<_i2.Either<_i5.Failure, void>> restartProgram(String? programId) =>
       (super.noSuchMethod(
         Invocation.method(
           #restartProgram,
-          [
-            programId,
-            userId,
-          ],
+          [programId],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+            _FakeEither_0<_i5.Failure, void>(
+          this,
+          Invocation.method(
+            #restartProgram,
+            [programId],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
 
   @override
-  _i6.Future<void> continueProgram(
-    String? programId,
-    String? userId,
-  ) =>
+  _i4.Future<_i2.Either<_i5.Failure, void>> continueProgram(
+          String? programId) =>
       (super.noSuchMethod(
         Invocation.method(
           #continueProgram,
-          [
-            programId,
-            userId,
-          ],
+          [programId],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> cleanupDuplicatePrograms(String? userId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #cleanupDuplicatePrograms,
-          [userId],
-        ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+            _FakeEither_0<_i5.Failure, void>(
+          this,
+          Invocation.method(
+            #continueProgram,
+            [programId],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
 }

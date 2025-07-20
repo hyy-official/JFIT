@@ -21,20 +21,22 @@ class RankingLeaderboardWidget extends StatelessWidget {
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${_getPeriodText(period)} 그룹 랭킹',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        const SizedBox(height: 16),
-        // Top 3 podium
-        if (rankings.length >= 3) _buildPodium(context),
-        const SizedBox(height: 24),
-        // Full ranking list
-        _buildRankingList(context),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${_getPeriodText(period)} 그룹 랭킹',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 16),
+          // Top 3 podium
+          if (rankings.length >= 3) _buildPodium(context),
+          const SizedBox(height: 24),
+          // Full ranking list
+          _buildRankingList(context),
+        ],
+      ),
     );
   }
 
@@ -74,67 +76,72 @@ class RankingLeaderboardWidget extends StatelessWidget {
     final colors = [Colors.amber, Colors.grey[400]!, Colors.brown[400]!];
     final color = colors[position - 1];
 
-    return GestureDetector(
-      onTap: () => onGroupTap?.call(ranking.groupId),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Crown/Medal
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => onGroupTap?.call(ranking.groupId),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Crown/Medal
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                position == 1 ? Icons.emoji_events : Icons.military_tech,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
-            child: Icon(
-              position == 1 ? Icons.emoji_events : Icons.military_tech,
-              color: Colors.white,
-              size: 24,
+            const SizedBox(height: 4),
+            // Group name
+            Flexible(
+              child: Text(
+                ranking.groupName,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          // Group name
-          SizedBox(
-            width: 80,
-            child: Text(
-              ranking.groupName,
+            const SizedBox(height: 2),
+            // Score
+            Text(
+              '${ranking.totalScore}점',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontSize: 9,
               ),
               textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          const SizedBox(height: 4),
-          // Score
-          Text(
-            '${ranking.totalScore}점',
-            style: Theme.of(context).textTheme.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          // Podium base
-          Container(
-            width: 60,
-            height: height,
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.7),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-            ),
-            child: Center(
-              child: Text(
-                '$position',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+            const SizedBox(height: 4),
+            // Podium base
+            Container(
+              width: 50,
+              height: height * 0.6, // Reduce height to prevent overflow
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.7),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+              ),
+              child: Center(
+                child: Text(
+                  '$position',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

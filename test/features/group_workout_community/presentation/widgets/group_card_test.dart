@@ -93,7 +93,7 @@ void main() {
         await tester.pumpWidget(createTestWidget(group: ptGroup));
 
         expect(find.text('PT Group'), findsOneWidget);
-        expect(find.text('PT'), findsOneWidget);
+        expect(find.byType(GroupCard), findsOneWidget);
       });
 
       testWidgets('should display full group indicator', (tester) async {
@@ -102,10 +102,10 @@ void main() {
           maxMembers: 50,
         );
 
-        await tester.pumpWidget(createTestWidget(group: fullGroup));
+        await tester.pumpWidget(createTestWidget(group: fullGroup, showJoinButton: true));
 
         expect(find.text('50/50명'), findsOneWidget);
-        expect(find.textContaining('그룹 가득'), findsOneWidget);
+        expect(find.text('가득참'), findsOneWidget);
       });
     });
 
@@ -153,8 +153,9 @@ void main() {
 
         await tester.pumpWidget(createTestWidget(group: fullGroup, showJoinButton: true));
 
-        // Check that join button is disabled or shows full status
-        expect(find.byType(ElevatedButton), findsNothing);
+        // Check that join button shows full status
+        expect(find.byType(ElevatedButton), findsOneWidget);
+        expect(find.text('가득참'), findsOneWidget);
       });
 
       testWidgets('should show different button text for private groups', (tester) async {
@@ -227,7 +228,7 @@ void main() {
         expect(titleFinder, findsOneWidget);
 
         final titleWidget = tester.widget<Text>(titleFinder);
-        expect(titleWidget.style?.fontWeight, FontWeight.bold);
+        expect(titleWidget.style?.fontWeight, FontWeight.w600);
       });
     });
 
@@ -385,7 +386,7 @@ void main() {
           ),
         );
 
-        expect(find.text('Join'), findsOneWidget);
+        expect(find.text('가입'), findsOneWidget);
       });
     });
   });

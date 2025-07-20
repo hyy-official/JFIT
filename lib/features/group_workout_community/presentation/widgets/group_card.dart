@@ -24,7 +24,7 @@ class GroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     // Create comprehensive semantic label for the entire card
     final semanticLabel = AccessibilityUtils.groupCardSemanticLabel(
@@ -241,7 +241,7 @@ class GroupCard extends StatelessWidget {
   Widget _buildPrivacyBadge(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     final isPublic = group.privacyType == GroupPrivacyType.public;
     final privacyText = isPublic ? '공개' : '비공개';
@@ -283,7 +283,7 @@ class GroupCard extends StatelessWidget {
 
   Widget _buildJoinButton(BuildContext context, DeviceType deviceType, {bool isCompact = false}) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final isFull = group.currentMemberCount >= group.maxMembers;
     
     final semanticLabel = isFull 
@@ -345,7 +345,9 @@ class GroupCard extends StatelessWidget {
   Widget _buildProgressIndicator(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final progress = group.currentMemberCount / group.maxMembers;
+    final progress = group.maxMembers > 0 
+        ? (group.currentMemberCount / group.maxMembers).clamp(0.0, 1.0)
+        : 0.0;
     
     return Column(
       children: [

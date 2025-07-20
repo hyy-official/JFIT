@@ -58,7 +58,7 @@ class AppRouter {
             builder: (context, state) => WorkoutSessionPage(
               sessionId: state.uri.queryParameters['sessionId'],
               programId: state.uri.queryParameters['programId'],
-              programDay: int.tryParse(state.uri.queryParameters['programDay'] ?? ''),
+              programDay: state.uri.queryParameters['programDay'],
               targetWeek: int.tryParse(state.uri.queryParameters['targetWeek'] ?? ''),
               targetDay: int.tryParse(state.uri.queryParameters['targetDay'] ?? ''),
               showNavigation: state.uri.queryParameters['showNavigation'] == 'true',

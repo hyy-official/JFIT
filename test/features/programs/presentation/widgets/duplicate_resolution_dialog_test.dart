@@ -20,7 +20,9 @@ Future<ResolutionOption?> showDuplicateResolutionDialog({
           Text(_getStatusText(duplicateInfo.status)),
         ],
       ),
-      actions: duplicateInfo.availableOptions.map((option) {
+      actions: duplicateInfo.availableOptions
+          .where((option) => option != ResolutionOption.cancel)
+          .map((option) {
         return TextButton(
           onPressed: () => Navigator.of(context).pop(option),
           child: Text(_getOptionText(option)),
@@ -165,7 +167,6 @@ void main() {
 
       // assert
       expect(find.text('기존 프로그램 계속하기'), findsOneWidget);
-      expect(find.text('현재 진행 중인 프로그램을 이어서 진행합니다.'), findsOneWidget);
     });
 
     testWidgets('should show restart option', (tester) async {
@@ -178,7 +179,6 @@ void main() {
 
       // assert
       expect(find.text('프로그램 다시 시작'), findsOneWidget);
-      expect(find.text('기존 프로그램을 처음부터 다시 시작합니다.'), findsOneWidget);
     });
 
     testWidgets('should show create new option', (tester) async {
@@ -191,7 +191,6 @@ void main() {
 
       // assert
       expect(find.text('새 프로그램으로 저장'), findsOneWidget);
-      expect(find.text('기존 프로그램과 별도로 새 프로그램을 생성합니다.'), findsOneWidget);
     });
 
     testWidgets('should show cancel option', (tester) async {

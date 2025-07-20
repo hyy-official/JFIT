@@ -5,6 +5,8 @@ import 'package:jfit/features/group_workout_community/presentation/bloc/post_int
 import 'package:jfit/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_event.dart';
 import 'package:jfit/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_state.dart';
 import 'package:jfit/features/group_workout_community/domain/entities/post_comment.dart';
+import 'package:jfit/features/group_workout_community/domain/entities/community_post.dart';
+import 'package:jfit/features/group_workout_community/domain/repositories/post_interaction_repository.dart';
 
 /// 댓글 목록 위젯 - 대댓글 지원, 좋아요, 중첩 댓글 들여쓰기 반응형 처리
 class CommentListWidget extends StatefulWidget {
@@ -282,6 +284,7 @@ class _CommentListWidgetState extends State<CommentListWidget> {
       child: CommentInputWidget(
         postId: widget.postId,
         parentCommentId: parentCommentId,
+        currentUserId: widget.currentUserId,
         hintText: '답글을 입력하세요...',
         onCommentSubmitted: () {
           setState(() {
@@ -414,6 +417,7 @@ class _CommentListWidgetState extends State<CommentListWidget> {
 class CommentInputWidget extends StatefulWidget {
   final String postId;
   final String? parentCommentId;
+  final String currentUserId;
   final String hintText;
   final VoidCallback? onCommentSubmitted;
   final VoidCallback? onCancel;
@@ -422,6 +426,7 @@ class CommentInputWidget extends StatefulWidget {
     super.key,
     required this.postId,
     this.parentCommentId,
+    required this.currentUserId,
     this.hintText = '댓글을 입력하세요...',
     this.onCommentSubmitted,
     this.onCancel,
@@ -452,10 +457,12 @@ class _CommentInputWidgetState extends State<CommentInputWidget> {
     });
 
     context.read<PostInteractionBloc>().add(AddComment(
-      postId: widget.postId,
-      parentCommentId: widget.parentCommentId,
-      content: content,
-      authorId: 'current_user_id', // TODO: Get from auth service
+      AddCommentRequest(
+        postId: widget.postId,
+        authorId: widget.currentUserId,
+        content: content,
+        parentCommentId: widget.parentCommentId,
+      ),
     ));
 
     // Listen for comment submission result
@@ -468,14 +475,14 @@ class _CommentInputWidgetState extends State<CommentInputWidget> {
           _controller.clear();
           widget.onCommentSubmitted?.call();
         }
-      } else if (state is PostInteractionError) {
+      } else if (state is PostInteractionErrorState) {
         if (mounted) {
           setState(() {
             _isSubmitting = false;
           });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(state.userMessage),
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );

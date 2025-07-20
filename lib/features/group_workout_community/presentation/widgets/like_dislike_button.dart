@@ -4,6 +4,7 @@ import 'package:jfit/core/utils/breakpoint_utils.dart';
 import 'package:jfit/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_bloc.dart';
 import 'package:jfit/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_event.dart';
 import 'package:jfit/features/group_workout_community/presentation/bloc/post_interaction/post_interaction_state.dart';
+import 'package:jfit/features/group_workout_community/domain/entities/community_post.dart';
 
 /// 좋아요/싫어요 버튼 위젯 - 터치 영역 최적화, 애니메이션 효과
 class LikeDislikeButton extends StatefulWidget {

@@ -8,12 +8,18 @@ import 'package:jfit/features/workout_program/data/repositories/workout_program_
 import 'package:jfit/core/error/workout_program_failures.dart';
 
 import 'workout_program_repository_manager_test.mocks.dart';
+import '../../../helpers/test_helpers.dart';
 
 @GenerateMocks([
   WorkoutProgramRepository,
   SupabaseClient,
 ])
 void main() {
+  setUpAll(() async {
+    // Initialize test environment including Supabase
+    await TestHelpers.setupMockSupabase();
+  });
+
   group('WorkoutProgramRepositoryManager', () {
     late MockWorkoutProgramRepository mockRepository;
     late MockSupabaseClient mockSupabaseClient;
@@ -41,14 +47,15 @@ void main() {
     });
 
     group('getInstance', () {
-      test('should return null when repository cannot be initialized', () {
-        // arrange - no registrations in GetIt
+      test('should return repository instance when Supabase is available', () {
+        // arrange - Supabase is initialized in setUpAll
 
         // act
         final result = WorkoutProgramRepositoryManager.getInstance();
 
         // assert
-        expect(result, isNull);
+        expect(result, isNotNull);
+        expect(result, isA<WorkoutProgramRepository>());
       });
 
       test('should return repository from GetIt when registered', () {
@@ -88,40 +95,38 @@ void main() {
       });
 
       test('should handle GetIt exception gracefully', () {
-        // arrange
-        GetIt.instance.registerSingleton<WorkoutProgramRepository>(mockRepository);
-        // Simulate GetIt exception by unregistering after registration check
-        GetIt.instance.unregister<WorkoutProgramRepository>();
+        // arrange - no GetIt registration, should fallback to Supabase client
 
         // act
         final result = WorkoutProgramRepositoryManager.getInstance();
 
-        // assert
-        expect(result, isNull); // Should not throw, just return null
+        // assert - should create fallback instance since Supabase is available
+        expect(result, isNotNull);
+        expect(result, isA<WorkoutProgramRepository>());
       });
     });
 
     group('checkRepositoryHealth', () {
-      test('should return notInitialized when repository is null', () {
-        // arrange - no repository setup
+      test('should return healthy when repository is available', () {
+        // arrange - Supabase is initialized, so repository should be available
 
         // act
         final status = WorkoutProgramRepositoryManager.checkRepositoryHealth();
 
         // assert
-        expect(status, RepositoryHealthStatus.notInitialized);
+        expect(status, RepositoryHealthStatus.healthy);
       });
 
-      test('should return clientUnavailable when repository exists but client is null', () {
+      test('should return healthy when repository exists and client is available', () {
         // arrange
         WorkoutProgramRepositoryManager.setInstance(mockRepository);
-        // No Supabase client registered
+        // Supabase client is available from setUpAll
 
         // act
         final status = WorkoutProgramRepositoryManager.checkRepositoryHealth();
 
         // assert
-        expect(status, RepositoryHealthStatus.clientUnavailable);
+        expect(status, RepositoryHealthStatus.healthy);
       });
 
       test('should return healthy when both repository and client are available', () {
@@ -178,35 +183,36 @@ void main() {
         // act
         WorkoutProgramRepositoryManager.reset();
 
-        // assert
+        // assert - after reset, should create new instance since Supabase is available
         final result = WorkoutProgramRepositoryManager.getInstance();
-        expect(result, isNull); // Should be null since no registrations
+        expect(result, isNotNull);
+        expect(result, isNot(equals(mockRepository))); // Should be different instance
       });
     });
 
     group('createInitializationFailure', () {
-      test('should create failure with notInitialized status', () {
-        // arrange - no repository setup
+      test('should create failure with healthy status when repository is available', () {
+        // arrange - Supabase is available, so repository should be healthy
 
         // act
         final failure = WorkoutProgramRepositoryManager.createInitializationFailure();
 
         // assert
         expect(failure, isA<RepositoryNotInitializedFailure>());
-        expect(failure.technicalMessage, contains('Repository instance could not be created'));
+        expect(failure.technicalMessage, contains('Repository appears healthy but initialization failed'));
       });
 
-      test('should create failure with clientUnavailable status', () {
+      test('should create failure with healthy status when repository and client are available', () {
         // arrange
         WorkoutProgramRepositoryManager.setInstance(mockRepository);
-        // No Supabase client
+        // Supabase client is available from setUpAll
 
         // act
         final failure = WorkoutProgramRepositoryManager.createInitializationFailure();
 
         // assert
         expect(failure, isA<RepositoryNotInitializedFailure>());
-        expect(failure.technicalMessage, contains('Supabase client is not available'));
+        expect(failure.technicalMessage, contains('Repository appears healthy but initialization failed'));
       });
 
       test('should create failure with healthy status when repository appears healthy', () {
@@ -229,7 +235,8 @@ void main() {
 
         // act & assert - should not throw
         expect(() => WorkoutProgramRepositoryManager.getInstance(), returnsNormally);
-        expect(WorkoutProgramRepositoryManager.getInstance(), isNull);
+        // Since Supabase is available, should return a repository instance
+        expect(WorkoutProgramRepositoryManager.getInstance(), isNotNull);
       });
 
       test('should handle multiple initialization attempts', () {

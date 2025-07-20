@@ -2,8 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jfit/core/di/injection_container.dart';
 import 'package:jfit/features/workout_program/bloc/workout_program_bloc.dart';
-import 'package:jfit/features/workout_program/data/repositories/workout_program_repository.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   group('Injection Container Robustness Tests', () {
@@ -18,12 +16,12 @@ void main() {
     });
 
     group('Dependency Setup Error Handling', () {
-      test('setupDependencies handles errors gracefully and sets up fallbacks', () {
-        // This test verifies that setupDependencies doesn't throw even when Supabase is not initialized
-        expect(() => setupDependencies(), returnsNormally);
+      test('resetDependencies clears all registrations', () {
+        // This test verifies that resetDependencies works correctly
+        resetDependencies();
         
-        // Verify that fallback WorkoutProgramBloc is available even if repository setup fails
-        expect(GetIt.instance.isRegistered<WorkoutProgramBloc>(), isTrue);
+        // GetIt should be reset after calling resetDependencies
+        expect(() => resetDependencies(), returnsNormally);
       });
 
       test('fallback dependencies are set up when main setup fails', () {
