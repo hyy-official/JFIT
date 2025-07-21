@@ -21,7 +21,7 @@ import 'package:jfit/features/programs/data/models/workout_session_model.dart';
 import 'package:jfit/core/theme/theme_system.dart';
 
 // Navigation imports
-import 'package:jfit/core/navigation/main_navigation_page.dart';
+import 'package:go_router/go_router.dart';
 
 // Component imports
 import 'program_detail/components/program_header.dart';
@@ -103,22 +103,8 @@ class _ProgramDetailSheetState extends State<ProgramDetailSheet> {
         // 바텀시트를 닫고 WorkoutSessionPage로 이동
         Navigator.of(context).pop();
         
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (_) => MainNavigationPage(
-              initialIndex: 1, // "내 운동" 탭 (0: 홈, 1: 내 운동, 2: 루틴)
-              workoutSessionArgs: {
-                'sessionId': null,
-                'programId': workoutProgram['id'] as String,
-                'programDay': programDay,
-                'targetWeek': _controller.selectedWeek,
-                'targetDay': selectedDayObj.day,
-                'showNavigation': false,
-              },
-            ),
-          ),
-          (route) => false,
-        );
+        // GoRouter를 사용하여 workout 페이지로 이동
+        context.go('/workout?programId=${workoutProgram['id']}&programDay=${Uri.encodeComponent(programDay)}&targetWeek=${_controller.selectedWeek}&targetDay=${selectedDayObj.day}&showNavigation=false');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

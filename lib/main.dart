@@ -46,9 +46,8 @@ Future<void> main() async {
   try {
     // Supabase 프로젝트 초기화 with error handling
     PerformanceMonitor.startTiming('supabase_initialization');
-    final supabaseUrl = const String.fromEnvironment('SUPABASE_URL');
-    final supabaseKey = const String.fromEnvironment('SUPABASE_SERVICE_KEY', 
-        defaultValue: const String.fromEnvironment('SUPABASE_ANON_KEY'));
+    const supabaseUrl = 'https://mdjsjdxvumdxjulgemhg.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kanNqZHh2dW1keGp1bGdlbWhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0Mzg4MzIsImV4cCI6MjA2NzAxNDgzMn0.5dPioDEXWBq7Wu_WD7P9t519l7CYzxVN2HKOQm9gVUc';
     
     print('🔑 Supabase URL: $supabaseUrl');
     print('🔑 Supabase Key (first 20 chars): ${supabaseKey.substring(0, 20)}...');

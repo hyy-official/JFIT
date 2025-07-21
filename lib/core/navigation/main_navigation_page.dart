@@ -93,7 +93,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         }
         
         return ResponsiveScaffold(
-          appBar: _buildAppBar(context),
+          // appBar: _buildAppBar(context), // 앱 바 제거
           currentIndex: _currentIndex,
           navigationItems: NavigationConstants.defaultNavigationItems,
           onNavTap: (index) {
@@ -122,25 +122,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           onAiTap: () {
             // TODO: AI 기능 연결
           },
-          // Use child from GoRouter shell if available, otherwise use Navigator
-          body: widget.child ?? Navigator(
-            key: _navigatorKey,
-            onGenerateRoute: (settings) {
-              // Analytics 전용 라우트
-              if (settings.name == AnalyticsPage.routeName) {
-                return MaterialPageRoute(
-                  builder: (_) => const AnalyticsPage(),
-                  settings: settings,
-                );
-              }
-
-              // 기본: 현재 탭 페이지
-              return MaterialPageRoute(
-                builder: (_) => _pages[_currentIndex],
-                settings: settings,
-              );
-            },
-          ),
+          // GoRouter shell에서 제공하는 child 사용
+          body: widget.child ?? _pages[_currentIndex],
           // 데스크톱에서 항상 우측 패널 표시를 위해 selectedDate는 항상 제공
           selectedDate: DateTime.now(),
           // RecordPage일 때만 실제 데이터 제공, 다른 페이지에서는 null

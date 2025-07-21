@@ -69,7 +69,7 @@ class BreakpointUtils {
   static bool shouldShowPersistentSidebar(double width) => isDesktop(width);
   
   /// Determines if navigation should be bottom-based
-  static bool shouldUseBottomNavigation(double width) => isMobile(width);
+  static bool shouldUseBottomNavigation(double width) => !isDesktop(width);
   
   /// Returns appropriate font size scaling factor
   static double getFontScaleFactor(double width) {
